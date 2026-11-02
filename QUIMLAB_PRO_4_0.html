@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUIMLAB PRO 4.0 | Laboratorio Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+/* Aplica tema y color antes de pintar la página (evita parpadeo) */
+(function(){try{var p=JSON.parse(localStorage.getItem('quimlab_appearance')||'{}');var m=p.mode||'dark';if(m==='auto')m=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=m;if(p.accent){document.documentElement.style.setProperty('--accent',p.accent);document.documentElement.style.setProperty('--accent-2',p.accent2||p.accent);document.documentElement.style.setProperty('--on-accent',p.onAccent||'#06121f')}}catch(e){}})();
+</script>
+<style>
+/* ===================== TOKENS ===================== */
+:root{
+ --accent:#36c5dc;--accent-2:#568cff;--on-accent:#06121f;
+ --good:#2fbf84;--warn:#e9a93a;--bad:#ec5f6b;
+ --radius:18px;--radius-sm:12px;
+ --font:"Plus Jakarta Sans",Inter,"Segoe UI",system-ui,Arial,sans-serif;
+}
+:root[data-theme="dark"]{
+ color-scheme:dark;
+ --bg:#080d18;--bg-glow:color-mix(in srgb,var(--accent) 16%,transparent);
+ --surface:#0f1828;--surface-2:#142036;--surface-3:#1a2942;
+ --sidebar:#0a1220;--line:#22324a;--line-soft:#1b2a40;
+ --text:#e8eef8;--muted:#8fa1ba;--subtle:#5d7090;
+ --input:#0b1422;--shadow:0 18px 40px -18px #000c,0 2px 6px #0004;
+ --accent-ink:color-mix(in srgb,var(--accent) 80%,#fff);
+}
+:root[data-theme="light"]{
+ color-scheme:light;
+ --bg:#f2f5fa;--bg-glow:color-mix(in srgb,var(--accent) 14%,transparent);
+ --surface:#ffffff;--surface-2:#f7f9fc;--surface-3:#eef2f8;
+ --sidebar:#ffffff;--line:#e1e7f0;--line-soft:#edf1f7;
+ --text:#101a2c;--muted:#5a6a82;--subtle:#94a1b5;
+ --input:#ffffff;--shadow:0 14px 34px -20px #1b2c4a40,0 1px 3px #1b2c4a14;
+ --accent-ink:color-mix(in srgb,var(--accent) 70%,#000);
+}
+
+/* ===================== BASE ===================== */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(900px 500px at 85% -10%,var(--bg-glow),transparent 70%),radial-gradient(700px 400px at 0% 110%,color-mix(in srgb,var(--accent-2) 8%,transparent),transparent 70%),var(--bg);background-attachment:fixed;color:var(--text);font:14px/1.5 var(--font);-webkit-font-smoothing:antialiased;transition:background-color .3s,color .3s}
+::selection{background:color-mix(in srgb,var(--accent) 35%,transparent)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:11px;padding:10px 16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);font-weight:700;letter-spacing:.1px;box-shadow:0 6px 18px -8px color-mix(in srgb,var(--accent) 70%,transparent);transition:transform .15s,box-shadow .2s,filter .2s}
+button:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 10px 24px -10px color-mix(in srgb,var(--accent) 80%,transparent)}
+button:active{transform:translateY(0)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--line);box-shadow:none}
+button.secondary:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--line));background:var(--surface-3)}
+button.danger{background:color-mix(in srgb,var(--bad) 14%,var(--surface));color:var(--bad);border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);box-shadow:none}
+button.small{padding:6px 11px;font-size:11.5px;border-radius:9px}
+button.icon{width:40px;height:40px;padding:0;display:grid;place-items:center;font-size:17px}
+
+/* ===================== LAYOUT ===================== */
+.app{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+.sidebar{background:var(--sidebar);border-right:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;transition:background-color .3s}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 8px 24px}
+.logo{width:46px;height:46px;flex:none;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:var(--on-accent);font-size:22px;font-weight:800;box-shadow:0 8px 20px -8px color-mix(in srgb,var(--accent) 80%,transparent);overflow:hidden}
+.logo img{width:100%;height:100%;object-fit:cover}
+.brand b{font-size:16.5px;letter-spacing:.8px}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;font-weight:600}
+.navlabel{color:var(--subtle);font-size:10px;font-weight:800;letter-spacing:1.6px;padding:12px 12px 8px}
+.nav button{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:transparent;color:var(--muted);padding:10px 12px;margin:2px 0;font-weight:600;box-shadow:none;border:1px solid transparent;position:relative}
+.nav button:hover{background:var(--surface-2);color:var(--text);transform:none}
+.nav button.active{background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--text);border-color:color-mix(in srgb,var(--accent) 28%,transparent)}
+.nav button.active:before{content:"";position:absolute;left:-16px;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+.nav .ico{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:var(--accent-ink);background:color-mix(in srgb,var(--accent) 10%,transparent);font-size:14px;flex:none}
+.nav button.active .ico{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent)}
+.sidefoot{margin-top:auto;color:var(--subtle);font-size:11px;border-top:1px solid var(--line);padding:14px 8px 0}
+.sidefoot button{width:100%;margin-bottom:12px}
+
+main{min-width:0;padding:28px 32px;max-width:1600px;width:100%;margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:26px}
+.eyebrow{color:var(--accent-ink);font-size:11px;letter-spacing:2px;font-weight:800}
+.topbar h1{font-size:28px;margin:4px 0;letter-spacing:-.4px}
+.sub{color:var(--muted)}.sub:first-letter{text-transform:uppercase}
+.topactions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.status{border:1px solid color-mix(in srgb,var(--good) 35%,transparent);background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good);padding:8px 13px;border-radius:30px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:7px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 0 var(--good);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--good) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+.page{display:none}.page.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}
+.two{grid-template-columns:1.25fr .75fr}.three{grid-template-columns:repeat(3,1fr)}
+
+/* ===================== CARDS ===================== */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:background-color .3s,border-color .3s,transform .2s}
+.stats .card{position:relative;overflow:hidden}
+.stats .card:after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c,var(--accent)) 20%,transparent),transparent 70%)}
+.stats .card:hover,.quick .card:hover{transform:translateY(-3px)}
+.stats .card:nth-child(2){--c:var(--accent-2)}.stats .card:nth-child(3){--c:var(--good)}.stats .card:nth-child(4){--c:var(--warn)}
+.stathead{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12.5px;font-weight:600}
+.statnum{font-size:32px;font-weight:800;margin:12px 0 2px;letter-spacing:-.5px}
+.statnote{font-size:11.5px;color:var(--subtle)}
+.staticon{width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--c,var(--accent)) 15%,transparent);display:grid;place-items:center;color:var(--c,var(--accent));font-size:17px;position:relative;z-index:1}
+h2{font-size:17px;margin:0 0 16px;letter-spacing:-.2px}h3{font-size:14.5px;margin:0 0 10px}
+.muted{color:var(--muted)}.small{font-size:11.5px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:26px 0 13px}.sectionhead h2{margin:0}
+.quick .card{display:flex;flex-direction:column;align-items:flex-start}
+.quick .card p{flex:1}
+.quick .qi{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:19px;margin-bottom:12px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent-ink)}
+
+/* ===================== TABLES ===================== */
+.tablewrap{overflow:auto;padding:6px}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:620px}
+th,td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--line-soft);font-size:12.5px}
+th{color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.6px;text-transform:uppercase;background:var(--surface-2)}
+th:first-child{border-radius:10px 0 0 10px}th:last-child{border-radius:0 10px 10px 0}
+th{border-bottom:0}
+tbody tr{transition:background-color .15s}
+tbody tr:hover td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+tbody tr:last-child td{border-bottom:0}
+.pill{display:inline-block;padding:4px 10px;border-radius:20px;background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent-ink);font-size:10.5px;font-weight:800;white-space:nowrap}
+.pill.good{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.pill.warn{background:color-mix(in srgb,var(--warn) 17%,transparent);color:var(--warn)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+
+/* ===================== FORMS ===================== */
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
+label{font-size:11.5px;color:var(--muted);font-weight:700}
+input,select,textarea{width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:var(--input);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s,background-color .3s}
+input::placeholder,textarea::placeholder{color:var(--subtle)}
+input:hover,select:hover,textarea:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent)}
+textarea{min-height:80px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.metric{font-size:34px;font-weight:800;letter-spacing:-.5px}
+.meter{height:9px;border-radius:20px;background:var(--surface-3);overflow:hidden;margin:12px 0}
+.meter span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;border-radius:20px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.meter.ph{background:linear-gradient(90deg,#e5484d,#f59e0b,#eab308,#22c55e,#14b8a6,#3b82f6,#7c3aed);position:relative;overflow:visible;height:12px}
+.meter.ph span{background:none;position:relative}
+.meter.ph span:after{content:"";position:absolute;right:-8px;top:-5px;width:16px;height:22px;border-radius:6px;background:var(--surface);border:3px solid var(--text);box-shadow:var(--shadow)}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1.5px dashed var(--line);border-radius:14px;background:var(--surface-2)}
+.notice{padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--accent) 9%,transparent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-left:4px solid var(--accent);color:var(--text);font-size:12.5px;margin-bottom:15px}
+ul.muted li{margin:5px 0}
+.recent-item{padding:11px 0;border-bottom:1px solid var(--line-soft);display:flex;gap:12px;align-items:center}
+.recent-item:last-child{border-bottom:0}
+.recent-item .dot{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent-ink)}
+
+/* Equipos */
+.machine{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:14px;margin:9px 0;background:var(--surface-2)}
+.tank{width:52px;height:58px;flex:none;border:3px solid var(--subtle);border-radius:10px 10px 16px 16px;position:relative;background:linear-gradient(180deg,transparent 40%,color-mix(in srgb,var(--accent) 35%,transparent) 40%);overflow:visible}
+.tank:before{content:"";position:absolute;left:21px;top:-14px;height:30px;border-left:3px solid var(--subtle)}
+.tank:after{content:"";position:absolute;left:9px;right:9px;top:14px;border-top:3px solid var(--accent);border-radius:3px;animation:spin 1.6s linear infinite}
+@keyframes spin{0%{transform:scaleX(1)}50%{transform:scaleX(.2)}100%{transform:scaleX(1)}}
+.footer{color:var(--subtle);font-size:10.5px;text-align:center;margin:34px 0 8px}
+
+/* ===================== PANEL APARIENCIA ===================== */
+.overlay{position:fixed;inset:0;background:#0007;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(380px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:50;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding:22px;overflow:auto;box-shadow:-20px 0 50px -20px #0008}
+.drawer.open{transform:none}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.drawer h2{margin:0}
+.drawer h3{margin:24px 0 10px;font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted)}
+.mode-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mode-switch button{background:var(--surface-2);color:var(--text);border:1.5px solid var(--line);box-shadow:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;font-size:12px}
+.mode-switch button .prev{width:100%;height:42px;border-radius:8px;border:1px solid var(--line)}
+.mode-switch button[data-mode="light"] .prev{background:linear-gradient(90deg,#fff 30%,#f2f5fa 30%)}
+.mode-switch button[data-mode="dark"] .prev{background:linear-gradient(90deg,#0a1220 30%,#080d18 30%)}
+.mode-switch button[data-mode="auto"] .prev{background:linear-gradient(135deg,#fff 50%,#0a1220 50%)}
+.mode-switch button.on{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.palette{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.swatch-btn{width:100%;display:block;aspect-ratio:1;border-radius:14px;padding:0;border:2px solid transparent;box-shadow:none;position:relative}
+.swatch-btn.on{border-color:var(--text)}
+.swatch-btn.on:after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:18px;text-shadow:0 1px 3px #0008}
+.swatch-name{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+.custom-row{display:flex;gap:10px;align-items:center;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.custom-row input[type=color]{width:46px;height:40px;padding:3px;border-radius:10px;cursor:pointer}
+.logo-edit{display:flex;gap:14px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.logo-edit .logo{width:60px;height:60px;font-size:26px}
+.preview-card{margin-top:10px;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,30px);opacity:0;background:var(--text);color:var(--surface);padding:10px 16px;border-radius:12px;font-weight:600;font-size:12.5px;transition:.3s;z-index:60;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===================== BÚSQUEDA, EDICIÓN Y GRÁFICAS ===================== */
+.sectionhead{flex-wrap:wrap}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toolbar .search{width:230px;padding:8px 12px}
+.toolbar select{width:auto;max-width:200px;padding:8px 10px}
+.rowactions{display:flex;gap:6px}.rowactions button{white-space:nowrap}
+tr.is-editing td{background:color-mix(in srgb,var(--accent) 12%,transparent)!important}
+.card.is-editing{border-color:var(--accent)}
+.edit-banner{display:none}
+form.editing .edit-banner{display:block;padding:10px 14px;margin-bottom:14px;border-radius:12px;background:color-mix(in srgb,var(--warn) 14%,transparent);border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);color:var(--text);font-size:12.5px}
+.card:has(form.editing){border-color:var(--warn);box-shadow:0 0 0 3px color-mix(in srgb,var(--warn) 18%,transparent),var(--shadow)}
+.charthead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}.charthead h2{margin:0}
+.charts svg{width:100%;height:auto;display:block;overflow:visible}
+.charts .gridline{stroke:var(--line-soft);stroke-width:1}
+.charts .axis{fill:var(--subtle);font-size:10px;font-family:var(--font)}
+.charts .line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.charts .dot{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.charts .dot-bad{fill:var(--bad);stroke:var(--surface);stroke-width:2}
+.charts .pt{cursor:pointer}.charts .pt:hover circle:last-child{r:7}
+.chartfoot,.qlegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:var(--muted);margin-top:8px;align-items:center}
+.lg{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.dot-lg{background:var(--accent);border-radius:50%}.bad-lg{background:var(--bad);border-radius:50%}
+.hbars{display:flex;flex-direction:column;gap:7px}
+.hbar{display:grid;grid-template-columns:104px 1fr 26px;gap:10px;align-items:center;font-size:12px;cursor:default;padding:2px 0}
+.hbar .hl{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbar .ht{height:14px;border-radius:0 4px 4px 0;background:var(--line-soft)}
+.hbar .ht span{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--accent);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.hbar .hv{text-align:right;font-size:12px}
+.hbar:hover .ht span{filter:brightness(1.15)}
+.hero{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:4px 0 14px}
+.stack{display:flex;gap:2px;height:22px;border-radius:6px;overflow:hidden;background:var(--line-soft)}
+.stack span{min-width:4px;cursor:default;transition:filter .2s}.stack span:hover{filter:brightness(1.15)}
+.qlegend{display:grid;grid-template-columns:1fr 1fr;margin-top:14px}
+.qlegend div{display:flex;align-items:center;color:var(--text)}.qlegend b{margin-left:auto;padding-right:6px}
+.tip{position:fixed;z-index:70;pointer-events:none;background:var(--surface);color:var(--text);border:1px solid var(--line);box-shadow:var(--shadow);padding:8px 11px;border-radius:10px;font-size:12px;line-height:1.45;opacity:0;transition:opacity .12s;max-width:240px}
+.tip.show{opacity:1}
+@media(max-width:1200px){.charts{grid-template-columns:1fr 1fr}.charts .card:first-child{grid-column:1/-1}}
+@media(max-width:900px){.charts{grid-template-columns:1fr}}
+@media(max-width:560px){.toolbar,.toolbar .search{width:100%}.toolbar select{flex:1;max-width:none}}
+
+.navbadge{order:3;margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--warn);color:#1a1200;font-size:10.5px;font-weight:800;display:inline-grid;place-items:center}
+.navbadge.bad{background:var(--bad);color:#fff}.navbadge[hidden]{display:none}
+.nav button{display:flex}
+.alertsum{display:flex;flex-wrap:wrap;gap:6px}
+.alertlist{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.alertitem{display:flex;gap:10px;align-items:center;text-align:left;width:100%;background:var(--surface-2);color:var(--text);border:1px solid var(--line);box-shadow:none;padding:9px 11px;font-weight:500}
+.alertitem:hover{transform:none;border-color:currentColor}
+.alertitem b{display:block;font-size:12.5px}.alertitem .ai{width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;font-size:12px;font-weight:800}
+.alertitem.bad .ai{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}.alertitem.warn .ai{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.alertitem.bad{border-left:3px solid var(--bad)}.alertitem.warn{border-left:3px solid var(--warn)}
+
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:900px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .sidebar{height:auto;position:sticky;top:0;z-index:20;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+ .brand{padding:2px 4px 10px}.logo{width:38px;height:38px;font-size:18px}
+ .nav{display:flex;overflow:auto;gap:6px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}
+ .navlabel,.sidefoot{display:none}
+ .nav button{white-space:nowrap;width:auto;font-size:12px;padding:8px 12px}.nav .ico{display:none}.nav button.active:before{display:none}
+ main{padding:20px 16px;min-width:0}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two,.three{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .topbar{align-items:flex-start;flex-direction:column}.topbar h1{font-size:23px}
+ .stats{gap:10px}.card{padding:15px}.statnum{font-size:25px}.formgrid{grid-template-columns:1fr}
+ .status{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+ <div class="brand"><div class="logo" id="logoBox">Q</div><div><b id="brandName">QUIMLAB PRO</b><small>INDUSTRIAL LAB 4.0</small></div></div>
+ <div class="navlabel">PLATAFORMA</div>
+ <nav class="nav">
+  <button class="active" data-page="dashboard"><span class="ico">▦</span>Panel principal</button>
+  <button data-page="formulas"><span class="ico">◈</span>Formulación y colores</button>
+  <button data-page="mediciones"><span class="ico">◉</span>Laboratorio / pH</button>
+  <button data-page="viscosidad"><span class="ico">≋</span>Viscosidad</button>
+  <button data-page="produccion"><span class="ico">⚙</span>Producción y lotes</button>
+  <button data-page="materias"><span class="ico">▤</span><span class="navbadge" id="navMat" hidden></span>Materias primas</button>
+  <button data-page="equipos"><span class="ico">▥</span>Equipos mezcladores</button>
+  <button data-page="calidad"><span class="ico">✓</span>Control de calidad</button>
+ </nav>
+ <div class="sidefoot"><button class="secondary" onclick="openDrawer()">🎨 Personalizar apariencia</button>QUIMLAB PRO 4.0<br>Prototipo local · Datos en este dispositivo</div>
+</aside>
+<main>
+ <header class="topbar"><div><div class="eyebrow">SISTEMA DE GESTIÓN QUÍMICA</div><h1 id="pageTitle">Panel principal</h1><div class="sub" id="today"></div></div>
+  <div class="topactions"><span class="status"><i></i>Sistema local activo</span>
+   <button class="secondary icon" id="themeToggle" title="Cambiar modo claro / oscuro" aria-label="Cambiar modo claro / oscuro">☀</button>
+   <button class="secondary icon" onclick="openDrawer()" title="Paleta de colores" aria-label="Abrir paleta de colores">🎨</button>
+   <button class="secondary" onclick="$('importFile').click()" title="Restaurar datos desde un archivo .json">⇧ Importar</button><button class="secondary" onclick="exportBackup()" title="Descargar todos los datos en un archivo .json">⇩ Exportar copia</button><input type="file" id="importFile" accept=".json,application/json" hidden></div></header>
+
+<section class="page active" id="dashboard">
+ <div class="grid stats">
+  <div class="card"><div class="stathead">Fórmulas registradas <span class="staticon">◈</span></div><div class="statnum" id="sFormulas">0</div><div class="statnote">Biblioteca de formulaciones</div></div>
+  <div class="card"><div class="stathead">Lotes registrados <span class="staticon">⚙</span></div><div class="statnum" id="sLotes">0</div><div class="statnote">Trazabilidad de producción</div></div>
+  <div class="card"><div class="stathead">Materias primas <span class="staticon">▤</span></div><div class="statnum" id="sMaterias">0</div><div class="statnote">Referencias en inventario</div></div>
+  <div class="card"><div class="stathead">Mediciones laboratorio <span class="staticon">◉</span></div><div class="statnum" id="sMediciones">0</div><div class="statnote">Registros de control</div></div>
+ </div>
+ <div class="grid three charts">
+  <div class="card"><div class="charthead"><h2>Tendencia de pH</h2><span class="muted small">Últimas 15 mediciones</span></div><div id="chartPh"></div></div>
+  <div class="card"><div class="charthead"><h2>Lotes por estado</h2><span class="muted small">Producción</span></div><div id="chartLotes"></div></div>
+  <div class="card"><div class="charthead"><h2>Resultados de calidad</h2><span class="muted small">Inspecciones</span></div><div id="chartQc"></div></div>
+ </div>
+ <div class="grid two" style="margin-top:16px">
+  <div class="card"><h2>Actividad reciente</h2><div id="recent" class="empty">Aún no hay actividad. Registra una fórmula, medición o lote para comenzar.</div></div>
+  <div class="card"><h2>Centro de alertas</h2><div class="notice">Los rangos de aceptación deben definirse según la ficha técnica de cada producto.</div><div id="alerts">No hay alertas registradas.</div></div>
+ </div>
+ <div class="sectionhead"><h2>Accesos rápidos</h2></div>
+ <div class="grid three quick">
+  <div class="card"><div class="qi">◈</div><h3>Nueva formulación</h3><p class="muted small">Construye y guarda una receta de pigmentos y aditivos.</p><button onclick="go('formulas')">Abrir módulo →</button></div>
+  <div class="card"><div class="qi">◉</div><h3>Registrar pH</h3><p class="muted small">Documenta una medición de laboratorio.</p><button onclick="go('mediciones')">Abrir módulo →</button></div>
+  <div class="card"><div class="qi">⚙</div><h3>Crear lote</h3><p class="muted small">Registra una orden y su trazabilidad.</p><button onclick="go('produccion')">Abrir módulo →</button></div>
+ </div>
+</section>
+
+<section class="page" id="formulas">
+ <div class="grid two">
+  <div class="card"><h2>Constructor de formulaciones</h2><div class="notice">Registra cantidades reales de una receta aprobada. La herramienta calcula proporciones; no genera recetas químicas automáticamente.</div>
+   <form id="formulaForm"><div class="formgrid">
+    <div class="field"><label>Nombre de la fórmula *</label><input id="fNombre" required placeholder="Ej. Azul industrial brillante"></div>
+    <div class="field"><label>Código interno</label><input id="fCodigo" placeholder="QL-COL-001"></div>
+    <div class="field"><label>Producto / línea</label><select id="fTipo"><option>Pintura base agua</option><option>Pintura base solvente</option><option>Recubrimiento</option><option>Pasta pigmentaria</option><option>Otro</option></select></div>
+    <div class="field"><label>Tamaño del lote (kg)</label><input id="fLote" type="number" min="0" step="0.001" value="1"></div>
+    <div class="field full"><label>Componentes (uno por línea: nombre,cantidad en gramos)</label><textarea id="fComponentes" required placeholder="Resina,650&#10;Pigmento azul,120&#10;Aditivo,15&#10;Agua,215"></textarea></div>
+    <div class="field full"><label>Observaciones / versión</label><textarea id="fNotas" placeholder="Versión, patrón de color, notas de laboratorio..."></textarea></div>
+   </div><div class="actions"><button type="submit">Guardar fórmula</button><button type="reset" class="secondary">Limpiar</button></div></form>
+  </div>
+  <div class="card"><h2>Vista de composición</h2><div id="formulaPreview" class="empty">Escribe los componentes y guarda la fórmula para ver su composición.</div><div class="small muted" style="margin-top:12px">Los porcentajes son calculados sobre la suma de los componentes ingresados.</div></div>
+ </div>
+ <div class="sectionhead"><h2>Biblioteca de fórmulas</h2><div class="toolbar"><input type="search" class="search" data-k="formulas" placeholder="🔍 Buscar…" aria-label="Buscar"><select class="filter" data-k="formulas" aria-label="Filtrar"></select><span class="pill" id="count-formulas">0 registros</span></div></div>
+ <div class="card tablewrap"><table><thead><tr><th>Fórmula</th><th>Código</th><th>Producto</th><th>Lote base</th><th>Componentes</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="formulaRows"></tbody></table></div>
+</section>
+
+<section class="page" id="mediciones">
+ <div class="grid two">
+  <div class="card"><h2>Registro de pH</h2><form id="phForm"><div class="formgrid">
+   <div class="field"><label>Producto / muestra *</label><input id="phProducto" required placeholder="Nombre de muestra"></div>
+   <div class="field"><label>Lote</label><input id="phLote" placeholder="Número de lote"></div>
+   <div class="field"><label>Valor medido de pH *</label><input id="phValor" required type="number" min="0" max="14" step="0.01" placeholder="Ej. 8.50"></div>
+   <div class="field"><label>pH mínimo especificado</label><input id="phMin" type="number" min="0" max="14" step="0.01" placeholder="Ej. 8"></div>
+   <div class="field"><label>pH máximo especificado</label><input id="phMax" type="number" min="0" max="14" step="0.01" placeholder="Ej. 9"></div>
+   <div class="field"><label>Temperatura (°C)</label><input id="phTemp" type="number" step="0.1" placeholder="Ej. 25"></div>
+   <div class="field"><label>Equipo / código</label><input id="phEquipo" placeholder="pH-metro"></div>
+   <div class="field"><label>Responsable</label><input id="phResp" placeholder="Operario / analista"></div>
+  </div><div class="actions"><button>Guardar medición</button></div></form></div>
+  <div class="card"><h2>Indicador de pH</h2><div class="metric" id="phDisplay">—</div><div class="meter ph"><span id="phMeter"></span></div><div style="display:flex;justify-content:space-between" class="small muted"><span>0 · Ácido</span><span>7 · Neutro</span><span>14 · Alcalino</span></div><div id="phStatus" class="notice" style="margin-top:18px">Ingresa una medición para visualizar el resultado.</div><p class="small muted">La aceptación depende del rango definido para el producto, no de una regla universal.</p></div>
+ </div>
+ <div class="sectionhead"><h2>Historial de mediciones</h2><div class="toolbar"><input type="search" class="search" data-k="ph" placeholder="🔍 Buscar…" aria-label="Buscar"><select class="filter" data-k="ph" aria-label="Filtrar"></select><span class="pill" id="count-ph">0 registros</span></div></div><div class="card tablewrap"><table><thead><tr><th>Fecha</th><th>Muestra</th><th>Lote</th><th>pH</th><th>Rango</th><th>Estado</th><th>Responsable</th><th>Acciones</th></tr></thead><tbody id="phRows"></tbody></table></div>
+</section>
+
+<section class="page" id="viscosidad">
+ <div class="grid two">
+  <div class="card"><h2>Registro de viscosidad</h2><form id="visForm"><div class="formgrid">
+   <div class="field"><label>Producto / muestra *</label><input id="vProducto" required></div><div class="field"><label>Lote</label><input id="vLote"></div>
+   <div class="field"><label>Resultado *</label><input id="vValor" required type="number" min="0" step="0.01"></div><div class="field"><label>Unidad</label><select id="vUnidad"><option>cP</option><option>KU</option><option>mPa·s</option></select></div>
+   <div class="field"><label>Temperatura (°C)</label><input id="vTemp" type="number" step="0.1"></div><div class="field"><label>Instrumento / modelo</label><input id="vEquipo" placeholder="Viscosímetro"></div>
+   <div class="field"><label>Husillo / spindle</label><input id="vHusillo"></div><div class="field"><label>Velocidad (RPM)</label><input id="vRpm" type="number" step="0.1"></div>
+   <div class="field"><label>Mínimo especificado</label><input id="vMin" type="number" step="0.01"></div><div class="field"><label>Máximo especificado</label><input id="vMax" type="number" step="0.01"></div>
+   <div class="field full"><label>Responsable / observaciones</label><input id="vResp"></div>
+  </div><div class="actions"><button>Guardar resultado</button></div></form></div>
+  <div class="card"><h2>Guía de medición</h2><div class="notice">La viscosidad depende de la temperatura y de las condiciones de ensayo.</div><h3>Datos que deben acompañar el resultado</h3><ul class="muted small"><li>Instrumento y calibración vigente.</li><li>Geometría o husillo utilizado.</li><li>Velocidad de rotación.</li><li>Temperatura de la muestra.</li><li>Unidad y método de ensayo.</li></ul><div class="notice">No convertir automáticamente KU a cP sin método y correlación validados para el producto.</div></div>
+ </div>
+ <div class="sectionhead"><h2>Historial de viscosidad</h2><div class="toolbar"><input type="search" class="search" data-k="vis" placeholder="🔍 Buscar…" aria-label="Buscar"><select class="filter" data-k="vis" aria-label="Filtrar"></select><span class="pill" id="count-vis">0 registros</span></div></div><div class="card tablewrap"><table><thead><tr><th>Fecha</th><th>Producto</th><th>Lote</th><th>Resultado</th><th>Temperatura</th><th>Equipo / método</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="vRows"></tbody></table></div>
+</section>
+
+<section class="page" id="produccion">
+ <div class="card"><h2>Registro de producción y trazabilidad</h2><form id="loteForm"><div class="formgrid">
+  <div class="field"><label>Orden / lote *</label><input id="lCodigo" required placeholder="OP-0001"></div><div class="field"><label>Producto *</label><input id="lProducto" required></div>
+  <div class="field"><label>Fórmula utilizada</label><select id="lFormula"><option value="">Seleccionar fórmula</option></select></div><div class="field"><label>Cantidad programada (kg)</label><input id="lProgramada" type="number" min="0" step="0.01"></div>
+  <div class="field"><label>Cantidad fabricada (kg)</label><input id="lFabricada" type="number" min="0" step="0.01"></div><div class="field"><label>Máquina utilizada</label><select id="lMaquina"><option value="">Seleccionar equipo</option><option>Dispersor alta velocidad</option><option>Agitador industrial</option><option>Molino de perlas</option><option>Tanque de preparación</option></select></div>
+  <div class="field"><label>Responsable</label><input id="lResp"></div><div class="field"><label>Estado</label><select id="lEstado"><option>Pendiente</option><option>En preparación</option><option>Mezclando</option><option>En laboratorio</option><option>Aprobado</option><option>Rechazado</option><option>Terminado</option></select></div>
+  <div class="field full"><label>Observaciones</label><textarea id="lNotas"></textarea></div>
+ </div><div class="actions"><button>Guardar lote</button></div></form></div>
+ <div class="sectionhead"><h2>Órdenes registradas</h2><div class="toolbar"><input type="search" class="search" data-k="lotes" placeholder="🔍 Buscar…" aria-label="Buscar"><select class="filter" data-k="lotes" aria-label="Filtrar"></select><span class="pill" id="count-lotes">0 registros</span></div></div><div class="card tablewrap"><table><thead><tr><th>Orden</th><th>Producto</th><th>Fórmula</th><th>Programado</th><th>Fabricado</th><th>Equipo</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="loteRows"></tbody></table></div>
+</section>
+
+<section class="page" id="materias">
+ <div class="grid two">
+  <div class="card"><h2>Alta de materia prima</h2><form id="matForm"><div class="formgrid">
+   <div class="field"><label>Nombre *</label><input id="mNombre" required></div><div class="field"><label>Código</label><input id="mCodigo"></div>
+   <div class="field"><label>Tipo</label><select id="mTipo"><option>Pigmento</option><option>Resina</option><option>Aditivo</option><option>Solvente</option><option>Carga mineral</option><option>Otro</option></select></div><div class="field"><label>Cantidad disponible</label><input id="mCantidad" type="number" min="0" step="0.001"></div>
+   <div class="field"><label>Unidad</label><select id="mUnidad"><option>kg</option><option>g</option><option>L</option><option>unidad</option></select></div><div class="field"><label>Lote proveedor</label><input id="mLote"></div>
+   <div class="field"><label>Proveedor</label><input id="mProveedor"></div><div class="field"><label>Vencimiento</label><input id="mVence" type="date"></div>
+   <div class="field full"><label>Ubicación / ficha de seguridad</label><input id="mUbicacion" placeholder="Estante, zona o referencia documental"></div>
+  </div><div class="actions"><button>Guardar materia prima</button></div></form></div>
+  <div class="card"><h2>Buenas prácticas de almacenamiento</h2><div class="notice">Consulta siempre la hoja de datos de seguridad (SDS) y la ficha técnica del proveedor.</div><ul class="muted small"><li>Separar materiales incompatibles.</li><li>Identificar recipientes y lotes.</li><li>Controlar fechas de vencimiento.</li><li>Usar EPP y ventilación definidos por la SDS.</li><li>Registrar entradas, consumos y ajustes.</li></ul></div>
+ </div>
+ <div class="sectionhead"><h2>Inventario de materias primas</h2><div class="toolbar"><input type="search" class="search" data-k="materias" placeholder="🔍 Buscar…" aria-label="Buscar"><select class="filter" data-k="materias" aria-label="Filtrar"></select><span class="pill" id="count-materias">0 registros</span></div></div><div class="card tablewrap"><table><thead><tr><th>Materia prima</th><th>Código</th><th>Tipo</th><th>Disponible</th><th>Lote</th><th>Proveedor</th><th>Vencimiento</th><th>Ubicación</th><th>Acciones</th></tr></thead><tbody id="matRows"></tbody></table></div>
+</section>
+
+<section class="page" id="equipos">
+ <div class="grid two">
+  <div class="card"><h2>Registrar equipo mezclador</h2><form id="eqForm"><div class="formgrid">
+   <div class="field"><label>Nombre del equipo *</label><input id="eNombre" required placeholder="Dispersor 01"></div><div class="field"><label>Código</label><input id="eCodigo"></div>
+   <div class="field"><label>Tipo</label><select id="eTipo"><option>Dispersor alta velocidad</option><option>Agitador</option><option>Molino de perlas</option><option>Tanque de mezcla</option><option>Homogeneizador</option><option>Otro</option></select></div><div class="field"><label>Capacidad (L)</label><input id="eCapacidad" type="number" min="0"></div>
+   <div class="field"><label>RPM nominales</label><input id="eRpm" type="number" min="0"></div><div class="field"><label>Estado</label><select id="eEstado"><option>Disponible</option><option>En operación</option><option>Mantenimiento</option><option>Fuera de servicio</option></select></div>
+   <div class="field full"><label>Último mantenimiento / observaciones</label><input id="eNotas"></div>
+  </div><div class="actions"><button>Guardar equipo</button></div></form></div>
+  <div class="card"><h2>Estación de mezclado</h2><div class="machine"><div class="tank"></div><div><b>Dispersor industrial</b><div class="muted small">Representación conceptual · No conectado a máquina física</div><span class="pill">Modelo visual</span></div></div><div class="notice">La pantalla registra datos operativos manuales. No envía órdenes a motores, variadores ni PLC.</div></div>
+ </div>
+ <div class="sectionhead"><h2>Parque de equipos</h2><div class="toolbar"><input type="search" class="search" data-k="equipos" placeholder="🔍 Buscar…" aria-label="Buscar"><select class="filter" data-k="equipos" aria-label="Filtrar"></select><span class="pill" id="count-equipos">0 registros</span></div></div><div id="equipmentList" class="grid two"></div>
+</section>
+
+<section class="page" id="calidad">
+ <div class="card"><h2>Inspección y liberación de lote</h2><form id="qcForm"><div class="formgrid">
+  <div class="field"><label>Lote *</label><input id="qLote" required></div><div class="field"><label>Producto</label><input id="qProducto"></div>
+  <div class="field"><label>Resultado de inspección</label><select id="qEstado"><option>Pendiente</option><option>Aprobado</option><option>Rechazado</option><option>Requiere ajuste</option></select></div><div class="field"><label>Inspector</label><input id="qInspector"></div>
+  <div class="field"><label>Color / patrón</label><input id="qColor" placeholder="Código o referencia"></div><div class="field"><label>Densidad (g/mL)</label><input id="qDensidad" type="number" step="0.001"></div>
+  <div class="field"><label>Brillo / método</label><input id="qBrillo"></div><div class="field"><label>Secado / método</label><input id="qSecado"></div>
+  <div class="field full"><label>Observaciones y evidencia</label><textarea id="qNotas" placeholder="Apariencia, homogeneidad, pruebas realizadas, referencia de ficha técnica..."></textarea></div>
+ </div><div class="actions"><button>Guardar inspección</button></div></form></div>
+ <div class="sectionhead"><h2>Historial de calidad</h2><div class="toolbar"><input type="search" class="search" data-k="qc" placeholder="🔍 Buscar…" aria-label="Buscar"><select class="filter" data-k="qc" aria-label="Filtrar"></select><span class="pill" id="count-qc">0 registros</span></div></div><div class="card tablewrap"><table><thead><tr><th>Fecha</th><th>Lote</th><th>Producto</th><th>Estado</th><th>Inspector</th><th>Observaciones</th><th>Acciones</th></tr></thead><tbody id="qcRows"></tbody></table></div>
+</section>
+<div class="footer">QUIMLAB PRO 4.0 · Prototipo de gestión local · Validar métodos y especificaciones con el laboratorio responsable.</div>
+</main></div>
+
+<!-- ===================== PANEL DE APARIENCIA ===================== -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-label="Personalizar apariencia">
+ <div class="drawer-head"><h2>🎨 Apariencia</h2><button class="secondary icon" onclick="closeDrawer()" aria-label="Cerrar">✕</button></div>
+ <div class="muted small">Personaliza colores, modo y logotipo. Se guarda en este dispositivo.</div>
+
+ <h3>Modo de visualización</h3>
+ <div class="mode-switch" id="modeSwitch">
+  <button data-mode="light"><span class="prev"></span>☀ Claro</button>
+  <button data-mode="dark"><span class="prev"></span>☾ Oscuro</button>
+  <button data-mode="auto"><span class="prev"></span>◐ Automático</button>
+ </div>
+
+ <h3>Paleta de colores</h3>
+ <div class="palette" id="palette"></div>
+ <div class="custom-row"><input type="color" id="customColor" value="#36c5dc" aria-label="Color personalizado"><div><b class="small">Color personalizado</b><div class="muted small">Elige cualquier tono para la interfaz</div></div></div>
+
+ <h3>Logotipo / imagen</h3>
+ <div class="logo-edit"><div class="logo" id="logoPreview">Q</div><div style="display:flex;flex-direction:column;gap:8px;flex:1">
+  <button class="small" onclick="$('logoFile').click()">⇪ Subir imagen</button>
+  <button class="secondary small" onclick="resetLogo()">Quitar imagen</button>
+  <input type="file" id="logoFile" accept="image/*" hidden></div></div>
+ <div class="field" style="margin-top:12px"><label>Nombre de la empresa / sistema</label><input id="brandInput" maxlength="28" placeholder="QUIMLAB PRO"></div>
+
+ <h3>Vista previa</h3>
+ <div class="preview-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b>Lote OP-0001</b><span class="pill good">Aprobado</span></div><div class="meter"><span style="width:68%"></span></div><div class="actions" style="margin-top:8px"><button class="small">Botón principal</button><button class="secondary small">Secundario</button></div></div>
+
+ <div class="actions" style="margin-top:22px"><button class="secondary" onclick="resetAppearance()">↺ Restablecer todo</button></div>
+</aside>
+<div class="toast" id="toast"></div>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+const KEY='quimlab_pro_40_data';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"formulas":[],"ph":[],"vis":[],"lotes":[],"materias":[],"equipos":[],"qc":[]}');
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toLocaleString('es-CO');
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('pageTitle').textContent=document.querySelector(`[data-page="${page}"]`).lastChild.textContent.trim();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+$('today').textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+/* ===================== CONFIGURACIÓN DE COLECCIONES ===================== */
+const COLS=['formulas','ph','vis','lotes','materias','equipos','qc'];
+const FORMS={
+ formulas:{form:'formulaForm',page:'formulas',name:'fórmula',fields:{nombre:'fNombre',codigo:'fCodigo',tipo:'fTipo',lote:'fLote',notas:'fNotas'}},
+ ph:{form:'phForm',page:'mediciones',name:'medición de pH',fields:{producto:'phProducto',lote:'phLote',valor:'phValor',min:'phMin',max:'phMax',temp:'phTemp',equipo:'phEquipo',resp:'phResp'}},
+ vis:{form:'visForm',page:'viscosidad',name:'resultado de viscosidad',fields:{producto:'vProducto',lote:'vLote',valor:'vValor',unidad:'vUnidad',temp:'vTemp',equipo:'vEquipo',husillo:'vHusillo',rpm:'vRpm',min:'vMin',max:'vMax',resp:'vResp'}},
+ lotes:{form:'loteForm',page:'produccion',name:'lote',fields:{codigo:'lCodigo',producto:'lProducto',formula:'lFormula',prog:'lProgramada',fab:'lFabricada',maquina:'lMaquina',resp:'lResp',estado:'lEstado',notas:'lNotas'}},
+ materias:{form:'matForm',page:'materias',name:'materia prima',fields:{nombre:'mNombre',codigo:'mCodigo',tipo:'mTipo',cantidad:'mCantidad',unidad:'mUnidad',lote:'mLote',proveedor:'mProveedor',vence:'mVence',ubicacion:'mUbicacion'}},
+ equipos:{form:'eqForm',page:'equipos',name:'equipo',fields:{nombre:'eNombre',codigo:'eCodigo',tipo:'eTipo',capacidad:'eCapacidad',rpm:'eRpm',estado:'eEstado',notas:'eNotas'}},
+ qc:{form:'qcForm',page:'calidad',name:'inspección',fields:{lote:'qLote',producto:'qProducto',estado:'qEstado',inspector:'qInspector',color:'qColor',densidad:'qDensidad',brillo:'qBrillo',secado:'qSecado',notas:'qNotas'}}
+};
+const FILTER_FIELD={formulas:'tipo',ph:'estado',vis:'estado',lotes:'estado',materias:'tipo',equipos:'estado',qc:'estado'};
+const FILTER_LABEL={formulas:'Todos los productos',materias:'Todos los tipos'};
+const editing={};const filters={};COLS.forEach(k=>{editing[k]=null;filters[k]={q:'',v:''}});
+function normalize(db0){const d={};COLS.forEach(k=>d[k]=Array.isArray(db0&&db0[k])?db0[k].filter(x=>x&&typeof x==='object'):[]);d.formulas.forEach(f=>{if(!Array.isArray(f.items))f.items=[]});return d}
+db=normalize(db);
+
+/* ===================== BÚSQUEDA Y FILTROS ===================== */
+const flat=v=>Array.isArray(v)?v.map(flat).join(' '):(v&&typeof v==='object')?Object.values(v).map(flat).join(' '):String(v??'');
+const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+function view(k){const f=filters[k],q=norm(f.q.trim()),field=FILTER_FIELD[k];return db[k].map((x,i)=>({x,i})).filter(({x})=>(!f.v||x[field]===f.v)&&(!q||norm(flat(x)).includes(q)))}
+function updateToolbar(k,shown){const sel=document.querySelector(`.filter[data-k="${k}"]`);if(sel){const vals=[...new Set(db[k].map(x=>x[FILTER_FIELD[k]]).filter(Boolean))].sort();if(filters[k].v&&!vals.includes(filters[k].v))filters[k].v='';sel.innerHTML=`<option value="">${FILTER_LABEL[k]||'Todos los estados'}</option>`+vals.map(v=>`<option>${esc(v)}</option>`).join('');sel.value=filters[k].v}
+ const c=$('count-'+k);if(c){const t=db[k].length;c.textContent=shown===t?`${t} registro${t===1?'':'s'}`:`${shown} de ${t}`}}
+document.querySelectorAll('.search').forEach(el=>el.addEventListener('input',()=>{filters[el.dataset.k].q=el.value;render()}));
+document.querySelectorAll('.filter').forEach(el=>el.addEventListener('change',()=>{filters[el.dataset.k].v=el.value;render()}));
+
+/* ===================== TABLAS ===================== */
+function rowEmpty(n,k){const filtered=k&&db[k].length;return `<tr><td colspan="${n}" class="muted" style="text-align:center;padding:26px">${filtered?'Ningún registro coincide con la búsqueda.':'Sin registros todavía.'}</td></tr>`}
+const PRINTABLE={formulas:1,lotes:1,qc:1};
+const acts=(k,i)=>`<td><div class="rowactions">${PRINTABLE[k]?`<button class="secondary small" onclick="printReport('${k}',${i})" title="Imprimir / PDF" aria-label="Imprimir">🖨</button>`:''}<button class="secondary small" onclick="editItem('${k}',${i})">✎ Editar</button><button class="danger small" onclick="deleteItem('${k}',${i})" aria-label="Eliminar">✕</button></div></td>`;
+function table(k,id,cols,row){const v=view(k);$(id).innerHTML=v.length?v.map(({x,i})=>`<tr class="${editing[k]===i?'is-editing':''}">${row(x)}${acts(k,i)}</tr>`).join(''):rowEmpty(cols,k);updateToolbar(k,v.length)}
+const n=v=>v===null||v===undefined||v===''?'—':esc(v);
+function render(){
+ $('sFormulas').textContent=db.formulas.length;$('sLotes').textContent=db.lotes.length;$('sMaterias').textContent=db.materias.length;$('sMediciones').textContent=db.ph.length+db.vis.length;
+ table('formulas','formulaRows',7,x=>`<td><b>${esc(x.nombre)}</b></td><td>${n(x.codigo)}</td><td>${esc(x.tipo)}</td><td>${n(x.lote)} kg</td><td>${x.items.length}</td><td>${esc(x.fecha)}</td>`);
+ table('ph','phRows',8,x=>`<td>${esc(x.fecha)}</td><td>${esc(x.producto)}</td><td>${n(x.lote)}</td><td><b>${n(x.valor)}</b></td><td>${n(x.min)} – ${n(x.max)}</td><td>${badge(x.estado)}</td><td>${n(x.resp)}</td>`);
+ table('vis','vRows',8,x=>`<td>${esc(x.fecha)}</td><td>${esc(x.producto)}</td><td>${n(x.lote)}</td><td><b>${n(x.valor)} ${esc(x.unidad)}</b></td><td>${n(x.temp)} °C</td><td>${n(x.equipo)} ${esc(x.husillo||'')}</td><td>${badge(x.estado)}</td>`);
+ table('lotes','loteRows',9,x=>`<td><b>${esc(x.codigo)}</b></td><td>${esc(x.producto)}</td><td>${n(x.formula)}</td><td>${n(x.prog)} kg</td><td>${n(x.fab)} kg</td><td>${n(x.maquina)}</td><td>${badge(x.estado)}</td><td>${esc(x.fecha)}</td>`);
+ table('materias','matRows',9,x=>`<td><b>${esc(x.nombre)}</b></td><td>${n(x.codigo)}</td><td>${esc(x.tipo)}</td><td>${esc(x.cantidad||0)} ${esc(x.unidad)}</td><td>${n(x.lote)}</td><td>${n(x.proveedor)}</td><td>${venceCell(x)}</td><td>${n(x.ubicacion)}</td>`);
+ table('qc','qcRows',7,x=>`<td>${esc(x.fecha)}</td><td><b>${esc(x.lote)}</b></td><td>${n(x.producto)}</td><td>${badge(x.estado)}</td><td>${n(x.inspector)}</td><td>${n(x.notas)}</td>`);
+ const ev=view('equipos');updateToolbar('equipos',ev.length);
+ $('equipmentList').innerHTML=ev.map(({x,i})=>`<div class="card ${editing.equipos===i?'is-editing':''}"><div class="machine"><div class="tank"></div><div><b>${esc(x.nombre)}</b><div class="muted small">${esc(x.tipo)} · ${n(x.capacidad)} L · ${n(x.rpm)} RPM</div>${badge(x.estado)}</div></div><div class="small muted">${esc(x.codigo||'Sin código')} · ${esc(x.notas||'Sin observaciones')}</div><div class="actions"><button class="secondary small" onclick="editItem('equipos',${i})">✎ Editar</button><button class="danger small" onclick="deleteItem('equipos',${i})">Eliminar equipo</button></div></div>`).join('')||`<div class="empty">${db.equipos.length?'Ningún equipo coincide con la búsqueda.':'No hay equipos registrados.'}</div>`;
+ const lf=$('lFormula'),cur=lf.value;lf.innerHTML='<option value="">Seleccionar fórmula</option>'+db.formulas.map(x=>`<option>${esc(x.nombre)}</option>`).join('');lf.value=cur;
+ let recent=[...db.formulas.map(x=>({t:'Fórmula: '+x.nombre,d:x.fecha,i:'◈'})),...db.ph.map(x=>({t:'Medición pH: '+x.producto,d:x.fecha,i:'◉'})),...db.lotes.map(x=>({t:'Lote: '+x.codigo,d:x.fecha,i:'⚙'}))].slice(-5).reverse();
+ const rc=$('recent');rc.classList.toggle('empty',!recent.length);
+ rc.innerHTML=recent.length?recent.map(x=>`<div class="recent-item"><span class="dot">${x.i}</span><div><b>${esc(x.t)}</b><div class="muted small">${esc(x.d)}</div></div></div>`).join(''):'Aún no hay actividad. Registra una fórmula, medición o lote para comenzar.';
+ renderAlerts();
+ renderCharts();
+}
+function badge(s){let c=['Aprobado','Disponible','Terminado','Dentro de rango'].includes(s)?'good':['Rechazado','Fuera de servicio','Fuera de rango'].includes(s)?'bad':['Pendiente','Mantenimiento','Requiere ajuste'].includes(s)?'warn':'';return `<span class="pill ${c}">${esc(s)}</span>`}
+
+/* ===================== ALERTAS DE VENCIMIENTO E INVENTARIO ===================== */
+const AVISO_DIAS=30;
+function diasPara(fecha){if(!fecha||!/^\d{4}-\d{2}-\d{2}$/.test(fecha))return null;const [y,m,d]=fecha.split('-').map(Number),hoy=new Date();hoy.setHours(0,0,0,0);return Math.round((new Date(y,m-1,d)-hoy)/864e5)}
+function venceInfo(x){const d=diasPara(x.vence);if(d===null)return null;if(d<0)return{c:'bad',t:`Vencida hace ${-d} día${d===-1?'':'s'}`,d};if(d===0)return{c:'bad',t:'Vence hoy',d};if(d<=AVISO_DIAS)return{c:'warn',t:`Vence en ${d} día${d===1?'':'s'}`,d};return{c:'good',t:'Vigente',d}}
+function venceCell(x){const v=venceInfo(x);return v?`${esc(x.vence)}<br><span class="pill ${v.c}">${v.c==='bad'?'✕':v.c==='warn'?'⚠':'✓'} ${v.t}</span>`:n(x.vence)}
+function renderAlerts(){
+ const items=[];
+ db.materias.forEach((x,i)=>{const v=venceInfo(x);if(v&&v.c!=='good')items.push({sev:v.c==='bad'?0:1,d:v.d,c:v.c,ico:v.c==='bad'?'✕':'⚠',t:`${esc(x.nombre)}${x.lote?' · lote '+esc(x.lote):''}`,s:`${v.t} (${esc(x.vence)})`,i});
+  if(x.cantidad!==''&&x.cantidad!=null&&Number(x.cantidad)<=0)items.push({sev:2,d:0,c:'warn',ico:'▢',t:esc(x.nombre),s:'Existencia en cero',i})});
+ items.sort((a,b)=>a.sev-b.sev||a.d-b.d);
+ const venc=items.filter(a=>a.sev===0).length,prox=items.filter(a=>a.sev===1).length,cero=items.filter(a=>a.sev===2).length;
+ const nb=$('navMat'),tot=venc+prox;nb.hidden=!tot;nb.textContent=tot;nb.className='navbadge'+(venc?' bad':'');
+ $('alerts').innerHTML=`<div class="alertsum"><span class="pill ${venc?'bad':'good'}">✕ ${venc} vencida${venc===1?'':'s'}</span><span class="pill ${prox?'warn':'good'}">⚠ ${prox} por vencer (${AVISO_DIAS} días)</span><span class="pill ${cero?'warn':'good'}">▢ ${cero} sin existencia</span></div>`+
+  (items.length?`<div class="alertlist">${items.slice(0,6).map(a=>`<button class="alertitem ${a.c}" onclick="go('materias');filters.materias.q='';render()"><span class="ai">${a.ico}</span><span><b>${a.t}</b><span class="muted small">${a.s}</span></span></button>`).join('')}${items.length>6?`<div class="muted small" style="padding:6px 2px">y ${items.length-6} alerta${items.length-6===1?'':'s'} más en Materias primas.</div>`:''}</div>`:'<div class="muted small" style="margin-top:10px">✓ No hay materias primas vencidas, por vencer ni sin existencia.</div>');
+}
+
+/* ===================== INFORMES PARA IMPRIMIR / PDF ===================== */
+function printReport(k,i){
+ const x=db[k][i];if(!x)return;
+ const brand=esc(appearance.brand||'QUIMLAB PRO'),logo=localStorage.getItem(LKEY),acc=appearance.accent;
+ const row=(l,v)=>`<tr><th>${l}</th><td>${v===undefined||v===null||v===''?'—':esc(v)}</td></tr>`;
+ const tbl=(h,rows)=>rows.length?`<table class="list"><thead><tr>${h.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`:'<p class="none">Sin registros asociados.</p>';
+ let title,code,body='';
+ const composition=(f,kg)=>{const tot=f.items.reduce((a,b)=>a+Number(b.cantidad||0),0)||1;return tbl(['Componente','Cantidad fórmula (g)','%'].concat(kg?[`Para ${esc(kg)} kg`]:[]),f.items.map(it=>{const pc=Number(it.cantidad)/tot;return `<tr><td>${esc(it.nombre)}</td><td>${esc(it.cantidad)}</td><td>${(pc*100).toFixed(2)}%</td>${kg?`<td>${(pc*Number(kg)).toFixed(3)} kg</td>`:''}</tr>`}))+`<p class="note">Porcentajes calculados sobre la suma de componentes (${tot.toFixed(2)} g).${kg?' Cantidades escaladas proporcionalmente a la cantidad programada; verificar contra la fórmula aprobada.':''}</p>`};
+ if(k==='formulas'){title='Ficha de formulación';code=x.codigo||x.nombre;
+  body=`<h2>Datos generales</h2><table class="kv">${row('Fórmula',x.nombre)}${row('Código',x.codigo)}${row('Producto / línea',x.tipo)}${row('Lote base (kg)',x.lote)}${row('Fecha de registro',x.fecha)}${x.editado?row('Última edición',x.editado):''}</table>
+  <h2>Composición</h2>${composition(x)}${x.notas?`<h2>Observaciones</h2><p>${esc(x.notas)}</p>`:''}`;
+ }else{
+  const lote=k==='lotes'?x:db.lotes.find(l=>l.codigo===x.lote)||{codigo:x.lote,producto:x.producto};
+  const cod=lote.codigo||'';title=k==='qc'?'Informe de inspección y liberación':'Informe de lote de producción';code=cod;
+  const f=db.formulas.find(fm=>fm.nombre===lote.formula);
+  const ph=db.ph.filter(m=>cod&&m.lote===cod),vis=db.vis.filter(m=>cod&&m.lote===cod),qcs=k==='qc'?[x]:db.qc.filter(q=>cod&&q.lote===cod);
+  body=`<h2>Datos del lote</h2><table class="kv">${row('Orden / lote',lote.codigo)}${row('Producto',lote.producto)}${row('Fórmula utilizada',lote.formula)}${row('Cantidad programada (kg)',lote.prog)}${row('Cantidad fabricada (kg)',lote.fab)}${row('Equipo',lote.maquina)}${row('Responsable',lote.resp)}${row('Estado',lote.estado)}${row('Fecha',lote.fecha)}</table>${lote.notas?`<p><b>Observaciones:</b> ${esc(lote.notas)}</p>`:''}
+  ${f?`<h2>Composición — ${esc(f.nombre)}</h2>${composition(f,Number(lote.prog)>0?lote.prog:null)}`:''}
+  <h2>Mediciones de pH</h2>${tbl(['Fecha','Muestra','pH','Rango','Temp. °C','Estado','Responsable'],ph.map(m=>`<tr><td>${esc(m.fecha)}</td><td>${esc(m.producto)}</td><td><b>${esc(m.valor)}</b></td><td>${esc(m.min??'—')} – ${esc(m.max??'—')}</td><td>${esc(m.temp||'—')}</td><td>${esc(m.estado)}</td><td>${esc(m.resp||'—')}</td></tr>`))}
+  <h2>Viscosidad</h2>${tbl(['Fecha','Resultado','Rango','Temp. °C','Equipo / husillo / RPM','Estado'],vis.map(m=>`<tr><td>${esc(m.fecha)}</td><td><b>${esc(m.valor)} ${esc(m.unidad)}</b></td><td>${esc(m.min??'—')} – ${esc(m.max??'—')}</td><td>${esc(m.temp||'—')}</td><td>${esc([m.equipo,m.husillo,m.rpm&&m.rpm+' RPM'].filter(Boolean).join(' · ')||'—')}</td><td>${esc(m.estado)}</td></tr>`))}
+  <h2>Control de calidad</h2>${qcs.length?qcs.map(q=>`<table class="kv">${row('Fecha',q.fecha)}${row('Resultado',q.estado)}${row('Inspector',q.inspector)}${row('Color / patrón',q.color)}${row('Densidad (g/mL)',q.densidad)}${row('Brillo / método',q.brillo)}${row('Secado / método',q.secado)}${row('Observaciones',q.notas)}</table>`).join(''):'<p class="none">Sin inspecciones registradas.</p>'}`;
+ }
+ const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>${esc(title)} ${esc(code)}</title><style>
+ @page{size:A4;margin:16mm 14mm}*{box-sizing:border-box}body{font:11pt/1.45 "Segoe UI",Arial,sans-serif;color:#111;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid ${acc};padding-bottom:10px;margin-bottom:16px}
+ .brand{display:flex;gap:10px;align-items:center}.logo{width:44px;height:44px;border-radius:10px;background:${acc};color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;overflow:hidden}.logo img{width:100%;height:100%;object-fit:cover}
+ .brand b{font-size:15pt}.brand small{display:block;color:#666;font-size:8pt;letter-spacing:1.5px}.meta{text-align:right;font-size:9pt;color:#555}
+ h1{font-size:16pt;margin:0 0 2px}h2{font-size:11.5pt;margin:18px 0 6px;padding:4px 8px;background:#f1f4f8;border-left:4px solid ${acc}}
+ table{width:100%;border-collapse:collapse;margin-bottom:6px;page-break-inside:auto}tr{page-break-inside:avoid}
+ .kv th{width:34%;text-align:left;font-weight:600;color:#444;background:#fafbfc}.kv th,.kv td{border:1px solid #dde3ea;padding:5px 8px;font-size:10pt}
+ .list th{background:#f1f4f8;text-align:left;font-size:9pt}.list th,.list td{border:1px solid #dde3ea;padding:5px 7px;font-size:9.5pt}
+ .note,.none{font-size:9pt;color:#666}.signs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:46px}.signs div{border-top:1px solid #333;padding-top:5px;font-size:9pt;text-align:center}
+ footer{margin-top:24px;font-size:8pt;color:#888;border-top:1px solid #ddd;padding-top:6px}</style></head><body>
+ <header><div class="brand"><div class="logo">${logo?`<img src="${logo}" alt="">`:brand.charAt(0)}</div><div><b>${brand}</b><small>INDUSTRIAL LAB 4.0</small></div></div><div class="meta"><h1>${esc(title)}</h1>${esc(code)}<br>Generado: ${esc(today())}</div></header>
+ ${body}
+ <div class="signs"><div>Elaboró</div><div>Revisó</div><div>Aprobó / liberó</div></div>
+ <footer>${brand} · Documento generado desde registros locales. Validar métodos y especificaciones con el laboratorio responsable.</footer></body></html>`;
+ const fr=document.createElement('iframe');fr.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(fr);
+ fr.onload=()=>{setTimeout(()=>{try{fr.contentWindow.focus();fr.contentWindow.print()}finally{setTimeout(()=>fr.remove(),1500)}},150)};
+ fr.srcdoc=html;
+}
+
+/* ===================== GRÁFICAS DEL PANEL ===================== */
+function renderCharts(){
+ /* 1. Tendencia de pH: línea de las últimas 15 mediciones */
+ const pts=db.ph.slice(0,15).reverse().filter(x=>Number.isFinite(Number(x.valor)));
+ const ch=$('chartPh');
+ if(!pts.length){ch.innerHTML='<div class="empty">Registra mediciones de pH para ver la tendencia.</div>'}
+ else{
+  const W=320,H=170,L=24,R=10,T=10,B=22,vals=pts.map(p=>Number(p.valor));
+  let lo=Math.max(0,Math.floor(Math.min(...vals)-1)),hi=Math.min(14,Math.ceil(Math.max(...vals)+1));if(hi-lo<2){lo=Math.max(0,lo-1);hi=Math.min(14,hi+1)}
+  const x=i=>pts.length===1?(L+W-R)/2:L+i*(W-L-R)/(pts.length-1),y=v=>T+(hi-v)*(H-T-B)/(hi-lo);
+  const step=Math.max(1,Math.ceil((hi-lo)/4));let grid='';for(let g=lo;g<=hi;g+=step)grid+=`<line x1="${L}" x2="${W-R}" y1="${y(g)}" y2="${y(g)}" class="gridline"/><text x="${L-8}" y="${y(g)+3.5}" class="axis" text-anchor="end">${g}</text>`;
+  const path=pts.map((p,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(Number(p.valor)).toFixed(1)}`).join(' ');
+  const area=`${path} L${x(pts.length-1).toFixed(1)},${H-B} L${x(0).toFixed(1)},${H-B} Z`;
+  const dots=pts.map((p,i)=>{const bad=p.estado==='Fuera de rango',tip=`<b>pH ${esc(p.valor)}</b><br>${esc(p.producto)}${p.lote?' · '+esc(p.lote):''}<br>${esc(p.estado)}${p.min!=null&&p.max!=null?` (${esc(p.min)}–${esc(p.max)})`:''}<br><span class="muted">${esc(p.fecha)}</span>`;
+   return `<g class="pt" data-tip="${esc(tip)}"><circle cx="${x(i)}" cy="${y(Number(p.valor))}" r="12" fill="transparent"/><circle cx="${x(i)}" cy="${y(Number(p.valor))}" r="${bad?5.5:4.5}" class="${bad?'dot-bad':'dot'}"/></g>`}).join('');
+  const out=pts.filter(p=>p.estado==='Fuera de rango').length;
+  ch.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Tendencia de pH de las últimas ${pts.length} mediciones">
+   <defs><linearGradient id="phFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+   ${grid}<path d="${area}" fill="url(#phFill)"/><path d="${path}" class="line"/>${dots}
+   <text x="${L}" y="${H-6}" class="axis">Más antigua</text><text x="${W-R}" y="${H-6}" class="axis" text-anchor="end">Más reciente</text></svg>
+   <div class="chartfoot"><span><i class="lg dot-lg"></i>Medición</span>${out?`<span><i class="lg bad-lg"></i>✕ Fuera de rango (${out})</span>`:''}<span class="muted">Último: <b>${esc(pts[pts.length-1].valor)}</b></span></div>`;
+ }
+ /* 2. Lotes por estado: barras horizontales (un solo tono) */
+ const ESTADOS=['Pendiente','En preparación','Mezclando','En laboratorio','Aprobado','Rechazado','Terminado'];
+ const cnt=ESTADOS.map(s=>({s,c:db.lotes.filter(x=>x.estado===s).length})),mx=Math.max(1,...cnt.map(o=>o.c));
+ $('chartLotes').innerHTML=db.lotes.length?`<div class="hbars">${cnt.map(o=>`<div class="hbar" data-tip="<b>${o.s}</b><br>${o.c} lote${o.c===1?'':'s'} · ${Math.round(o.c/db.lotes.length*100)}%"><span class="hl">${o.s}</span><span class="ht"><span style="width:${o.c?Math.max(3,o.c/mx*100):0}%"></span></span><b class="hv">${o.c}</b></div>`).join('')}</div>`:'<div class="empty">Registra lotes para ver su distribución por estado.</div>';
+ /* 3. Resultados de calidad: barra apilada con colores de estado + icono + etiqueta */
+ const QS=[{s:'Aprobado',c:'var(--good)',i:'✓'},{s:'Requiere ajuste',c:'var(--warn)',i:'⚠'},{s:'Pendiente',c:'var(--subtle)',i:'◷'},{s:'Rechazado',c:'var(--bad)',i:'✕'}];
+ const tq=db.qc.length,qd=QS.map(q=>({...q,n:db.qc.filter(x=>x.estado===q.s).length}));
+ $('chartQc').innerHTML=tq?`<div class="hero"><span class="metric">${Math.round(qd[0].n/tq*100)}%</span><span class="muted small">de aprobación · ${tq} inspecci${tq===1?'ón':'ones'}</span></div>
+  <div class="stack">${qd.filter(q=>q.n).map(q=>`<span style="flex:${q.n};background:${q.c}" data-tip="<b>${q.i} ${q.s}</b><br>${q.n} · ${Math.round(q.n/tq*100)}%"></span>`).join('')}</div>
+  <div class="qlegend">${qd.map(q=>`<div><i class="lg" style="background:${q.c}"></i>${q.i} ${q.s}<b>${q.n}</b></div>`).join('')}</div>`:'<div class="empty">Registra inspecciones para ver los resultados de calidad.</div>';
+}
+/* Tooltip compartido */
+const tip=$('tip');
+function showTip(el,ev){tip.innerHTML=el.dataset.tip;tip.classList.add('show');const r=tip.getBoundingClientRect();let px=ev.clientX+14,py=ev.clientY-r.height-12;if(px+r.width>innerWidth-8)px=ev.clientX-r.width-14;if(py<8)py=ev.clientY+16;tip.style.left=px+'px';tip.style.top=py+'px'}
+document.addEventListener('pointermove',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');el?showTip(el,e):tip.classList.remove('show')});
+document.addEventListener('pointerdown',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');el?showTip(el,e):tip.classList.remove('show')});
+
+/* ===================== GUARDAR / EDITAR / ELIMINAR ===================== */
+function setVal(id,v){$(id).value=v??''}
+function editItem(k,i){
+ const cfg=FORMS[k],x=db[k][i];if(!x)return;
+ cancelEdit(k,true);go(cfg.page);
+ Object.entries(cfg.fields).forEach(([p,id])=>{if(id==='lFormula'&&x[p]&&![...$(id).options].some(o=>o.value===x[p]))$(id).insertAdjacentHTML('beforeend',`<option>${esc(x[p])}</option>`);setVal(id,x[p])});
+ if(k==='formulas')$('fComponentes').value=x.items.map(it=>`${it.nombre},${it.cantidad}`).join('\n');
+ editing[k]=i;const f=$(cfg.form);f.classList.add('editing');
+ f.querySelector('.edit-banner').innerHTML=`✎ Editando ${cfg.name}: <b>${esc(x.nombre||x.producto||x.codigo||x.lote||'')}</b>`;
+ const sb=f.querySelector('button[type=submit],.actions button:not([type])');sb.textContent='Actualizar '+cfg.name;
+ f.querySelector('.cancel-edit').hidden=false;render();
+ setTimeout(()=>f.closest('.card').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function cancelEdit(k,silent){const f=$(FORMS[k].form);if(editing[k]===null&&!f.classList.contains('editing'))return;editing[k]=null;f.classList.remove('editing');const sb=f.querySelector('button[type=submit],.actions button:not([type])');sb.textContent=sb.dataset.label;f.querySelector('.cancel-edit').hidden=true;if(!silent){f.reset();render()}}
+function upsert(k,obj,where){
+ if(editing[k]!==null&&db[k][editing[k]]){const old=db[k][editing[k]];db[k][editing[k]]={...old,...obj,fecha:old.fecha||today(),editado:today()};cancelEdit(k,true);save();toast('Cambios guardados');return}
+ obj.fecha=today();where==='start'?db[k].unshift(obj):db[k].push(obj);save();toast('Registro guardado correctamente');
+}
+function deleteItem(k,i){if(confirm('¿Eliminar este registro?')){if(editing[k]!==null)cancelEdit(k);db[k].splice(i,1);save();toast('Registro eliminado')}}
+/* Prepara cada formulario: aviso de edición y botón "Cancelar" */
+Object.entries(FORMS).forEach(([k,cfg])=>{const f=$(cfg.form);f.insertAdjacentHTML('afterbegin','<div class="edit-banner"></div>');const sb=f.querySelector('button[type=submit],.actions button:not([type])');sb.dataset.label=sb.textContent;sb.insertAdjacentHTML('afterend','<button type="button" class="secondary cancel-edit" hidden>Cancelar edición</button>');f.querySelector('.cancel-edit').addEventListener('click',()=>cancelEdit(k));f.addEventListener('reset',()=>{if(editing[k]!==null)setTimeout(()=>cancelEdit(k,true))})});
+const numOrNull=id=>$(id).value===''?null:Number($(id).value);
+const rangeState=(v,min,max)=>min===null||max===null?'Sin rango':v>=min&&v<=max?'Dentro de rango':'Fuera de rango';
+$('formulaForm').addEventListener('submit',e=>{e.preventDefault();let lines=$('fComponentes').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{let p=s.split(',');return {nombre:p.slice(0,-1).join(',').trim(),cantidad:Number(p[p.length-1])}});if(!lines.length||lines.some(x=>!x.nombre||!Number.isFinite(x.cantidad)||x.cantidad<0)){alert('Revisa los componentes. Usa nombre,cantidad en gramos.');return}let total=lines.reduce((a,b)=>a+b.cantidad,0);if(total<=0){alert('La suma de componentes debe ser mayor que cero.');return}const fp=$('formulaPreview');fp.classList.remove('empty');fp.innerHTML=`<div class="metric">${total.toFixed(2)} g</div><div class="muted small">Suma de componentes</div>`+lines.map(x=>`<div style="margin-top:12px"><div style="display:flex;justify-content:space-between"><b>${esc(x.nombre)}</b><span class="muted">${x.cantidad} g · ${(x.cantidad/total*100).toFixed(1)}%</span></div><div class="meter"><span style="width:${x.cantidad/total*100}%"></span></div></div>`).join('');upsert('formulas',{nombre:$('fNombre').value,codigo:$('fCodigo').value,tipo:$('fTipo').value,lote:$('fLote').value,items:lines,total,notas:$('fNotas').value},'end');e.target.reset()});
+$('phForm').addEventListener('submit',e=>{e.preventDefault();let v=Number($('phValor').value),min=numOrNull('phMin'),max=numOrNull('phMax'),state=rangeState(v,min,max);upsert('ph',{producto:$('phProducto').value,lote:$('phLote').value,valor:v,min,max,temp:$('phTemp').value,equipo:$('phEquipo').value,resp:$('phResp').value,estado:state},'start');$('phDisplay').textContent=v.toFixed(2);$('phMeter').style.width=(v/14*100)+'%';$('phStatus').textContent=state==='Dentro de rango'?'✓ Resultado dentro del rango configurado.':state==='Fuera de rango'?'⚠ ATENCIÓN: resultado fuera del rango configurado.':'Medición guardada; no se definió rango de aceptación.';$('phStatus').style.borderLeftColor=state==='Dentro de rango'?'var(--good)':state==='Fuera de rango'?'var(--bad)':'';e.target.reset()});
+$('visForm').addEventListener('submit',e=>{e.preventDefault();let v=Number($('vValor').value),min=numOrNull('vMin'),max=numOrNull('vMax');upsert('vis',{producto:$('vProducto').value,lote:$('vLote').value,valor:v,unidad:$('vUnidad').value,temp:$('vTemp').value,equipo:$('vEquipo').value,husillo:$('vHusillo').value,rpm:$('vRpm').value,min,max,resp:$('vResp').value,estado:rangeState(v,min,max)},'start');e.target.reset()});
+$('loteForm').addEventListener('submit',e=>{e.preventDefault();upsert('lotes',{codigo:$('lCodigo').value,producto:$('lProducto').value,formula:$('lFormula').value,prog:$('lProgramada').value,fab:$('lFabricada').value,maquina:$('lMaquina').value,resp:$('lResp').value,estado:$('lEstado').value,notas:$('lNotas').value},'start');e.target.reset()});
+$('matForm').addEventListener('submit',e=>{e.preventDefault();upsert('materias',{nombre:$('mNombre').value,codigo:$('mCodigo').value,tipo:$('mTipo').value,cantidad:$('mCantidad').value,unidad:$('mUnidad').value,lote:$('mLote').value,proveedor:$('mProveedor').value,vence:$('mVence').value,ubicacion:$('mUbicacion').value},'end');e.target.reset()});
+$('eqForm').addEventListener('submit',e=>{e.preventDefault();upsert('equipos',{nombre:$('eNombre').value,codigo:$('eCodigo').value,tipo:$('eTipo').value,capacidad:$('eCapacidad').value,rpm:$('eRpm').value,estado:$('eEstado').value,notas:$('eNotas').value},'end');e.target.reset()});
+$('qcForm').addEventListener('submit',e=>{e.preventDefault();upsert('qc',{lote:$('qLote').value,producto:$('qProducto').value,estado:$('qEstado').value,inspector:$('qInspector').value,color:$('qColor').value,densidad:$('qDensidad').value,brillo:$('qBrillo').value,secado:$('qSecado').value,notas:$('qNotas').value},'start');e.target.reset()});
+
+/* ===================== COPIA DE SEGURIDAD: EXPORTAR / IMPORTAR ===================== */
+$('importFile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();r.onload=()=>{let d;try{d=JSON.parse(r.result)}catch(err){alert('El archivo no es un JSON válido.');return}
+ if(!d||typeof d!=='object'||!COLS.some(k=>Array.isArray(d[k]))){alert('El archivo no es una copia de seguridad válida de QUIMLAB PRO.');return}
+ const nd=normalize(d),tot=COLS.reduce((a,k)=>a+nd[k].length,0);
+ const resumen=`Fórmulas: ${nd.formulas.length} · pH: ${nd.ph.length} · Viscosidad: ${nd.vis.length} · Lotes: ${nd.lotes.length} · Materias: ${nd.materias.length} · Equipos: ${nd.equipos.length} · Calidad: ${nd.qc.length}`;
+ if(!confirm(`Copia de seguridad con ${tot} registros:\n${resumen}\n\nAceptar = REEMPLAZAR los datos actuales por los de la copia.\nCancelar = no hacer cambios.\n\nConsejo: exporta primero una copia de los datos actuales.`))return;
+ COLS.forEach(k=>cancelEdit(k,true));db=nd;save();toast(`Copia importada: ${tot} registros`)};r.readAsText(f)});
+function exportBackup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='QUIMLAB_PRO_respaldo_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href)}
+
+/* ===================== APARIENCIA: TEMA, PALETA Y LOGO ===================== */
+const AKEY='quimlab_appearance',LKEY='quimlab_logo';
+const PALETTES=[
+ {name:'Océano',a:'#36c5dc',b:'#568cff'},
+ {name:'Esmeralda',a:'#22c58b',b:'#0ea5a4'},
+ {name:'Violeta',a:'#a78bfa',b:'#6d5bf5'},
+ {name:'Coral',a:'#ff7a59',b:'#f43f5e'},
+ {name:'Ámbar',a:'#f5b83d',b:'#f07c2a'},
+ {name:'Rosa',a:'#f472b6',b:'#c026d3'},
+ {name:'Índigo',a:'#6366f1',b:'#3b5bdb'},
+ {name:'Grafito',a:'#94a3b8',b:'#475569'}
+];
+let appearance=Object.assign({mode:'dark',accent:PALETTES[0].a,accent2:PALETTES[0].b,brand:''},JSON.parse(localStorage.getItem(AKEY)||'{}'));
+const mq=matchMedia('(prefers-color-scheme: light)');
+function luminance(hex){const n=parseInt(hex.slice(1),16),c=[n>>16,(n>>8)&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function shade(hex,amt){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;r=Math.round(r*(1-amt));g=Math.round(g*(1-amt));b=Math.round(b*(1-amt));return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}
+function applyAppearance(){
+ const root=document.documentElement;
+ const mode=appearance.mode==='auto'?(mq.matches?'light':'dark'):appearance.mode;
+ root.dataset.theme=mode;
+ appearance.onAccent=luminance(appearance.accent)>.45?'#06121f':'#ffffff';
+ root.style.setProperty('--accent',appearance.accent);
+ root.style.setProperty('--accent-2',appearance.accent2);
+ root.style.setProperty('--on-accent',appearance.onAccent);
+ $('themeToggle').textContent=mode==='dark'?'☀':'☾';
+ document.querySelectorAll('#modeSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.mode===appearance.mode));
+ document.querySelectorAll('.swatch-btn').forEach(b=>b.classList.toggle('on',b.dataset.a===appearance.accent));
+ $('customColor').value=appearance.accent;
+ const name=appearance.brand||'QUIMLAB PRO';$('brandName').textContent=name;$('brandInput').value=appearance.brand;
+ const letter=esc(name.trim().charAt(0).toUpperCase()||'Q');
+ const logo=localStorage.getItem(LKEY);
+ [$('logoBox'),$('logoPreview')].forEach(el=>el.innerHTML=logo?`<img src="${logo}" alt="Logotipo">`:letter);
+ localStorage.setItem(AKEY,JSON.stringify(appearance));
+}
+$('palette').innerHTML=PALETTES.map(p=>`<div><button class="swatch-btn" data-a="${p.a}" data-b="${p.b}" title="${p.name}" style="background:linear-gradient(135deg,${p.a},${p.b})"></button><div class="swatch-name">${p.name}</div></div>`).join('');
+document.querySelectorAll('.swatch-btn').forEach(b=>b.addEventListener('click',()=>{appearance.accent=b.dataset.a;appearance.accent2=b.dataset.b;applyAppearance()}));
+$('customColor').addEventListener('input',e=>{appearance.accent=e.target.value;appearance.accent2=shade(e.target.value,.28);applyAppearance()});
+document.querySelectorAll('#modeSwitch button').forEach(b=>b.addEventListener('click',()=>{appearance.mode=b.dataset.mode;applyAppearance()}));
+$('themeToggle').addEventListener('click',()=>{appearance.mode=document.documentElement.dataset.theme==='dark'?'light':'dark';applyAppearance();toast(appearance.mode==='dark'?'Modo oscuro activado':'Modo claro activado')});
+mq.addEventListener('change',()=>{if(appearance.mode==='auto')applyAppearance()});
+$('brandInput').addEventListener('input',e=>{appearance.brand=e.target.value.trim();applyAppearance()});
+$('logoFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('Selecciona un archivo de imagen.');return}
+ const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const s=256,c=document.createElement('canvas');c.width=c.height=s;const ctx=c.getContext('2d'),m=Math.min(img.width,img.height);ctx.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,s,s);try{localStorage.setItem(LKEY,c.toDataURL('image/png'));applyAppearance();toast('Imagen actualizada')}catch(err){alert('No se pudo guardar la imagen en este dispositivo.')}};img.src=r.result};r.readAsDataURL(f);e.target.value=''});
+function resetLogo(){localStorage.removeItem(LKEY);applyAppearance();toast('Imagen eliminada')}
+function resetAppearance(){appearance={mode:'dark',accent:PALETTES[0].a,accent2:PALETTES[0].b,brand:''};localStorage.removeItem(LKEY);applyAppearance();toast('Apariencia restablecida')}
+function openDrawer(){$('drawer').classList.add('open');$('overlay').classList.add('open')}
+function closeDrawer(){$('drawer').classList.remove('open');$('overlay').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+let tt;function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2000)}
+
+applyAppearance();
+render();
+</script>
+</body></html>

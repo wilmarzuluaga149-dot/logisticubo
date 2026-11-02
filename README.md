@@ -22,3 +22,22 @@ La última milla y el transporte de larga distancia requieren un control estrict
 
 6. Conclusión y Mejora Continua
 Implementar controles rigurosos en cada etapa de la cadena logística asegura una ventaja competitiva sostenible. La retroalimentación constante y el análisis de indicadores (KPIs) permiten identificar áreas de oportunidad y eficiencia operativa.
+
+---
+
+## Aplicaciones en este repositorio
+
+| Archivo | Aplicación |
+|---|---|
+| `index.html.html` | **LogistiCubo**: herramienta de logística, cubicaje y seguridad BASC. |
+| `QUIMLAB_PRO_4_0.html` | **QUIMLAB PRO 4.0**: gestión de laboratorio químico industrial (formulación, pH, viscosidad, lotes, materias primas, equipos y control de calidad). |
+
+Las dos son archivos HTML independientes: basta con abrirlos en el navegador. Los datos se guardan en el propio dispositivo (localStorage).
+
+### Funciones de QUIMLAB PRO 4.0
+- Modo claro, oscuro o automático; paleta de 8 colores y color personalizado; logotipo y nombre propios.
+- Panel con gráficas: tendencia de pH, lotes por estado y resultados de calidad.
+- Edición de registros, buscador y filtros en cada tabla.
+- Alertas de materias primas vencidas, por vencer (30 días) y sin existencia.
+- Informes para imprimir o guardar en PDF: ficha de formulación e informe de lote o de inspección.
+- Copia de seguridad: exportar e importar en formato `.json`.
