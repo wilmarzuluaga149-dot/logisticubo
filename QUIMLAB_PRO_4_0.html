@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUIMLAB PRO 4.0 | Laboratorio Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+/* Aplica tema y color antes de pintar la página (evita parpadeo) */
+(function(){try{var p=JSON.parse(localStorage.getItem('quimlab_appearance')||'{}');var m=p.mode||'dark';if(m==='auto')m=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=m;if(p.accent){document.documentElement.style.setProperty('--accent',p.accent);document.documentElement.style.setProperty('--accent-2',p.accent2||p.accent);document.documentElement.style.setProperty('--on-accent',p.onAccent||'#06121f')}}catch(e){}})();
+</script>
+<style>
+/* ===================== TOKENS ===================== */
+:root{
+ --accent:#36c5dc;--accent-2:#568cff;--on-accent:#06121f;
+ --good:#2fbf84;--warn:#e9a93a;--bad:#ec5f6b;
+ --radius:18px;--radius-sm:12px;
+ --font:"Plus Jakarta Sans",Inter,"Segoe UI",system-ui,Arial,sans-serif;
+}
+:root[data-theme="dark"]{
+ color-scheme:dark;
+ --bg:#080d18;--bg-glow:color-mix(in srgb,var(--accent) 16%,transparent);
+ --surface:#0f1828;--surface-2:#142036;--surface-3:#1a2942;
+ --sidebar:#0a1220;--line:#22324a;--line-soft:#1b2a40;
+ --text:#e8eef8;--muted:#8fa1ba;--subtle:#5d7090;
+ --input:#0b1422;--shadow:0 18px 40px -18px #000c,0 2px 6px #0004;
+ --accent-ink:color-mix(in srgb,var(--accent) 80%,#fff);
+}
+:root[data-theme="light"]{
+ color-scheme:light;
+ --bg:#f2f5fa;--bg-glow:color-mix(in srgb,var(--accent) 14%,transparent);
+ --surface:#ffffff;--surface-2:#f7f9fc;--surface-3:#eef2f8;
+ --sidebar:#ffffff;--line:#e1e7f0;--line-soft:#edf1f7;
+ --text:#101a2c;--muted:#5a6a82;--subtle:#94a1b5;
+ --input:#ffffff;--shadow:0 14px 34px -20px #1b2c4a40,0 1px 3px #1b2c4a14;
+ --accent-ink:color-mix(in srgb,var(--accent) 70%,#000);
+}
+
+/* ===================== BASE ===================== */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(900px 500px at 85% -10%,var(--bg-glow),transparent 70%),radial-gradient(700px 400px at 0% 110%,color-mix(in srgb,var(--accent-2) 8%,transparent),transparent 70%),var(--bg);background-attachment:fixed;color:var(--text);font:14px/1.5 var(--font);-webkit-font-smoothing:antialiased;transition:background-color .3s,color .3s}
+::selection{background:color-mix(in srgb,var(--accent) 35%,transparent)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:11px;padding:10px 16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);font-weight:700;letter-spacing:.1px;box-shadow:0 6px 18px -8px color-mix(in srgb,var(--accent) 70%,transparent);transition:transform .15s,box-shadow .2s,filter .2s}
+button:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 10px 24px -10px color-mix(in srgb,var(--accent) 80%,transparent)}
+button:active{transform:translateY(0)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--line);box-shadow:none}
+button.secondary:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--line));background:var(--surface-3)}
+button.danger{background:color-mix(in srgb,var(--bad) 14%,var(--surface));color:var(--bad);border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);box-shadow:none}
+button.small{padding:6px 11px;font-size:11.5px;border-radius:9px}
+button.icon{width:40px;height:40px;padding:0;display:grid;place-items:center;font-size:17px}
+
+/* ===================== LAYOUT ===================== */
+.app{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+.sidebar{background:var(--sidebar);border-right:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;transition:background-color .3s}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 8px 24px}
+.logo{width:46px;height:46px;flex:none;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:var(--on-accent);font-size:22px;font-weight:800;box-shadow:0 8px 20px -8px color-mix(in srgb,var(--accent) 80%,transparent);overflow:hidden}
+.logo img{width:100%;height:100%;object-fit:cover}
+.brand b{font-size:16.5px;letter-spacing:.8px}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;font-weight:600}
+.navlabel{color:var(--subtle);font-size:10px;font-weight:800;letter-spacing:1.6px;padding:12px 12px 8px}
+.nav button{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:transparent;color:var(--muted);padding:10px 12px;margin:2px 0;font-weight:600;box-shadow:none;border:1px solid transparent;position:relative}
+.nav button:hover{background:var(--surface-2);color:var(--text);transform:none}
+.nav button.active{background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--text);border-color:color-mix(in srgb,var(--accent) 28%,transparent)}
+.nav button.active:before{content:"";position:absolute;left:-16px;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+.nav .ico{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:var(--accent-ink);background:color-mix(in srgb,var(--accent) 10%,transparent);font-size:14px;flex:none}
+.nav button.active .ico{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent)}
+.sidefoot{margin-top:auto;color:var(--subtle);font-size:11px;border-top:1px solid var(--line);padding:14px 8px 0}
+.sidefoot button{width:100%;margin-bottom:12px}
+
+main{min-width:0;padding:28px 32px;max-width:1600px;width:100%;margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:26px}
+.eyebrow{color:var(--accent-ink);font-size:11px;letter-spacing:2px;font-weight:800}
+.topbar h1{font-size:28px;margin:4px 0;letter-spacing:-.4px}
+.sub{color:var(--muted)}.sub:first-letter{text-transform:uppercase}
+.topactions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.status{border:1px solid color-mix(in srgb,var(--good) 35%,transparent);background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good);padding:8px 13px;border-radius:30px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:7px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 0 var(--good);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--good) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+.page{display:none}.page.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}
+.two{grid-template-columns:1.25fr .75fr}.three{grid-template-columns:repeat(3,1fr)}
+
+/* ===================== CARDS ===================== */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:background-color .3s,border-color .3s,transform .2s}
+.stats .card{position:relative;overflow:hidden}
+.stats .card:after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c,var(--accent)) 20%,transparent),transparent 70%)}
+.stats .card:hover,.quick .card:hover{transform:translateY(-3px)}
+.stats .card:nth-child(2){--c:var(--accent-2)}.stats .card:nth-child(3){--c:var(--good)}.stats .card:nth-child(4){--c:var(--warn)}
+.stathead{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12.5px;font-weight:600}
+.statnum{font-size:32px;font-weight:800;margin:12px 0 2px;letter-spacing:-.5px}
+.statnote{font-size:11.5px;color:var(--subtle)}
+.staticon{width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--c,var(--accent)) 15%,transparent);display:grid;place-items:center;color:var(--c,var(--accent));font-size:17px;position:relative;z-index:1}
+h2{font-size:17px;margin:0 0 16px;letter-spacing:-.2px}h3{font-size:14.5px;margin:0 0 10px}
+.muted{color:var(--muted)}.small{font-size:11.5px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:26px 0 13px}.sectionhead h2{margin:0}
+.quick .card{display:flex;flex-direction:column;align-items:flex-start}
+.quick .card p{flex:1}
+.quick .qi{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:19px;margin-bottom:12px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent-ink)}
+
+/* ===================== TABLES ===================== */
+.tablewrap{overflow:auto;padding:6px}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:620px}
+th,td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--line-soft);font-size:12.5px}
+th{color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.6px;text-transform:uppercase;background:var(--surface-2)}
+th:first-child{border-radius:10px 0 0 10px}th:last-child{border-radius:0 10px 10px 0}
+th{border-bottom:0}
+tbody tr{transition:background-color .15s}
+tbody tr:hover td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+tbody tr:last-child td{border-bottom:0}
+.pill{display:inline-block;padding:4px 10px;border-radius:20px;background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent-ink);font-size:10.5px;font-weight:800;white-space:nowrap}
+.pill.good{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.pill.warn{background:color-mix(in srgb,var(--warn) 17%,transparent);color:var(--warn)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+
+/* ===================== FORMS ===================== */
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
+label{font-size:11.5px;color:var(--muted);font-weight:700}
+input,select,textarea{width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:var(--input);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s,background-color .3s}
+input::placeholder,textarea::placeholder{color:var(--subtle)}
+input:hover,select:hover,textarea:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent)}
+textarea{min-height:80px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.metric{font-size:34px;font-weight:800;letter-spacing:-.5px}
+.meter{height:9px;border-radius:20px;background:var(--surface-3);overflow:hidden;margin:12px 0}
+.meter span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;border-radius:20px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.meter.ph{background:linear-gradient(90deg,#e5484d,#f59e0b,#eab308,#22c55e,#14b8a6,#3b82f6,#7c3aed);position:relative;overflow:visible;height:12px}
+.meter.ph span{background:none;position:relative}
+.meter.ph span:after{content:"";position:absolute;right:-8px;top:-5px;width:16px;height:22px;border-radius:6px;background:var(--surface);border:3px solid var(--text);box-shadow:var(--shadow)}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1.5px dashed var(--line);border-radius:14px;background:var(--surface-2)}
+.notice{padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--accent) 9%,transparent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-left:4px solid var(--accent);color:var(--text);font-size:12.5px;margin-bottom:15px}
+ul.muted li{margin:5px 0}
+.recent-item{padding:11px 0;border-bottom:1px solid var(--line-soft);display:flex;gap:12px;align-items:center}
+.recent-item:last-child{border-bottom:0}
+.recent-item .dot{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent-ink)}
+
+/* Equipos */
+.machine{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:14px;margin:9px 0;background:var(--surface-2)}
+.tank{width:52px;height:58px;flex:none;border:3px solid var(--subtle);border-radius:10px 10px 16px 16px;position:relative;background:linear-gradient(180deg,transparent 40%,color-mix(in srgb,var(--accent) 35%,transparent) 40%);overflow:visible}
+.tank:before{content:"";position:absolute;left:21px;top:-14px;height:30px;border-left:3px solid var(--subtle)}
+.tank:after{content:"";position:absolute;left:9px;right:9px;top:14px;border-top:3px solid var(--accent);border-radius:3px;animation:spin 1.6s linear infinite}
+@keyframes spin{0%{transform:scaleX(1)}50%{transform:scaleX(.2)}100%{transform:scaleX(1)}}
+.footer{color:var(--subtle);font-size:10.5px;text-align:center;margin:34px 0 8px}
+
+/* ===================== PANEL APARIENCIA ===================== */
+.overlay{position:fixed;inset:0;background:#0007;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(380px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:50;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding:22px;overflow:auto;box-shadow:-20px 0 50px -20px #0008}
+.drawer.open{transform:none}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.drawer h2{margin:0}
+.drawer h3{margin:24px 0 10px;font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted)}
+.mode-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mode-switch button{background:var(--surface-2);color:var(--text);border:1.5px solid var(--line);box-shadow:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;font-size:12px}
+.mode-switch button .prev{width:100%;height:42px;border-radius:8px;border:1px solid var(--line)}
+.mode-switch button[data-mode="light"] .prev{background:linear-gradient(90deg,#fff 30%,#f2f5fa 30%)}
+.mode-switch button[data-mode="dark"] .prev{background:linear-gradient(90deg,#0a1220 30%,#080d18 30%)}
+.mode-switch button[data-mode="auto"] .prev{background:linear-gradient(135deg,#fff 50%,#0a1220 50%)}
+.mode-switch button.on{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.palette{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.swatch-btn{width:100%;display:block;aspect-ratio:1;border-radius:14px;padding:0;border:2px solid transparent;box-shadow:none;position:relative}
+.swatch-btn.on{border-color:var(--text)}
+.swatch-btn.on:after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:18px;text-shadow:0 1px 3px #0008}
+.swatch-name{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+.custom-row{display:flex;gap:10px;align-items:center;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.custom-row input[type=color]{width:46px;height:40px;padding:3px;border-radius:10px;cursor:pointer}
+.logo-edit{display:flex;gap:14px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.logo-edit .logo{width:60px;height:60px;font-size:26px}
+.preview-card{margin-top:10px;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,30px);opacity:0;background:var(--text);color:var(--surface);padding:10px 16px;border-radius:12px;font-weight:600;font-size:12.5px;transition:.3s;z-index:60;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:900px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .sidebar{height:auto;position:sticky;top:0;z-index:20;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+ .brand{padding:2px 4px 10px}.logo{width:38px;height:38px;font-size:18px}
+ .nav{display:flex;overflow:auto;gap:6px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}
+ .navlabel,.sidefoot{display:none}
+ .nav button{white-space:nowrap;width:auto;font-size:12px;padding:8px 12px}.nav .ico{display:none}.nav button.active:before{display:none}
+ main{padding:20px 16px;min-width:0}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two,.three{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .topbar{align-items:flex-start;flex-direction:column}.topbar h1{font-size:23px}
+ .stats{gap:10px}.card{padding:15px}.statnum{font-size:25px}.formgrid{grid-template-columns:1fr}
+ .status{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+ <div class="brand"><div class="logo" id="logoBox">Q</div><div><b id="brandName">QUIMLAB PRO</b><small>INDUSTRIAL LAB 4.0</small></div></div>
+ <div class="navlabel">PLATAFORMA</div>
+ <nav class="nav">
+  <button class="active" data-page="dashboard"><span class="ico">▦</span>Panel principal</button>
+  <button data-page="formulas"><span class="ico">◈</span>Formulación y colores</button>
+  <button data-page="mediciones"><span class="ico">◉</span>Laboratorio / pH</button>
+  <button data-page="viscosidad"><span class="ico">≋</span>Viscosidad</button>
+  <button data-page="produccion"><span class="ico">⚙</span>Producción y lotes</button>
+  <button data-page="materias"><span class="ico">▤</span>Materias primas</button>
+  <button data-page="equipos"><span class="ico">▥</span>Equipos mezcladores</button>
+  <button data-page="calidad"><span class="ico">✓</span>Control de calidad</button>
+ </nav>
+ <div class="sidefoot"><button class="secondary" onclick="openDrawer()">🎨 Personalizar apariencia</button>QUIMLAB PRO 4.0<br>Prototipo local · Datos en este dispositivo</div>
+</aside>
+<main>
+ <header class="topbar"><div><div class="eyebrow">SISTEMA DE GESTIÓN QUÍMICA</div><h1 id="pageTitle">Panel principal</h1><div class="sub" id="today"></div></div>
+  <div class="topactions"><span class="status"><i></i>Sistema local activo</span>
+   <button class="secondary icon" id="themeToggle" title="Cambiar modo claro / oscuro" aria-label="Cambiar modo claro / oscuro">☀</button>
+   <button class="secondary icon" onclick="openDrawer()" title="Paleta de colores" aria-label="Abrir paleta de colores">🎨</button>
+   <button class="secondary" onclick="exportBackup()">⇩ Copia de seguridad</button></div></header>
+
+<section class="page active" id="dashboard">
+ <div class="grid stats">
+  <div class="card"><div class="stathead">Fórmulas registradas <span class="staticon">◈</span></div><div class="statnum" id="sFormulas">0</div><div class="statnote">Biblioteca de formulaciones</div></div>
+  <div class="card"><div class="stathead">Lotes registrados <span class="staticon">⚙</span></div><div class="statnum" id="sLotes">0</div><div class="statnote">Trazabilidad de producción</div></div>
+  <div class="card"><div class="stathead">Materias primas <span class="staticon">▤</span></div><div class="statnum" id="sMaterias">0</div><div class="statnote">Referencias en inventario</div></div>
+  <div class="card"><div class="stathead">Mediciones laboratorio <span class="staticon">◉</span></div><div class="statnum" id="sMediciones">0</div><div class="statnote">Registros de control</div></div>
+ </div>
+ <div class="grid two">
+  <div class="card"><h2>Actividad reciente</h2><div id="recent" class="empty">Aún no hay actividad. Registra una fórmula, medición o lote para comenzar.</div></div>
+  <div class="card"><h2>Centro de alertas</h2><div class="notice">Los rangos de aceptación deben definirse según la ficha técnica de cada producto.</div><div id="alerts" class="muted small">No hay alertas registradas.</div></div>
+ </div>
+ <div class="sectionhead"><h2>Accesos rápidos</h2></div>
+ <div class="grid three quick">
+  <div class="card"><div class="qi">◈</div><h3>Nueva formulación</h3><p class="muted small">Construye y guarda una receta de pigmentos y aditivos.</p><button onclick="go('formulas')">Abrir módulo →</button></div>
+  <div class="card"><div class="qi">◉</div><h3>Registrar pH</h3><p class="muted small">Documenta una medición de laboratorio.</p><button onclick="go('mediciones')">Abrir módulo →</button></div>
+  <div class="card"><div class="qi">⚙</div><h3>Crear lote</h3><p class="muted small">Registra una orden y su trazabilidad.</p><button onclick="go('produccion')">Abrir módulo →</button></div>
+ </div>
+</section>
+
+<section class="page" id="formulas">
+ <div class="grid two">
+  <div class="card"><h2>Constructor de formulaciones</h2><div class="notice">Registra cantidades reales de una receta aprobada. La herramienta calcula proporciones; no genera recetas químicas automáticamente.</div>
+   <form id="formulaForm"><div class="formgrid">
+    <div class="field"><label>Nombre de la fórmula *</label><input id="fNombre" required placeholder="Ej. Azul industrial brillante"></div>
+    <div class="field"><label>Código interno</label><input id="fCodigo" placeholder="QL-COL-001"></div>
+    <div class="field"><label>Producto / línea</label><select id="fTipo"><option>Pintura base agua</option><option>Pintura base solvente</option><option>Recubrimiento</option><option>Pasta pigmentaria</option><option>Otro</option></select></div>
+    <div class="field"><label>Tamaño del lote (kg)</label><input id="fLote" type="number" min="0" step="0.001" value="1"></div>
+    <div class="field full"><label>Componentes (uno por línea: nombre,cantidad en gramos)</label><textarea id="fComponentes" required placeholder="Resina,650&#10;Pigmento azul,120&#10;Aditivo,15&#10;Agua,215"></textarea></div>
+    <div class="field full"><label>Observaciones / versión</label><textarea id="fNotas" placeholder="Versión, patrón de color, notas de laboratorio..."></textarea></div>
+   </div><div class="actions"><button type="submit">Guardar fórmula</button><button type="reset" class="secondary">Limpiar</button></div></form>
+  </div>
+  <div class="card"><h2>Vista de composición</h2><div id="formulaPreview" class="empty">Escribe los componentes y guarda la fórmula para ver su composición.</div><div class="small muted" style="margin-top:12px">Los porcentajes son calculados sobre la suma de los componentes ingresados.</div></div>
+ </div>
+ <div class="sectionhead"><h2>Biblioteca de fórmulas</h2><span class="pill" id="formulaCount">0 registros</span></div>
+ <div class="card tablewrap"><table><thead><tr><th>Fórmula</th><th>Código</th><th>Producto</th><th>Lote base</th><th>Componentes</th><th>Fecha</th><th>Acción</th></tr></thead><tbody id="formulaRows"></tbody></table></div>
+</section>
+
+<section class="page" id="mediciones">
+ <div class="grid two">
+  <div class="card"><h2>Registro de pH</h2><form id="phForm"><div class="formgrid">
+   <div class="field"><label>Producto / muestra *</label><input id="phProducto" required placeholder="Nombre de muestra"></div>
+   <div class="field"><label>Lote</label><input id="phLote" placeholder="Número de lote"></div>
+   <div class="field"><label>Valor medido de pH *</label><input id="phValor" required type="number" min="0" max="14" step="0.01" placeholder="Ej. 8.50"></div>
+   <div class="field"><label>pH mínimo especificado</label><input id="phMin" type="number" min="0" max="14" step="0.01" placeholder="Ej. 8"></div>
+   <div class="field"><label>pH máximo especificado</label><input id="phMax" type="number" min="0" max="14" step="0.01" placeholder="Ej. 9"></div>
+   <div class="field"><label>Temperatura (°C)</label><input id="phTemp" type="number" step="0.1" placeholder="Ej. 25"></div>
+   <div class="field"><label>Equipo / código</label><input id="phEquipo" placeholder="pH-metro"></div>
+   <div class="field"><label>Responsable</label><input id="phResp" placeholder="Operario / analista"></div>
+  </div><div class="actions"><button>Guardar medición</button></div></form></div>
+  <div class="card"><h2>Indicador de pH</h2><div class="metric" id="phDisplay">—</div><div class="meter ph"><span id="phMeter"></span></div><div style="display:flex;justify-content:space-between" class="small muted"><span>0 · Ácido</span><span>7 · Neutro</span><span>14 · Alcalino</span></div><div id="phStatus" class="notice" style="margin-top:18px">Ingresa una medición para visualizar el resultado.</div><p class="small muted">La aceptación depende del rango definido para el producto, no de una regla universal.</p></div>
+ </div>
+ <div class="sectionhead"><h2>Historial de mediciones</h2></div><div class="card tablewrap"><table><thead><tr><th>Fecha</th><th>Muestra</th><th>Lote</th><th>pH</th><th>Rango</th><th>Estado</th><th>Responsable</th></tr></thead><tbody id="phRows"></tbody></table></div>
+</section>
+
+<section class="page" id="viscosidad">
+ <div class="grid two">
+  <div class="card"><h2>Registro de viscosidad</h2><form id="visForm"><div class="formgrid">
+   <div class="field"><label>Producto / muestra *</label><input id="vProducto" required></div><div class="field"><label>Lote</label><input id="vLote"></div>
+   <div class="field"><label>Resultado *</label><input id="vValor" required type="number" min="0" step="0.01"></div><div class="field"><label>Unidad</label><select id="vUnidad"><option>cP</option><option>KU</option><option>mPa·s</option></select></div>
+   <div class="field"><label>Temperatura (°C)</label><input id="vTemp" type="number" step="0.1"></div><div class="field"><label>Instrumento / modelo</label><input id="vEquipo" placeholder="Viscosímetro"></div>
+   <div class="field"><label>Husillo / spindle</label><input id="vHusillo"></div><div class="field"><label>Velocidad (RPM)</label><input id="vRpm" type="number" step="0.1"></div>
+   <div class="field"><label>Mínimo especificado</label><input id="vMin" type="number" step="0.01"></div><div class="field"><label>Máximo especificado</label><input id="vMax" type="number" step="0.01"></div>
+   <div class="field full"><label>Responsable / observaciones</label><input id="vResp"></div>
+  </div><div class="actions"><button>Guardar resultado</button></div></form></div>
+  <div class="card"><h2>Guía de medición</h2><div class="notice">La viscosidad depende de la temperatura y de las condiciones de ensayo.</div><h3>Datos que deben acompañar el resultado</h3><ul class="muted small"><li>Instrumento y calibración vigente.</li><li>Geometría o husillo utilizado.</li><li>Velocidad de rotación.</li><li>Temperatura de la muestra.</li><li>Unidad y método de ensayo.</li></ul><div class="notice">No convertir automáticamente KU a cP sin método y correlación validados para el producto.</div></div>
+ </div>
+ <div class="sectionhead"><h2>Historial de viscosidad</h2></div><div class="card tablewrap"><table><thead><tr><th>Fecha</th><th>Producto</th><th>Lote</th><th>Resultado</th><th>Temperatura</th><th>Equipo / método</th><th>Estado</th></tr></thead><tbody id="vRows"></tbody></table></div>
+</section>
+
+<section class="page" id="produccion">
+ <div class="card"><h2>Registro de producción y trazabilidad</h2><form id="loteForm"><div class="formgrid">
+  <div class="field"><label>Orden / lote *</label><input id="lCodigo" required placeholder="OP-0001"></div><div class="field"><label>Producto *</label><input id="lProducto" required></div>
+  <div class="field"><label>Fórmula utilizada</label><select id="lFormula"><option value="">Seleccionar fórmula</option></select></div><div class="field"><label>Cantidad programada (kg)</label><input id="lProgramada" type="number" min="0" step="0.01"></div>
+  <div class="field"><label>Cantidad fabricada (kg)</label><input id="lFabricada" type="number" min="0" step="0.01"></div><div class="field"><label>Máquina utilizada</label><select id="lMaquina"><option value="">Seleccionar equipo</option><option>Dispersor alta velocidad</option><option>Agitador industrial</option><option>Molino de perlas</option><option>Tanque de preparación</option></select></div>
+  <div class="field"><label>Responsable</label><input id="lResp"></div><div class="field"><label>Estado</label><select id="lEstado"><option>Pendiente</option><option>En preparación</option><option>Mezclando</option><option>En laboratorio</option><option>Aprobado</option><option>Rechazado</option><option>Terminado</option></select></div>
+  <div class="field full"><label>Observaciones</label><textarea id="lNotas"></textarea></div>
+ </div><div class="actions"><button>Guardar lote</button></div></form></div>
+ <div class="sectionhead"><h2>Órdenes registradas</h2></div><div class="card tablewrap"><table><thead><tr><th>Orden</th><th>Producto</th><th>Fórmula</th><th>Programado</th><th>Fabricado</th><th>Equipo</th><th>Estado</th><th>Fecha</th></tr></thead><tbody id="loteRows"></tbody></table></div>
+</section>
+
+<section class="page" id="materias">
+ <div class="grid two">
+  <div class="card"><h2>Alta de materia prima</h2><form id="matForm"><div class="formgrid">
+   <div class="field"><label>Nombre *</label><input id="mNombre" required></div><div class="field"><label>Código</label><input id="mCodigo"></div>
+   <div class="field"><label>Tipo</label><select id="mTipo"><option>Pigmento</option><option>Resina</option><option>Aditivo</option><option>Solvente</option><option>Carga mineral</option><option>Otro</option></select></div><div class="field"><label>Cantidad disponible</label><input id="mCantidad" type="number" min="0" step="0.001"></div>
+   <div class="field"><label>Unidad</label><select id="mUnidad"><option>kg</option><option>g</option><option>L</option><option>unidad</option></select></div><div class="field"><label>Lote proveedor</label><input id="mLote"></div>
+   <div class="field"><label>Proveedor</label><input id="mProveedor"></div><div class="field"><label>Vencimiento</label><input id="mVence" type="date"></div>
+   <div class="field full"><label>Ubicación / ficha de seguridad</label><input id="mUbicacion" placeholder="Estante, zona o referencia documental"></div>
+  </div><div class="actions"><button>Guardar materia prima</button></div></form></div>
+  <div class="card"><h2>Buenas prácticas de almacenamiento</h2><div class="notice">Consulta siempre la hoja de datos de seguridad (SDS) y la ficha técnica del proveedor.</div><ul class="muted small"><li>Separar materiales incompatibles.</li><li>Identificar recipientes y lotes.</li><li>Controlar fechas de vencimiento.</li><li>Usar EPP y ventilación definidos por la SDS.</li><li>Registrar entradas, consumos y ajustes.</li></ul></div>
+ </div>
+ <div class="sectionhead"><h2>Inventario de materias primas</h2></div><div class="card tablewrap"><table><thead><tr><th>Materia prima</th><th>Código</th><th>Tipo</th><th>Disponible</th><th>Lote</th><th>Proveedor</th><th>Vencimiento</th><th>Ubicación</th></tr></thead><tbody id="matRows"></tbody></table></div>
+</section>
+
+<section class="page" id="equipos">
+ <div class="grid two">
+  <div class="card"><h2>Registrar equipo mezclador</h2><form id="eqForm"><div class="formgrid">
+   <div class="field"><label>Nombre del equipo *</label><input id="eNombre" required placeholder="Dispersor 01"></div><div class="field"><label>Código</label><input id="eCodigo"></div>
+   <div class="field"><label>Tipo</label><select id="eTipo"><option>Dispersor alta velocidad</option><option>Agitador</option><option>Molino de perlas</option><option>Tanque de mezcla</option><option>Homogeneizador</option><option>Otro</option></select></div><div class="field"><label>Capacidad (L)</label><input id="eCapacidad" type="number" min="0"></div>
+   <div class="field"><label>RPM nominales</label><input id="eRpm" type="number" min="0"></div><div class="field"><label>Estado</label><select id="eEstado"><option>Disponible</option><option>En operación</option><option>Mantenimiento</option><option>Fuera de servicio</option></select></div>
+   <div class="field full"><label>Último mantenimiento / observaciones</label><input id="eNotas"></div>
+  </div><div class="actions"><button>Guardar equipo</button></div></form></div>
+  <div class="card"><h2>Estación de mezclado</h2><div class="machine"><div class="tank"></div><div><b>Dispersor industrial</b><div class="muted small">Representación conceptual · No conectado a máquina física</div><span class="pill">Modelo visual</span></div></div><div class="notice">La pantalla registra datos operativos manuales. No envía órdenes a motores, variadores ni PLC.</div></div>
+ </div>
+ <div class="sectionhead"><h2>Parque de equipos</h2></div><div id="equipmentList" class="grid two"></div>
+</section>
+
+<section class="page" id="calidad">
+ <div class="card"><h2>Inspección y liberación de lote</h2><form id="qcForm"><div class="formgrid">
+  <div class="field"><label>Lote *</label><input id="qLote" required></div><div class="field"><label>Producto</label><input id="qProducto"></div>
+  <div class="field"><label>Resultado de inspección</label><select id="qEstado"><option>Pendiente</option><option>Aprobado</option><option>Rechazado</option><option>Requiere ajuste</option></select></div><div class="field"><label>Inspector</label><input id="qInspector"></div>
+  <div class="field"><label>Color / patrón</label><input id="qColor" placeholder="Código o referencia"></div><div class="field"><label>Densidad (g/mL)</label><input id="qDensidad" type="number" step="0.001"></div>
+  <div class="field"><label>Brillo / método</label><input id="qBrillo"></div><div class="field"><label>Secado / método</label><input id="qSecado"></div>
+  <div class="field full"><label>Observaciones y evidencia</label><textarea id="qNotas" placeholder="Apariencia, homogeneidad, pruebas realizadas, referencia de ficha técnica..."></textarea></div>
+ </div><div class="actions"><button>Guardar inspección</button></div></form></div>
+ <div class="sectionhead"><h2>Historial de calidad</h2></div><div class="card tablewrap"><table><thead><tr><th>Fecha</th><th>Lote</th><th>Producto</th><th>Estado</th><th>Inspector</th><th>Observaciones</th></tr></thead><tbody id="qcRows"></tbody></table></div>
+</section>
+<div class="footer">QUIMLAB PRO 4.0 · Prototipo de gestión local · Validar métodos y especificaciones con el laboratorio responsable.</div>
+</main></div>
+
+<!-- ===================== PANEL DE APARIENCIA ===================== -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-label="Personalizar apariencia">
+ <div class="drawer-head"><h2>🎨 Apariencia</h2><button class="secondary icon" onclick="closeDrawer()" aria-label="Cerrar">✕</button></div>
+ <div class="muted small">Personaliza colores, modo y logotipo. Se guarda en este dispositivo.</div>
+
+ <h3>Modo de visualización</h3>
+ <div class="mode-switch" id="modeSwitch">
+  <button data-mode="light"><span class="prev"></span>☀ Claro</button>
+  <button data-mode="dark"><span class="prev"></span>☾ Oscuro</button>
+  <button data-mode="auto"><span class="prev"></span>◐ Automático</button>
+ </div>
+
+ <h3>Paleta de colores</h3>
+ <div class="palette" id="palette"></div>
+ <div class="custom-row"><input type="color" id="customColor" value="#36c5dc" aria-label="Color personalizado"><div><b class="small">Color personalizado</b><div class="muted small">Elige cualquier tono para la interfaz</div></div></div>
+
+ <h3>Logotipo / imagen</h3>
+ <div class="logo-edit"><div class="logo" id="logoPreview">Q</div><div style="display:flex;flex-direction:column;gap:8px;flex:1">
+  <button class="small" onclick="$('logoFile').click()">⇪ Subir imagen</button>
+  <button class="secondary small" onclick="resetLogo()">Quitar imagen</button>
+  <input type="file" id="logoFile" accept="image/*" hidden></div></div>
+ <div class="field" style="margin-top:12px"><label>Nombre de la empresa / sistema</label><input id="brandInput" maxlength="28" placeholder="QUIMLAB PRO"></div>
+
+ <h3>Vista previa</h3>
+ <div class="preview-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b>Lote OP-0001</b><span class="pill good">Aprobado</span></div><div class="meter"><span style="width:68%"></span></div><div class="actions" style="margin-top:8px"><button class="small">Botón principal</button><button class="secondary small">Secundario</button></div></div>
+
+ <div class="actions" style="margin-top:22px"><button class="secondary" onclick="resetAppearance()">↺ Restablecer todo</button></div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='quimlab_pro_40_data';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"formulas":[],"ph":[],"vis":[],"lotes":[],"materias":[],"equipos":[],"qc":[]}');
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toLocaleString('es-CO');
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('pageTitle').textContent=document.querySelector(`[data-page="${page}"]`).textContent.trim();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+$('today').textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+function rowEmpty(id,n){return `<tr><td colspan="${n}" class="muted" style="text-align:center;padding:26px">Sin registros todavía.</td></tr>`}
+function render(){
+ $('sFormulas').textContent=db.formulas.length;$('sLotes').textContent=db.lotes.length;$('sMaterias').textContent=db.materias.length;$('sMediciones').textContent=db.ph.length+db.vis.length;
+ $('formulaCount').textContent=db.formulas.length+' registros';
+ $('formulaRows').innerHTML=db.formulas.map((x,i)=>`<tr><td><b>${esc(x.nombre)}</b></td><td>${esc(x.codigo||'—')}</td><td>${esc(x.tipo)}</td><td>${esc(x.lote)} kg</td><td>${x.items.length}</td><td>${esc(x.fecha)}</td><td><button class="danger small" onclick="deleteItem('formulas',${i})">Eliminar</button></td></tr>`).join('')||rowEmpty('formulaRows',7);
+ $('phRows').innerHTML=db.ph.map(x=>`<tr><td>${esc(x.fecha)}</td><td>${esc(x.producto)}</td><td>${esc(x.lote||'—')}</td><td><b>${x.valor}</b></td><td>${x.min??'—'} – ${x.max??'—'}</td><td>${badge(x.estado)}</td><td>${esc(x.resp||'—')}</td></tr>`).join('')||rowEmpty('phRows',7);
+ $('vRows').innerHTML=db.vis.map(x=>`<tr><td>${esc(x.fecha)}</td><td>${esc(x.producto)}</td><td>${esc(x.lote||'—')}</td><td><b>${x.valor} ${esc(x.unidad)}</b></td><td>${x.temp||'—'} °C</td><td>${esc(x.equipo||'—')} ${esc(x.husillo||'')}</td><td>${badge(x.estado)}</td></tr>`).join('')||rowEmpty('vRows',7);
+ $('loteRows').innerHTML=db.lotes.map(x=>`<tr><td><b>${esc(x.codigo)}</b></td><td>${esc(x.producto)}</td><td>${esc(x.formula||'—')}</td><td>${x.prog||'—'} kg</td><td>${x.fab||'—'} kg</td><td>${esc(x.maquina||'—')}</td><td>${badge(x.estado)}</td><td>${esc(x.fecha)}</td></tr>`).join('')||rowEmpty('loteRows',8);
+ $('matRows').innerHTML=db.materias.map(x=>`<tr><td><b>${esc(x.nombre)}</b></td><td>${esc(x.codigo||'—')}</td><td>${esc(x.tipo)}</td><td>${x.cantidad??0} ${esc(x.unidad)}</td><td>${esc(x.lote||'—')}</td><td>${esc(x.proveedor||'—')}</td><td>${esc(x.vence||'—')}</td><td>${esc(x.ubicacion||'—')}</td></tr>`).join('')||rowEmpty('matRows',8);
+ $('qcRows').innerHTML=db.qc.map(x=>`<tr><td>${esc(x.fecha)}</td><td><b>${esc(x.lote)}</b></td><td>${esc(x.producto||'—')}</td><td>${badge(x.estado)}</td><td>${esc(x.inspector||'—')}</td><td>${esc(x.notas||'—')}</td></tr>`).join('')||rowEmpty('qcRows',6);
+ $('equipmentList').innerHTML=db.equipos.map((x,i)=>`<div class="card"><div class="machine"><div class="tank"></div><div><b>${esc(x.nombre)}</b><div class="muted small">${esc(x.tipo)} · ${x.capacidad||'—'} L · ${x.rpm||'—'} RPM</div>${badge(x.estado)}</div></div><div class="small muted">${esc(x.codigo||'Sin código')} · ${esc(x.notas||'Sin observaciones')}</div><div class="actions"><button class="danger small" onclick="deleteItem('equipos',${i})">Eliminar equipo</button></div></div>`).join('')||'<div class="empty">No hay equipos registrados.</div>';
+ $('lFormula').innerHTML='<option value="">Seleccionar fórmula</option>'+db.formulas.map(x=>`<option>${esc(x.nombre)}</option>`).join('');
+ let recent=[...db.formulas.map(x=>({t:'Fórmula: '+x.nombre,d:x.fecha,i:'◈'})),...db.ph.map(x=>({t:'Medición pH: '+x.producto,d:x.fecha,i:'◉'})),...db.lotes.map(x=>({t:'Lote: '+x.codigo,d:x.fecha,i:'⚙'}))].slice(-5).reverse();
+ const rc=$('recent');rc.classList.toggle('empty',!recent.length);
+ rc.innerHTML=recent.length?recent.map(x=>`<div class="recent-item"><span class="dot">${x.i}</span><div><b>${esc(x.t)}</b><div class="muted small">${esc(x.d)}</div></div></div>`).join(''):'Aún no hay actividad. Registra una fórmula, medición o lote para comenzar.';
+ let alerts=db.materias.filter(x=>Number(x.cantidad)<=0).length;$('alerts').innerHTML=alerts?`<span class="pill bad">${alerts}</span> materias primas con existencia en cero.`:'<span class="pill good">OK</span> No hay alertas de inventario por existencia cero.';
+}
+function badge(s){let c=['Aprobado','Disponible','Terminado','Dentro de rango'].includes(s)?'good':['Rechazado','Fuera de servicio','Fuera de rango'].includes(s)?'bad':['Pendiente','Mantenimiento','Requiere ajuste'].includes(s)?'warn':'';return `<span class="pill ${c}">${esc(s)}</span>`}
+function deleteItem(k,i){if(confirm('¿Eliminar este registro?')){db[k].splice(i,1);save();toast('Registro eliminado')}}
+$('formulaForm').addEventListener('submit',e=>{e.preventDefault();let lines=$('fComponentes').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{let p=s.split(',');return {nombre:p.slice(0,-1).join(',').trim(),cantidad:Number(p[p.length-1])}});if(!lines.length||lines.some(x=>!x.nombre||!Number.isFinite(x.cantidad)||x.cantidad<0)){alert('Revisa los componentes. Usa nombre,cantidad en gramos.');return}let total=lines.reduce((a,b)=>a+b.cantidad,0);if(total<=0){alert('La suma de componentes debe ser mayor que cero.');return}db.formulas.push({nombre:$('fNombre').value,codigo:$('fCodigo').value,tipo:$('fTipo').value,lote:$('fLote').value,items:lines,total,notas:$('fNotas').value,fecha:today()});const fp=$('formulaPreview');fp.classList.remove('empty');fp.innerHTML=`<div class="metric">${total.toFixed(2)} g</div><div class="muted small">Suma de componentes</div>`+lines.map(x=>`<div style="margin-top:12px"><div style="display:flex;justify-content:space-between"><b>${esc(x.nombre)}</b><span class="muted">${x.cantidad} g · ${(x.cantidad/total*100).toFixed(1)}%</span></div><div class="meter"><span style="width:${x.cantidad/total*100}%"></span></div></div>`).join('');e.target.reset();save();toast('Fórmula guardada')});
+$('phForm').addEventListener('submit',e=>{e.preventDefault();let v=Number($('phValor').value),min=$('phMin').value===''?null:Number($('phMin').value),max=$('phMax').value===''?null:Number($('phMax').value);let state=min===null||max===null?'Sin rango':v>=min&&v<=max?'Dentro de rango':'Fuera de rango';db.ph.unshift({producto:$('phProducto').value,lote:$('phLote').value,valor:v,min,max,temp:$('phTemp').value,equipo:$('phEquipo').value,resp:$('phResp').value,estado:state,fecha:today()});$('phDisplay').textContent=v.toFixed(2);$('phMeter').style.width=(v/14*100)+'%';$('phStatus').textContent=state==='Dentro de rango'?'✓ Resultado dentro del rango configurado.':state==='Fuera de rango'?'⚠ ATENCIÓN: resultado fuera del rango configurado.':'Medición guardada; no se definió rango de aceptación.';$('phStatus').style.borderLeftColor=state==='Dentro de rango'?'var(--good)':state==='Fuera de rango'?'var(--bad)':'';save();e.target.reset();toast('Medición guardada')});
+$('visForm').addEventListener('submit',e=>{e.preventDefault();let v=Number($('vValor').value),min=$('vMin').value===''?null:Number($('vMin').value),max=$('vMax').value===''?null:Number($('vMax').value);let state=min===null||max===null?'Sin rango':v>=min&&v<=max?'Dentro de rango':'Fuera de rango';db.vis.unshift({producto:$('vProducto').value,lote:$('vLote').value,valor:v,unidad:$('vUnidad').value,temp:$('vTemp').value,equipo:$('vEquipo').value,husillo:$('vHusillo').value,rpm:$('vRpm').value,min,max,resp:$('vResp').value,estado:state,fecha:today()});save();e.target.reset();toast('Resultado guardado')});
+$('loteForm').addEventListener('submit',e=>{e.preventDefault();db.lotes.unshift({codigo:$('lCodigo').value,producto:$('lProducto').value,formula:$('lFormula').value,prog:$('lProgramada').value,fab:$('lFabricada').value,maquina:$('lMaquina').value,resp:$('lResp').value,estado:$('lEstado').value,notas:$('lNotas').value,fecha:today()});save();e.target.reset();toast('Lote guardado')});
+$('matForm').addEventListener('submit',e=>{e.preventDefault();db.materias.push({nombre:$('mNombre').value,codigo:$('mCodigo').value,tipo:$('mTipo').value,cantidad:$('mCantidad').value,unidad:$('mUnidad').value,lote:$('mLote').value,proveedor:$('mProveedor').value,vence:$('mVence').value,ubicacion:$('mUbicacion').value});save();e.target.reset();toast('Materia prima guardada')});
+$('eqForm').addEventListener('submit',e=>{e.preventDefault();db.equipos.push({nombre:$('eNombre').value,codigo:$('eCodigo').value,tipo:$('eTipo').value,capacidad:$('eCapacidad').value,rpm:$('eRpm').value,estado:$('eEstado').value,notas:$('eNotas').value});save();e.target.reset();toast('Equipo guardado')});
+$('qcForm').addEventListener('submit',e=>{e.preventDefault();db.qc.unshift({lote:$('qLote').value,producto:$('qProducto').value,estado:$('qEstado').value,inspector:$('qInspector').value,color:$('qColor').value,densidad:$('qDensidad').value,brillo:$('qBrillo').value,secado:$('qSecado').value,notas:$('qNotas').value,fecha:today()});save();e.target.reset();toast('Inspección guardada')});
+function exportBackup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='QUIMLAB_PRO_respaldo_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href)}
+
+/* ===================== APARIENCIA: TEMA, PALETA Y LOGO ===================== */
+const AKEY='quimlab_appearance',LKEY='quimlab_logo';
+const PALETTES=[
+ {name:'Océano',a:'#36c5dc',b:'#568cff'},
+ {name:'Esmeralda',a:'#22c58b',b:'#0ea5a4'},
+ {name:'Violeta',a:'#a78bfa',b:'#6d5bf5'},
+ {name:'Coral',a:'#ff7a59',b:'#f43f5e'},
+ {name:'Ámbar',a:'#f5b83d',b:'#f07c2a'},
+ {name:'Rosa',a:'#f472b6',b:'#c026d3'},
+ {name:'Índigo',a:'#6366f1',b:'#3b5bdb'},
+ {name:'Grafito',a:'#94a3b8',b:'#475569'}
+];
+let appearance=Object.assign({mode:'dark',accent:PALETTES[0].a,accent2:PALETTES[0].b,brand:''},JSON.parse(localStorage.getItem(AKEY)||'{}'));
+const mq=matchMedia('(prefers-color-scheme: light)');
+function luminance(hex){const n=parseInt(hex.slice(1),16),c=[n>>16,(n>>8)&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function shade(hex,amt){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;r=Math.round(r*(1-amt));g=Math.round(g*(1-amt));b=Math.round(b*(1-amt));return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}
+function applyAppearance(){
+ const root=document.documentElement;
+ const mode=appearance.mode==='auto'?(mq.matches?'light':'dark'):appearance.mode;
+ root.dataset.theme=mode;
+ appearance.onAccent=luminance(appearance.accent)>.45?'#06121f':'#ffffff';
+ root.style.setProperty('--accent',appearance.accent);
+ root.style.setProperty('--accent-2',appearance.accent2);
+ root.style.setProperty('--on-accent',appearance.onAccent);
+ $('themeToggle').textContent=mode==='dark'?'☀':'☾';
+ document.querySelectorAll('#modeSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.mode===appearance.mode));
+ document.querySelectorAll('.swatch-btn').forEach(b=>b.classList.toggle('on',b.dataset.a===appearance.accent));
+ $('customColor').value=appearance.accent;
+ const name=appearance.brand||'QUIMLAB PRO';$('brandName').textContent=name;$('brandInput').value=appearance.brand;
+ const letter=esc(name.trim().charAt(0).toUpperCase()||'Q');
+ const logo=localStorage.getItem(LKEY);
+ [$('logoBox'),$('logoPreview')].forEach(el=>el.innerHTML=logo?`<img src="${logo}" alt="Logotipo">`:letter);
+ localStorage.setItem(AKEY,JSON.stringify(appearance));
+}
+$('palette').innerHTML=PALETTES.map(p=>`<div><button class="swatch-btn" data-a="${p.a}" data-b="${p.b}" title="${p.name}" style="background:linear-gradient(135deg,${p.a},${p.b})"></button><div class="swatch-name">${p.name}</div></div>`).join('');
+document.querySelectorAll('.swatch-btn').forEach(b=>b.addEventListener('click',()=>{appearance.accent=b.dataset.a;appearance.accent2=b.dataset.b;applyAppearance()}));
+$('customColor').addEventListener('input',e=>{appearance.accent=e.target.value;appearance.accent2=shade(e.target.value,.28);applyAppearance()});
+document.querySelectorAll('#modeSwitch button').forEach(b=>b.addEventListener('click',()=>{appearance.mode=b.dataset.mode;applyAppearance()}));
+$('themeToggle').addEventListener('click',()=>{appearance.mode=document.documentElement.dataset.theme==='dark'?'light':'dark';applyAppearance();toast(appearance.mode==='dark'?'Modo oscuro activado':'Modo claro activado')});
+mq.addEventListener('change',()=>{if(appearance.mode==='auto')applyAppearance()});
+$('brandInput').addEventListener('input',e=>{appearance.brand=e.target.value.trim();applyAppearance()});
+$('logoFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('Selecciona un archivo de imagen.');return}
+ const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const s=256,c=document.createElement('canvas');c.width=c.height=s;const ctx=c.getContext('2d'),m=Math.min(img.width,img.height);ctx.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,s,s);try{localStorage.setItem(LKEY,c.toDataURL('image/png'));applyAppearance();toast('Imagen actualizada')}catch(err){alert('No se pudo guardar la imagen en este dispositivo.')}};img.src=r.result};r.readAsDataURL(f);e.target.value=''});
+function resetLogo(){localStorage.removeItem(LKEY);applyAppearance();toast('Imagen eliminada')}
+function resetAppearance(){appearance={mode:'dark',accent:PALETTES[0].a,accent2:PALETTES[0].b,brand:''};localStorage.removeItem(LKEY);applyAppearance();toast('Apariencia restablecida')}
+function openDrawer(){$('drawer').classList.add('open');$('overlay').classList.add('open')}
+function closeDrawer(){$('drawer').classList.remove('open');$('overlay').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+let tt;function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2000)}
+
+applyAppearance();
+render();
+</script>
+</body></html>
