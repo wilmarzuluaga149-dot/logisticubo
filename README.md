@@ -22,3 +22,11 @@ La última milla y el transporte de larga distancia requieren un control estrict
 
 6. Conclusión y Mejora Continua
 Implementar controles rigurosos en cada etapa de la cadena logística asegura una ventaja competitiva sostenible. La retroalimentación constante y el análisis de indicadores (KPIs) permiten identificar áreas de oportunidad y eficiencia operativa.
+
+---
+
+## NEGOCIO PRO 360 ENTERPRISE
+
+Sistema administrativo en Excel 365 (inventarios, ventas, compras, caja, cartera, costos, informes y logística/cubicaje).
+Archivos listos para usar en [`NEGOCIO_PRO_360/entregables`](NEGOCIO_PRO_360/entregables) · documentación en
+[`NEGOCIO_PRO_360/README.md`](NEGOCIO_PRO_360/README.md).
