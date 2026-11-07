@@ -153,15 +153,35 @@ const XL = {
   /** Detecta columnas por nombre de encabezado. */
   detectar(headers) {
     const h = headers.map(x => U.normText(x));
-    const find = (...keys) => h.findIndex(x => keys.some(k => x === k || x.includes(k)));
-    let fecha = find('fecha', 'date', 'dia');
-    let loteria = find('loteria', 'lottery', 'sorteo', 'juego', 'nombre');
-    let numero = find('numero', 'resultado', 'ganador', 'number', 'premio', 'cifras', 'num');
+    // Se prueba cada palabra en orden de prioridad: primero coincidencia exacta, luego parcial
+    const find = (...keys) => {
+      for (const k of keys) { const i = h.indexOf(k); if (i >= 0) return i; }
+      for (const k of keys) { const i = h.findIndex(x => x.includes(k)); if (i >= 0) return i; }
+      return -1;
+    };
+    let fecha = find('fecha', 'fecha_sorteo', 'date', 'dia');
+    let numero = find('numero', 'numero_ganador', 'resultado', 'ganador', 'number', 'cifras', 'num', 'premio');
+    let loteria = find('loteria', 'lottery', 'juego', 'sorteo', 'nombre');
     if (numero === loteria) loteria = -1;
+    if (fecha === numero) fecha = -1;
     return { fecha, loteria, numero, hasHeader: fecha >= 0 || numero >= 0 };
   },
   /** Convierte filas a registros validados. map: {fecha, loteria, numero}, opts: {loteriaFija, formatoFecha, ultimas3, hasHeader} */
+  /** Archivos de premios (mayor, secos, extras...): deja solo el PREMIO MAYOR de los sorteos ordinarios. */
+  filtroPremios(aoa, hasHeader) {
+    if (!hasHeader || !aoa.length) return null;
+    const h = aoa[0].map(x => U.normText(x));
+    const cp = h.findIndex(x => x.includes('premio')), cs = h.findIndex(x => x === 'sorteo' || x.startsWith('sorteo') || x.includes('n. sorteo'));
+    if (cp < 0) return null;
+    const esMayor = v => { const t = U.normText(v); return /^(gran\s+)?(premio\s+)?mayor/.test(t) && !/anterior|posterior|aproxim|igual serie/.test(t); };
+    const body = aoa.slice(1);
+    if (!body.some(r => esMayor(r[cp]))) return null;
+    const keep = body.filter(r => esMayor(r[cp]) && (cs < 0 || /^\s*\d+\s*$/.test(String(r[cs] ?? ''))));
+    return { aoa: [aoa[0], ...keep], total: body.length, mayores: keep.length };
+  },
   mapear(aoa, map, opts) {
+    const pf = XL.filtroPremios(aoa, opts.hasHeader);
+    if (pf) aoa = pf.aoa;
     const out = [], errores = [], nuevasLot = new Set();
     const start = opts.hasHeader ? 1 : 0;
     const vistos = new Set();
@@ -182,7 +202,7 @@ const XL = {
       if (!Store.findLoteriaByName(lotNombre)) nuevasLot.add(lotNombre);
       out.push({ fecha, loteria: lotNombre, numero });
     }
-    return { registros: out, errores, nuevasLot: [...nuevasLot] };
+    return { registros: out, errores, nuevasLot: [...nuevasLot], filtroPremios: pf };
   },
 };
 

@@ -335,8 +335,24 @@ function iaOpcionesPorDefecto(d) {
   // ¿Los números vienen con 4 cifras (chance)? Entonces se toman las 3 últimas.
   const muestra = d.aoa.slice(det.hasHeader ? 1 : 0, 200).map(r => String(r[det.numero] ?? '').replace(/\D/g, '')).filter(Boolean);
   const largos = muestra.filter(x => x.length >= 4 && !/^0+\d{3}$/.test(x)).length;
-  return { fecha: det.fecha, numero: det.numero, loteria: det.loteria, hasHeader: det.hasHeader, ncol: det.ncol,
-    loteriaNombre: lotDef, formatoFecha: Store.config.formatoFecha, ultimas3: Store.config.ultimas3 || (muestra.length > 0 && largos / muestra.length > 0.5), modoDup: 'omitir',
+  // Columna de lotería con códigos numéricos (p. ej. el portal de Bogotá usa LOTERIA = 2): no sirve como nombre
+  let loteria = det.loteria, loteriaNombre = lotDef, loteriaAuto = false;
+  const cuerpo = d.aoa.slice(det.hasHeader ? 1 : 0, 300);
+  if (loteria >= 0 && cuerpo.every(r => /^\s*\d*\s*$/.test(String(r[loteria] ?? '')))) {
+    const h = (d.aoa[0] || []).map(x => U.normText(x));
+    const codigos = new Set(cuerpo.map(r => String(r[loteria]).trim()));
+    loteria = -1; loteriaNombre = lotDef;
+    if (h.includes('nombre_premio') && codigos.size === 1 && codigos.has('2')) { loteriaNombre = 'Lotería de Bogotá'; loteriaAuto = true; }
+  }
+  // Formato de fecha: si alguna fecha tiene el segundo número mayor que 12 (3/30/2023) es MM/DD/AAAA
+  let dmy = 0, mdy = 0;
+  if (det.fecha >= 0) for (const r of d.aoa.slice(det.hasHeader ? 1 : 0)) {
+    const m = String(r[det.fecha] ?? '').match(/^\s*(\d{1,2})[/.-](\d{1,2})[/.-]\d{2,4}/);
+    if (m) { if (+m[1] > 12) dmy++; else if (+m[2] > 12) mdy++; }
+  }
+  const formatoFecha = mdy > dmy ? 'mdy' : dmy > mdy ? 'dmy' : Store.config.formatoFecha;
+  return { fecha: det.fecha, numero: det.numero, loteria, hasHeader: det.hasHeader, ncol: det.ncol, loteriaAuto,
+    loteriaNombre, formatoFecha, ultimas3: Store.config.ultimas3 || (muestra.length > 0 && largos / muestra.length > 0.5), modoDup: 'omitir',
     orden: 'antiguo_primero', fechaFinal: U.todayISO(), todasCeldas: det.ncol > 1 && det.fecha < 0 && det.loteria < 0 && !det.hasHeader };
 }
 
@@ -347,11 +363,11 @@ async function iaLeerArchivo(file) {
   IA.src = { ...d, name: file.name, file }; IA.result = null;
   IA.opts = iaOpcionesPorDefecto(IA.src);
   const o = IA.opts;
-  if (Store.config.importarDirecto && o.fecha >= 0 && o.loteria >= 0) {
+  if (Store.config.importarDirecto && o.fecha >= 0 && (o.loteria >= 0 || o.loteriaAuto)) {
     const r = iaConstruir(d.aoa, o);
     if (r.registros.length) {
       if (UI.current === 'importar') UI.render();
-      UI.toast(`Importando ${U.fmt(r.registros.length)} resultados de "${file.name}"…`, 'ok', 4000);
+      UI.toast(r.filtroPremios ? `"${file.name}" trae ${U.fmt(r.filtroPremios.total)} premios: se importan solo los ${U.fmt(r.registros.length)} premios mayores…` : `Importando ${U.fmt(r.registros.length)} resultados de "${file.name}"…`, 'ok', 6000);
       await iaEjecutar(r.registros, { guardar: true, modoDup: 'omitir', errores: r.errores.length, directo: true });
       return;
     }
@@ -416,6 +432,7 @@ function iaRevision() {
         <div class="kpi ${r.errores.length ? '' : 'green'}"><div class="l">Con error</div><div class="v">${U.fmt(r.errores.length)}</div><div class="s">${r.errores.length ? 'no se importan' : 'ninguno'}</div></div>
       </div>
       ${r.sinFechas ? `<div class="note">Sin fechas en el archivo: a cada número se le asigna un sorteo diario consecutivo terminando el <b>${U.fmtDate(o.fechaFinal)}</b>. ${tot(g => g.duplicados.length + g.conflictos.length) ? '<span class="warn">Algunas fechas ya tienen resultado en esa lotería; si son números distintos, cambie la fecha o use una lotería nueva.</span>' : ''}</div>` : ''}
+      ${r.filtroPremios ? `<div class="note">El archivo trae todos los premios de cada sorteo: se tomaron solo los <b>premios mayores</b> de los sorteos ordinarios (<b>${U.fmt(r.filtroPremios.mayores)}</b> de ${U.fmt(r.filtroPremios.total)} filas). Los secos y sorteos extra se descartan.</div>` : ''}
       ${r.nuevasLot.length ? `<div class="note">Se creará la lotería: <b>${r.nuevasLot.map(U.esc).join(', ')}</b>.</div>` : ''}
       ${r.errores.length ? `<details><summary>Ver errores (${r.errores.length})</summary><ul>${r.errores.slice(0, 40).map(e => `<li>Fila ${e.fila}: ${U.esc(e.motivo)}</li>`).join('')}</ul></details>` : ''}`;
     return r;

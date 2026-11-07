@@ -88,6 +88,19 @@ const idle = async (p) => { await p.waitForTimeout(700); await esperarAuto(p); }
   await page.setInputFiles('#globalFile', f3); await page.waitForSelector('#iaGo');
   check(await ev(() => P3.Store.resultados.length) === antes, 'no se importó nada sin saber la lotería; se muestra la revisión');
 
+  console.log('5b. Archivo de premios (mayor + secos), con código de lotería y fechas mixtas');
+  let pr = '\uFEFF_id,LOTERIA,SORTEO,FECHA,NOMBRE_PREMIO,NUMERO,SERIE\n';
+  const sorteos = [['2216', '2014-01-02 00:00:00', '4316'], ['2217', '2014-01-09 00:00:00', '0065'], ['2684', '3/30/2023', '7044'], ['2685', '4/6/2023', '1902']];
+  let id = 1; for (const [so, fe, mayor] of sorteos) { pr += `${id++},2,${so},${fe},PREMIO MAYOR DE $6.000 MILLONES,${mayor},48\n`; for (let k = 0; k < 30; k++) pr += `${id++},2,${so},${fe},PREMIO SECO $10 MILLONES,${(k * 331) % 10000},${k}\n`; }
+  pr += `${id++},2,Extra 003,2023-12-01 00:00:00,PREMIO MAYOR EXTRA,5555,1\n`;
+  const fb = path.join(TMP, 'premios_bogota.csv'); fs.writeFileSync(fb, pr);
+  await ev(() => P3.UI.go('inicio'));
+  await page.setInputFiles('#globalFile', fb);
+  await page.waitForFunction(() => P3.Store.findLoteriaByName('Lotería de Bogotá') && P3.Store.resultadosDe(P3.Store.findLoteriaByName('Lotería de Bogotá').id).length >= 4, null, { timeout: 60000 });
+  const bg = await ev(() => P3.Store.resultadosDe(P3.Store.findLoteriaByName('Lotería de Bogotá').id).map(r => r.fecha + '=' + r.numero).join(','));
+  check(bg === '2014-01-02=316,2014-01-09=065,2023-03-30=044,2023-04-06=902', 'solo premios mayores de sorteos ordinarios, lotería reconocida y fechas M/D/AAAA: ' + bg);
+  await idle(page);
+
   console.log('6. Actualización en línea desde datos.gov.co');
   await ev(async () => {
     const m = await P3.Store.saveLoteria({ nombre: 'Lotería de Medellín' }); const s = await P3.Store.saveLoteria({ nombre: 'Lotería de Santander' });
