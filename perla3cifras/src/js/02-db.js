@@ -33,6 +33,8 @@ const DEFAULT_CONFIG = {
   importarDirecto: true,            // al elegir/arrastrar un archivo se importa sin pasar por la revisión
   actualizarEnLinea: true,          // al abrir, descarga resultados nuevos de fuentes oficiales (datos.gov.co)
   tema: { id: 'industrial', colores: null },
+  // Reemplazos indicados por el usuario: 0=5, 1=6, 2=7, 3=8, 4=9 (y al revés). 142 -> 697
+  reemplazos: { cifras: { 0: ['5'], 1: ['6'], 2: ['7'], 3: ['8'], 4: ['9'], 5: ['0'], 6: ['1'], 7: ['2'], 8: ['3'], 9: ['4'] }, numeros: {}, enPronosticos: true },
 };
 
 const DB = {

@@ -17,6 +17,7 @@ const MENU = [
   { id: 'loterias', ico: '▣', t: 'Loterías' },
   { id: 'historico', ico: '☰', t: 'Histórico de resultados' },
   { id: 'importar', ico: '⇪', t: 'Importar y analizar' },
+  { id: 'reemplazos', ico: '↻', t: 'Reemplazos' },
   { grp: 'Análisis' },
   { id: 'estadisticas', ico: '▤', t: 'Estadísticas' },
   { id: 'cifras', ico: '◫', t: 'Análisis de cifras' },

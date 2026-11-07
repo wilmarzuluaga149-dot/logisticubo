@@ -313,6 +313,7 @@ function iaTabNumero() {
             <b>Última vez</b><span>${gap === null ? 'nunca ha salido' : `${U.fmtDate(rows[st.last[+n]].fecha)} · hace ${gap} sorteos`}</span>
             <b>Combinado (${perms.join(', ') || '—'})</b><span>${apC.length} veces</span>
             <b>Cifras por posición</b><span>${[0, 1, 2].map(p => `${Stats.POS[p]}=${n[p]}: ${U.pct(st.pos[p][+n[p]], st.n)}`).join(' · ')} <span class="muted">(teórico 10%)</span></span>
+            ${Reemp.todos(n).length ? `<b>Reemplazo</b><span>${Reemp.todos(n).slice(0, 12).map(x => `${UI.num3(x)} <span class="muted small">(${st.freq[+x]} veces)</span>`).join(' ')} <a href="#reemplazos" class="small">cambiar tabla</a></span>` : ''}
             <b>Patrón</b><span>${U.pattern(n)} · paridad ${U.parity(n)} · suma ${U.digitSum(n)}</span>
             <b>Probabilidad real</b><span>1 entre 1000 (0,1%) en cada sorteo, igual que cualquier otro número</span>
           </div></div>

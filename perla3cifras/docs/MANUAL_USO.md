@@ -53,6 +53,17 @@ No hace falta ir a ningún módulo para actualizar:
   primera vez que se abre y nunca se duplica.
 * Todo esto se puede activar o desactivar en **Configuración → Actualización automática**.
 
+### Reemplazos (versión 1.4)
+En **Reemplazos** (menú, debajo de *Importar y analizar*) escriba uno o varios números de 2, 3 o 4 cifras (también 1, 5
+o 6) y pulse **REEMPLAZAR**. Cada cifra se convierte con la **tabla de cifras**, que viene cargada con
+**0=5, 1=6, 2=7, 3=8, 4=9** y al revés **5=0, 6=1, 7=2, 8=3, 9=4**. Ejemplos: 25 → 70, 142 → 697, 1234 → 6789,
+56789 → 01234. Se muestra cuántas veces ha salido cada número en la lotería activa (los de 4 cifras, por sus 3 últimas).
+* La tabla se puede cambiar (una cifra puede tener varias opciones: 1 → 6,8 genera todas las combinaciones) y hay
+  plantillas: Espejo (+5), Complemento a 9, Siguiente (+1) y Anterior (−1).
+* **Tabla de números:** reemplazos de números completos, una línea por número: `142 = 381, 517`.
+* Opcional: mostrar el número reemplazado junto a cada candidato de los pronósticos y en *Evaluar un número*.
+* Los resultados guardados nunca se modifican. Exportable a Excel.
+
 ### Colores y temas (versión 1.3)
 Pulse el botón **🎨** de la barra superior (o vaya a *Configuración → Apariencia*) y elija un tema: **Azul industrial**,
 **Negro**, **Blanco**, **Blanco y negro (alto contraste)**, Grafito, Esmeralda, Océano, Vino o Arena. También puede elegir

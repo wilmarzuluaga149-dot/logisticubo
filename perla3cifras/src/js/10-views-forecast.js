@@ -16,7 +16,7 @@ function renderCands(p, { showWhy = true } = {}) {
     const hit = ev.estado === 'evaluado' ? (c.n === ev.resultado ? 'hitd' : (ev.combinado && U.isPerm(c.n, ev.resultado) ? 'hitc' : '')) : '';
     return `<div class="cand ${hit}"><span class="rk">#${String(i + 1).padStart(2, '0')}</span><span class="n3">${c.n}</span>
       <span><span class="small">${c.score.toFixed(1)} pts</span><div class="bar"><i style="width:${(100 * c.score / maxS).toFixed(0)}%"></i></div></span>
-      <span class="why">${hit === 'hitd' ? '<span class="badge d">D-GANADOR</span> ' : hit === 'hitc' ? '<span class="badge c">C-GANADOR</span> ' : ''}${showWhy ? U.esc(c.razon || 'Generado en prueba histórica (sin explicación detallada).') : ''}</span></div>`;
+      <span class="why">${hit === 'hitd' ? '<span class="badge d">D-GANADOR</span> ' : hit === 'hitc' ? '<span class="badge c">C-GANADOR</span> ' : ''}${typeof Reemp !== 'undefined' && Reemp.conf().enPronosticos ? Reemp.etiqueta(c.n) + ' ' : ''}${showWhy ? U.esc(c.razon || 'Generado en prueba histórica (sin explicación detallada).') : ''}</span></div>`;
   }).join('')}</div>`;
 }
 function evalLine(p) {
