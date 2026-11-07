@@ -790,7 +790,17 @@ const U = {
   fmt(n, dec = 0) { return (n ?? 0).toLocaleString('es-CO', { minimumFractionDigits: dec, maximumFractionDigits: dec }); },
   debounce(fn, ms = 250) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; },
   sleep(ms) { return new Promise(r => setTimeout(r, ms)); },
+  /** Guarda un archivo. En la app Android lo entrega al sistema (carpeta Descargas); en el navegador y en la app de PC, descarga normal. */
   download(blob, name) {
+    if (window.AndroidBridge && window.AndroidBridge.saveFile) {
+      const fr = new FileReader();
+      fr.onload = () => {
+        try { const msg = window.AndroidBridge.saveFile(name, blob.type || 'application/octet-stream', String(fr.result).split(',')[1] || ''); if (msg) UI.toast(msg); }
+        catch (err) { UI.toast('No se pudo guardar el archivo: ' + err.message, 'err'); }
+      };
+      fr.readAsDataURL(blob);
+      return;
+    }
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = name;
     document.body.appendChild(a); a.click();
@@ -1656,7 +1666,11 @@ const XL = {
     if (aoa.length > 1) ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: 0, c: aoa[0].length - 1 } }) };
     return ws;
   },
-  save(wb, name) { this.need(); XLSX.writeFile(wb, name, { compression: true }); },
+  save(wb, name) {
+    this.need();
+    const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array', compression: true });
+    U.download(new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), name);
+  },
   book() { this.need(); const wb = XLSX.utils.book_new(); wb.Props = { Title: 'PERLA 3 CIFRAS PRO', Author: 'PERLA 3 CIFRAS PRO', CreatedDate: new Date() }; return wb; },
 
   /* ---------- Hojas ---------- */
@@ -1887,7 +1901,7 @@ const PDF = {
       doc.text('Herramienta de análisis estadístico. Los pronósticos no garantizan premios: cada sorteo es aleatorio e independiente.', 36, 820);
       doc.text(`Página ${i} de ${pages}`, W - 36, 820, { align: 'right' });
     }
-    doc.save(nombre);
+    U.download(doc.output('blob'), nombre);
   },
 };
 
@@ -4026,7 +4040,7 @@ window.addEventListener('unhandledrejection', (e) => { console.error(e.reason); 
     Auto.alAbrir();
     if (Store.config.actualizarEnLinea) setTimeout(() => EnLinea.actualizar({ silencioso: true }), 800);
     if (DB.mode !== 'idb') UI.toast('IndexedDB no está disponible: se usa almacenamiento de respaldo (limitado). Descargue copias de seguridad.', 'warn', 8000);
-    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !window.AndroidBridge && !window.PERLA3_ESCRITORIO) navigator.serviceWorker.register('sw.js').catch(() => { });
   } catch (err) {
     console.error(err);
     document.getElementById('view').innerHTML = `<div class="card"><h2>No se pudo iniciar</h2><p class="bad">${U.esc(err.message)}</p><p>Compruebe que el navegador permite el almacenamiento local (no use modo incógnito) e intente recargar.</p></div>`;

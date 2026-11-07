@@ -18,7 +18,11 @@ const XL = {
     if (aoa.length > 1) ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: 0, c: aoa[0].length - 1 } }) };
     return ws;
   },
-  save(wb, name) { this.need(); XLSX.writeFile(wb, name, { compression: true }); },
+  save(wb, name) {
+    this.need();
+    const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array', compression: true });
+    U.download(new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), name);
+  },
   book() { this.need(); const wb = XLSX.utils.book_new(); wb.Props = { Title: 'PERLA 3 CIFRAS PRO', Author: 'PERLA 3 CIFRAS PRO', CreatedDate: new Date() }; return wb; },
 
   /* ---------- Hojas ---------- */
@@ -249,6 +253,6 @@ const PDF = {
       doc.text('Herramienta de análisis estadístico. Los pronósticos no garantizan premios: cada sorteo es aleatorio e independiente.', 36, 820);
       doc.text(`Página ${i} de ${pages}`, W - 36, 820, { align: 'right' });
     }
-    doc.save(nombre);
+    U.download(doc.output('blob'), nombre);
   },
 };

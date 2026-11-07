@@ -110,7 +110,17 @@ const U = {
   fmt(n, dec = 0) { return (n ?? 0).toLocaleString('es-CO', { minimumFractionDigits: dec, maximumFractionDigits: dec }); },
   debounce(fn, ms = 250) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; },
   sleep(ms) { return new Promise(r => setTimeout(r, ms)); },
+  /** Guarda un archivo. En la app Android lo entrega al sistema (carpeta Descargas); en el navegador y en la app de PC, descarga normal. */
   download(blob, name) {
+    if (window.AndroidBridge && window.AndroidBridge.saveFile) {
+      const fr = new FileReader();
+      fr.onload = () => {
+        try { const msg = window.AndroidBridge.saveFile(name, blob.type || 'application/octet-stream', String(fr.result).split(',')[1] || ''); if (msg) UI.toast(msg); }
+        catch (err) { UI.toast('No se pudo guardar el archivo: ' + err.message, 'err'); }
+      };
+      fr.readAsDataURL(blob);
+      return;
+    }
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = name;
     document.body.appendChild(a); a.click();

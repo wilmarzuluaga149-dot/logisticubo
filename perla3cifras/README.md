@@ -13,6 +13,8 @@ integración con Excel 365, informes PDF y copias de seguridad.
 
 | Archivo | Contenido |
 |---|---|
+| `android/` | App Android (APK): proyecto nativo mínimo con WebView y script `build_apk.sh` (sin Gradle). |
+| `escritorio/` | App de Windows (Electron): `npm install && npm run dist` genera el instalador y la versión portátil. |
 | `PERLA3CIFRAS_PRO.html` | **La aplicación completa en un solo archivo** (incluye Chart.js, SheetJS y jsPDF). Funciona sin conexión y sin instalar nada. |
 | `docs/MANUAL_PERLA3CIFRAS_PRO.pdf` | Los tres manuales en un solo PDF (versión 1.3.0). |
 | `docs/MANUAL_USO.md` | Instrucciones de uso de los 16 módulos. |

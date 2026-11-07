@@ -1,0 +1,73 @@
+{
+  "name": "perla3cifras-pro",
+  "productName": "PERLA 3 CIFRAS PRO",
+  "version": "1.3.0",
+  "description": "Análisis estadístico de resultados de loterías de tres cifras",
+  "author": "PERLA 3 CIFRAS PRO",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8",
+    "resedit": "^1.7.2"
+  },
+  "build": {
+    "appId": "co.perla3cifras.pro",
+    "productName": "PERLA 3 CIFRAS PRO",
+    "copyright": "Uso personal",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "icon.png",
+      "app/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PERLA 3 CIFRAS PRO",
+      "uninstallDisplayName": "PERLA 3 CIFRAS PRO",
+      "installerLanguages": [
+        "es_ES"
+      ],
+      "language": "3082",
+      "deleteAppDataOnUninstall": false,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "artifactName": "PERLA3CIFRAS_PRO_${version}_instalador.${ext}"
+    },
+    "portable": {
+      "artifactName": "PERLA3CIFRAS_PRO_${version}_portable.exe"
+    },
+    "afterPack": "./afterPack.js",
+    "publish": null
+  }
+}

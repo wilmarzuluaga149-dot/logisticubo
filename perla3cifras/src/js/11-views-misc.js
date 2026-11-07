@@ -305,7 +305,7 @@ window.addEventListener('unhandledrejection', (e) => { console.error(e.reason); 
     Auto.alAbrir();
     if (Store.config.actualizarEnLinea) setTimeout(() => EnLinea.actualizar({ silencioso: true }), 800);
     if (DB.mode !== 'idb') UI.toast('IndexedDB no está disponible: se usa almacenamiento de respaldo (limitado). Descargue copias de seguridad.', 'warn', 8000);
-    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !window.AndroidBridge && !window.PERLA3_ESCRITORIO) navigator.serviceWorker.register('sw.js').catch(() => { });
   } catch (err) {
     console.error(err);
     document.getElementById('view').innerHTML = `<div class="card"><h2>No se pudo iniciar</h2><p class="bad">${U.esc(err.message)}</p><p>Compruebe que el navegador permite el almacenamiento local (no use modo incógnito) e intente recargar.</p></div>`;
