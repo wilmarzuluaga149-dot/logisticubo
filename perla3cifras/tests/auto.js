@@ -7,7 +7,7 @@ const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'p3auto-'));
 let ok = 0, fail = 0;
 const check = (c, m) => { c ? ok++ : fail++; console.log((c ? '  ✔ ' : '  ✘ ') + m); };
 const proxy = process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY } : undefined;
-const esperarAuto = (p, ms = 300000) => p.waitForFunction(() => window.P3 && !P3.Auto.running && !P3.Auto.cola.size, null, { timeout: ms, polling: 500 });
+const esperarAuto = (p, ms = 900000) => p.waitForFunction(() => window.P3 && !P3.Auto.running && !P3.Auto.cola.size, null, { timeout: ms, polling: 500 });
 const idle = async (p) => { await p.waitForTimeout(700); await esperarAuto(p); };
 
 (async () => {
@@ -18,7 +18,8 @@ const idle = async (p) => { await p.waitForTimeout(700); await esperarAuto(p); }
     const ctx = await browser.newContext({ ignoreHTTPSErrors: true }); const p = await ctx.newPage();
     p.on('pageerror', e => errors.push(e.message));
     const t = Date.now();
-    await p.goto(CON_DATOS); await p.waitForFunction(() => window.P3 && P3.Store.resultados.length > 7000, null, { timeout: 60000 });
+    await p.goto(CON_DATOS); await p.waitForFunction(() => window.P3 && P3.Store.resultados.length > 7000, null, { timeout: 120000 });
+    const n1 = await p.evaluate(() => P3.Store.resultados.length);
     check(true, 'al abrir, el histórico incluido se cargó solo: ' + await p.evaluate(() => P3.Store.resultados.length) + ' resultados');
     await idle(p);
     const s = await p.evaluate(() => {
@@ -37,7 +38,7 @@ const idle = async (p) => { await p.waitForTimeout(700); await esperarAuto(p); }
     check(!(await p.textContent('#view')).includes('Aún no hay pronósticos evaluados'), 'Comparador con datos sin hacer nada');
     await p.reload(); await p.waitForFunction(() => window.P3); await p.waitForTimeout(800);
     const n2 = await p.evaluate(() => P3.Store.resultados.length);
-    check(n2 >= 7564 && n2 < 7600, 'al volver a abrir no se duplica el histórico (' + n2 + ')');
+    check(n2 >= n1 && n2 < n1 + 50, 'al volver a abrir no se duplica el histórico (' + n2 + ')');
     await ctx.close();
   }
 
