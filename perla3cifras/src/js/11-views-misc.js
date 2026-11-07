@@ -232,6 +232,8 @@ UI.views.ayuda = (el) => {
       <li><b>Histórico:</b> registre resultados con fecha, lotería y número. Use «Pegar varios…» para copiar bloques desde Excel, o importe un archivo en el módulo <b>Excel</b>.</li>
       <li>Seleccione la <b>Lotería activa</b> en la barra superior: las estadísticas, el análisis de cifras y los algoritmos usarán esa lotería.</li>
       <li>Para practicar puede cargar <b>datos de ejemplo ficticios</b> en Configuración.</li></ol>
+    <h3>Importar y analizar (lo más rápido)</h3>
+    <p>En <b>Importar y analizar</b> puede, cada vez que lo necesite, arrastrar un archivo Excel o CSV (con o sin fechas, de pocos o miles de números), pegar una lista de números, registrar un solo resultado o evaluar un número. Tras una revisión previa, la aplicación une lo nuevo con lo que ya tenía (sin duplicar) y muestra: el pronóstico de los 3 algoritmos para el próximo sorteo, cómo habrían acertado con los números nuevos (usando solo los sorteos anteriores a cada uno) y la comparación con el histórico. Con «Solo analizar» no se guarda nada.</p>
     <h3>2. Columnas del histórico</h3><ul>
       <li><b>A, B, C:</b> primera (centenas), segunda (decenas) y tercera cifra (unidades).</li>
       <li><b>Aciertos A1/A2/A3:</b> evaluación del pronóstico de cada algoritmo para ese sorteo: <code>D#n</code> acierto directo con el candidato n.º n, <code>C#n</code> acierto combinado, <code>x/3</code> mejor cantidad de cifras en su posición.</li>

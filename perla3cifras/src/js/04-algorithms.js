@@ -47,16 +47,23 @@ const Algo = {
   seedSort(cands, seed) {
     return cands.sort((x, y) => y.score - x.score || (U.hash32(seed + x.n) - U.hash32(seed + y.n)));
   },
-  finalize(raw, k, seed, explain, why) {
+  finalize(raw, k, seed, explain, why, focus = null) {
     const norm = MathX.minmax(raw);
     const cands = U.ALL_NUMS.map((n, i) => ({ n, score: +(norm[i] * 100).toFixed(2), i }));
     this.seedSort(cands, seed);
-    return cands.slice(0, k).map(c => ({ n: c.n, score: c.score, razon: explain ? why(c.i, c.n) : undefined }));
+    const out = cands.slice(0, k).map(c => ({ n: c.n, score: c.score, razon: explain ? why(c.i, c.n) : undefined }));
+    if (focus) { // puesto (1–1000), puntuación y explicación de un número concreto
+      const j = cands.findIndex(c => c.n === focus);
+      out.focus = { n: focus, rank: j + 1, score: cands[j].score, razon: why(cands[j].i, focus) };
+    }
+    return out;
   },
+  /** Puesto (1 = mejor) que ocupa cada número en la clasificación completa de un algoritmo. */
+  rankOf(cands1000, n) { const j = cands1000.findIndex(c => c.n === n); return j < 0 ? null : j + 1; },
   pctTxt(c, t) { return t ? (100 * c / t).toFixed(1) + '%' : '0%'; },
 
   /* ------------------ ALGORITMO 1 · FRECUENCIA Y TENDENCIA ------------------ */
-  a1(hist, { k = 10, cfg = Store.config, seed = '', explain = true } = {}) {
+  a1(hist, { k = 10, cfg = Store.config, seed = '', explain = true, focus = null } = {}) {
     const W = Math.max(5, +cfg.a1Ventana || 30);
     const B = this.base(hist, W), n = B.n, w = B.w;
     const pH = B.pos.map(a => a.map(c => (c + 1) / (n + 10)));        // suavizado de Laplace
@@ -84,11 +91,11 @@ const Algo = {
       parts.push(B.num[i] ? `número salió ${B.num[i]} vez/veces (${B.numR[i]} recientes)` : 'número sin apariciones previas');
       parts.push(`tendencia ${nTr[i] >= 0.5 ? 'al alza' : 'a la baja'}`);
       return parts.join(' · ') + ' (teórico por cifra: 10%)';
-    });
+    }, focus);
   },
 
   /* ------------------ ALGORITMO 2 · CICLOS Y AUSENCIAS ------------------ */
-  a2(hist, { k = 10, cfg = Store.config, seed = '', explain = true, fechaObjetivo = null } = {}) {
+  a2(hist, { k = 10, cfg = Store.config, seed = '', explain = true, fechaObjetivo = null, focus = null } = {}) {
     const V = Math.max(20, +cfg.a2Ventana || 120);
     const B = this.base(hist, V), n = B.n, w = B.w;
     const cyc = [0, 1, 2].map(p => Array.from({ length: 10 }, (_, d) => this.cycle(B.posIdx[p][d], n, V)));
@@ -130,11 +137,11 @@ const Algo = {
       parts.push(`suma ${U.digitSum(s)}`);
       if (wd !== null) parts.push(`afinidad con ${U.DIAS[wd]}`);
       return parts.join(' · ');
-    });
+    }, focus);
   },
 
   /* ------------------ ALGORITMO 3 · MODELO COMBINADO PONDERADO ------------------ */
-  a3(hist, { k = 10, cfg = Store.config, seed = '', explain = true } = {}) {
+  a3(hist, { k = 10, cfg = Store.config, seed = '', explain = true, focus = null } = {}) {
     const P = { ...DEFAULT_CONFIG.a3Pesos, ...(cfg.a3Pesos || {}) };
     const W = Math.max(5, +cfg.a3Ventana || 40), H = Math.max(2, +cfg.a3VidaMedia || 25);
     const B = this.base(hist, W), n = B.n;
@@ -169,7 +176,7 @@ const Algo = {
         .map(x => `${x.key} ${(x.v * 100).toFixed(1)} pts`);
       const t = tern.get(U.sortedKey(s)) || 0;
       return `Aportes principales: ${contrib.join(', ') || 'ninguno'} · terna {${U.sortedKey(s).split('').join(',')}} salió ${t} vez/veces · número salió ${B.num[i]} vez/veces`;
-    });
+    }, focus);
   },
 
   run(alg, hist, opts) {

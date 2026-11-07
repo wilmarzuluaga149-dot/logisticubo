@@ -162,3 +162,5 @@ td.r,th.r{text-align:right} td.c,th.c{text-align:center}
   .card h2{color:#000}.tbl-wrap{max-height:none;overflow:visible}th{background:#eee;color:#000}td{color:#000}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.drop{border:2px dashed var(--line2);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;color:var(--ink2);background:rgba(12,22,38,.5);transition:border-color .15s,background .15s}
+.drop:hover,.drop.over,.drop:focus-visible{border-color:var(--gold);background:rgba(217,181,74,.06);outline:none}

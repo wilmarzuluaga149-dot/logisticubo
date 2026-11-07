@@ -222,7 +222,7 @@ const check = (cond, msg) => { if (cond) { ok++; console.log('  ✔ ' + msg); } 
   check(/\.pdf$/.test(pdf2.suggestedFilename()), 'informe PDF por lotería generado');
 
   console.log('11. Botones sin función');
-  const views = ['inicio', 'loterias', 'historico', 'estadisticas', 'cifras', 'generar', 'alg1', 'alg2', 'alg3', 'aciertos', 'comparador', 'informes', 'excel', 'config', 'ayuda'];
+  const views = ['inicio', 'loterias', 'historico', 'importar', 'estadisticas', 'cifras', 'generar', 'alg1', 'alg2', 'alg3', 'aciertos', 'comparador', 'informes', 'excel', 'config', 'ayuda'];
   const dead = [];
   for (const v of views) {
     await ev(v => P3.UI.go(v), v); await page.waitForTimeout(150);

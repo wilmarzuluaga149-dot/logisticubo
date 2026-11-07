@@ -11,6 +11,8 @@
 
 ## Módulos
 
+> Las secciones conservan la numeración original; *Importar y analizar* aparece en el menú justo después de *Histórico*.
+
 ### 1. Inicio / Panel principal
 Indicadores: sorteos registrados, loterías, último resultado y su fecha, pronósticos, aciertos directos y combinados,
 rendimiento de los tres algoritmos (con el número de aciertos esperado por azar). Gráficos: frecuencia por posición en los
@@ -33,6 +35,28 @@ pronósticos se borrarán.
   * *Algoritmo 1, 2, 3:* primer candidato (mayor puntuación) del algoritmo para ese sorteo.
   * *D-Ganador / C-Ganador:* algoritmos que acertaron.
   Se llenan cuando hay un pronóstico guardado o de prueba histórica para ese sorteo (si hay ambos, prevalece el manual).
+
+### 3b. Importar y analizar (el camino más rápido)
+Un solo lugar para meter números **cada vez que lo necesite** y obtener el resultado al instante. Cuatro formas:
+* **Archivo Excel / CSV:** arrastre el archivo o haga clic para buscarlo. Sirve con 10, 1000, 5000 o más filas, **con o sin fechas**:
+  * Con columnas FECHA · LOTERÍA · NÚMERO (en cualquier orden): se detectan solas y puede corregirlas.
+  * Solo una columna de números (o una cuadrícula, marcando *Leer todas las celdas*): indique la lotería, si el primero es
+    el más antiguo o el más reciente, y la fecha del número más reciente; se asigna un sorteo diario a cada número.
+* **Pegar números:** pegue una lista como `123 456 007 089` o filas copiadas de Excel.
+* **Un resultado:** fecha, lotería y número → *Registrar y analizar*.
+* **Evaluar un número:** escriba un número (sin registrarlo) y vea su historia y el puesto (1 a 1000) que le da cada algoritmo para el próximo sorteo.
+
+Antes de procesar se muestra la **revisión**: números válidos, cuántos son nuevos, cuántos ya estaban, fechas que ya tienen
+otro número (conservar o reemplazar) y errores. Luego:
+* **IMPORTAR Y ANALIZAR:** guarda lo nuevo (sin duplicar lo que ya tenía) y analiza todo junto.
+* **Solo analizar (sin guardar):** hace el mismo análisis sin tocar la base, para probar un archivo.
+
+El **resultado** muestra, por lotería: sorteos antes → ahora, números nuevos, último resultado; el **pronóstico de los 3
+algoritmos para el próximo sorteo** con todo el histórico (y los números que coinciden en 2 o 3 algoritmos); **cómo les fue a
+los algoritmos con los números nuevos** (para cada número se calcula el pronóstico solo con los sorteos anteriores: aciertos
+directos y combinados, esperado por azar y puesto medio del número real, que por azar ronda 500); los pronósticos que usted
+había guardado y ya tienen resultado; y la comparación de los números nuevos con el histórico. Se puede exportar a Excel o
+PDF y guardar los pronósticos para que se evalúen solos cuando registre el resultado.
 
 ### 4. Estadísticas
 Filtro por rango de fechas y exportación a Excel. Pestañas:

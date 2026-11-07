@@ -9,6 +9,7 @@ const MENU = [
   { id: 'inicio', ico: '◈', t: 'Inicio / Panel principal' },
   { id: 'loterias', ico: '▣', t: 'Loterías' },
   { id: 'historico', ico: '☰', t: 'Histórico de resultados' },
+  { id: 'importar', ico: '⇪', t: 'Importar y analizar' },
   { grp: 'Análisis' },
   { id: 'estadisticas', ico: '▤', t: 'Estadísticas' },
   { id: 'cifras', ico: '◫', t: 'Análisis de cifras' },

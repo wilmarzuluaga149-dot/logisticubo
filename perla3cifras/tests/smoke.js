@@ -12,7 +12,7 @@ const path = require('path');
   await page.click('#btnDemo');
   await page.click('.modal footer .btn.gold');
   await page.waitForFunction(() => P3.Store.resultados.length === 840);
-  const views = ['inicio','loterias','historico','estadisticas','cifras','generar','alg1','alg2','alg3','aciertos','comparador','informes','excel','config','ayuda'];
+  const views = ['inicio','loterias','historico','importar','estadisticas','cifras','generar','alg1','alg2','alg3','aciertos','comparador','informes','excel','config','ayuda'];
   for (const v of views) {
     await page.evaluate(v => P3.UI.go(v), v);
     await page.waitForTimeout(250);

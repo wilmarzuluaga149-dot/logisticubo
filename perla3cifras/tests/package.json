@@ -3,7 +3,7 @@
   "private": true,
   "description": "Pruebas automáticas de PERLA 3 CIFRAS PRO",
   "scripts": {
-    "test": "node smoke.js && node funcional.js",
+    "test": "node smoke.js && node funcional.js && node importar.js",
     "ejemplo": "node generar_ejemplo.js"
   },
   "devDependencies": { "playwright": "^1.48.0", "xlsx": "0.18.5" }

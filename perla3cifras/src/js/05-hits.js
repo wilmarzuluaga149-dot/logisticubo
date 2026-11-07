@@ -14,7 +14,11 @@ const Hits = {
     const r = Store.resultadoDe(p.loteriaId, p.fechaObjetivo);
     if (!r) return { estado: 'pendiente' };
     if (p.fechaCorte && p.fechaCorte >= p.fechaObjetivo) return { estado: 'invalido', resultado: r.numero };
-    const res = r.numero;
+    return Hits.evaluateNum(p, r.numero, cfg);
+  },
+
+  /** Compara una lista de candidatos con un número ganador concreto (sin consultar la base). */
+  evaluateNum(p, res, cfg = Store.config) {
     let directo = false, combinado = false, rank = null, rankC = null, mejorPos = 0, mejorN = null;
     p.candidatos.forEach((c, i) => {
       const pm = U.posMatches(c.n, res);

@@ -14,7 +14,8 @@ UI.views.inicio = (el) => {
   el.innerHTML = `
     ${Store.resultados.length ? '' : `<div class="card"><h2>Bienvenido a PERLA 3 CIFRAS PRO</h2>
       <p>Para comenzar: 1) cree sus loterías, 2) registre o importe resultados, 3) genere pronósticos y evalúe los algoritmos.</p>
-      <div class="toolbar"><button class="btn gold" data-go="loterias">Crear lotería</button><button class="btn" data-go="excel">Importar Excel/CSV</button><button class="btn" id="btnDemo">Cargar datos de ejemplo (ficticios)</button></div></div>`}
+      <div class="toolbar"><button class="btn gold" data-go="loterias">Crear lotería</button><button class="btn" data-go="importar">Importar y analizar números</button><button class="btn" id="btnDemo">Cargar datos de ejemplo (ficticios)</button></div></div>`}
+    <div class="card no-print" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:220px"><b style="color:var(--gold)">¿Tiene números nuevos?</b> <span class="small muted">Meta un archivo, pegue una lista o un solo resultado y obtenga el análisis al instante.</span></div><button class="btn gold" data-go="importar">⇪ Importar y analizar</button></div>
     <div class="kpis">
       <div class="kpi"><div class="l">Sorteos registrados</div><div class="v">${U.fmt(rows.length)}</div><div class="s">${L ? U.esc(Store.loteriaNombre(L)) : 'todas las loterías'}</div></div>
       <div class="kpi blue"><div class="l">Loterías</div><div class="v">${Store.loterias.length}</div><div class="s">${Store.loterias.filter(l => l.ejemplo).length ? 'incluye datos de ejemplo' : 'configuradas'}</div></div>

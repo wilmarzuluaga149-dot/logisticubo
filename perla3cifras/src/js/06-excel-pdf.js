@@ -171,7 +171,7 @@ const XL = {
       const fecha = U.parseDate(row[map.fecha], opts.formatoFecha);
       const numero = U.normNum(row[map.numero], { ultimas3: opts.ultimas3 });
       let lotNombre = map.loteria >= 0 ? String(row[map.loteria] ?? '').trim() : '';
-      if (!lotNombre) lotNombre = opts.loteriaFija ? Store.loteriaNombre(opts.loteriaFija) : '';
+      if (!lotNombre) lotNombre = opts.loteriaNombreFija || (opts.loteriaFija ? Store.loteriaNombre(opts.loteriaFija) : '');
       if (!fecha) { errores.push({ fila, motivo: `Fecha inválida: "${row[map.fecha] ?? ''}"` }); continue; }
       if (!numero) { errores.push({ fila, motivo: `Número inválido: "${row[map.numero] ?? ''}"` }); continue; }
       if (!lotNombre) { errores.push({ fila, motivo: 'Sin lotería' }); continue; }
