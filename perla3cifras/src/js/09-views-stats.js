@@ -3,8 +3,8 @@
    ===================================================================== */
 const StatV = { tab: 'frecuencia', desde: '', hasta: '', pairSel: 'AB' };
 
-function heatColor(t) { // secuencial de un solo tono (dorado): oscuro = poco, brillante = mucho
-  const a = [22, 35, 58], b = [233, 196, 92];
+function heatColor(t) { // secuencial de un solo tono (el acento del tema): tenue = poco, intenso = mucho
+  const a = (Tema.css('--heatlo') || '22,35,58').split(',').map(Number), b = (Tema.css('--heathi') || '233,196,92').split(',').map(Number);
   const m = Math.max(0, Math.min(1, t));
   return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * m)).join(',')})`;
 }
@@ -56,8 +56,8 @@ const StatTabs = {
     const head = ['Número', { t: 'Frecuencia', c: 'r' }, { t: '% hist.', c: 'r' }, { t: 'Teórico', c: 'r' }, { t: 'Sin salir', c: 'r' }];
     box.innerHTML = `
       <div class="card"><h2>Mapa de calor 000–999</h2><div class="sub">Cada celda es un número (filas de 40). Más brillante = más frecuente. Pase el cursor para ver el detalle.</div>
-        <div class="heat" id="heat">${st.freq.map((f, i) => `<div style="background:${f ? heatColor(f / max) : '#101a2b'}" title="${U.pad3(i)}: ${f} veces${st.gap[i] === null ? ' · nunca' : ' · hace ' + st.gap[i] + ' sorteos'}"></div>`).join('')}</div>
-        <div class="legend-row"><span><span class="sw" style="background:#101a2b"></span>0</span><span><span class="sw" style="background:${heatColor(0.33)}"></span>bajo</span><span><span class="sw" style="background:${heatColor(0.66)}"></span>medio</span><span><span class="sw" style="background:${heatColor(1)}"></span>máximo (${max})</span></div>
+        <div class="heat" id="heat">${st.freq.map((f, i) => `<div style="background:${f ? heatColor(f / max) : 'var(--heat0)'}" title="${U.pad3(i)}: ${f} veces${st.gap[i] === null ? ' · nunca' : ' · hace ' + st.gap[i] + ' sorteos'}"></div>`).join('')}</div>
+        <div class="legend-row"><span><span class="sw" style="background:var(--heat0)"></span>0</span><span><span class="sw" style="background:${heatColor(0.33)}"></span>bajo</span><span><span class="sw" style="background:${heatColor(0.66)}"></span>medio</span><span><span class="sw" style="background:${heatColor(1)}"></span>máximo (${max})</span></div>
       </div>
       <div class="grid g3">
         <div class="card"><h2>Más frecuentes</h2>${UI.table(head, top.map(fr))}</div>
@@ -83,7 +83,7 @@ const StatTabs = {
       <div class="toolbar"><label class="field">Pareja<select id="pairSel">${['AB', 'BC', 'AC'].map(k => `<option ${k === sel ? 'selected' : ''} value="${k}">${k} (${k === 'AB' ? 'centenas-decenas' : k === 'BC' ? 'decenas-unidades' : 'centenas-unidades'})</option>`).join('')}</select></label></div>
       <div class="grid g2"><div><div class="sub">Filas: cifra ${lab[0]} · Columnas: cifra ${lab[1]} · Valor teórico por pareja: 1% (${(st.n / 100).toFixed(1)} veces)</div>
       <div class="heat10"><div class="h"></div>${[...'0123456789'].map(d => `<div class="h">${d}</div>`).join('')}
-      ${Array.from({ length: 10 }, (_, a) => `<div class="h">${a}</div>` + Array.from({ length: 10 }, (_, b) => { const v = arr[a * 10 + b]; const t = v / max; return `<div style="background:${heatColor(t)};color:${t > 0.55 ? '#1d1600' : '#e6ecf5'}" title="${lab[0]}=${a}, ${lab[1]}=${b}: ${v} veces">${v}</div>`; }).join('')).join('')}</div>
+      ${Array.from({ length: 10 }, (_, a) => `<div class="h">${a}</div>` + Array.from({ length: 10 }, (_, b) => { const v = arr[a * 10 + b]; const t = v / max; return `<div style="background:${heatColor(t)};color:${t > 0.55 ? 'var(--on-gold)' : 'var(--ink)'}" title="${lab[0]}=${a}, ${lab[1]}=${b}: ${v} veces">${v}</div>`; }).join('')).join('')}</div>
       ${chiTxt(MathX.chiUniform(arr))}</div>
       <div>${UI.table(['Pareja', { t: 'Veces', c: 'r' }, { t: '%', c: 'r' }, { t: 'Teórico', c: 'r' }], Stats.topN(arr, 15).map(o => `<tr><td><span class="n3">${String(o.i).padStart(2, '0')}</span></td><td class="r">${o.v}</td><td class="r">${U.pct(o.v, st.n, 2)}</td><td class="r muted">1,00%</td></tr>`))}</div></div></div>`;
     document.getElementById('pairSel').onchange = (e) => { StatV.pairSel = e.target.value; StatTabs.parejas(box, st); };
@@ -109,7 +109,7 @@ const StatTabs = {
       <div class="card"><h2>Cambios entre sorteos por posición</h2><div class="sub">Diferencia (cifra actual − cifra anterior) mod 10. Teórico: 10% cada valor.</div><div class="chart-box"><canvas id="chChg"></canvas></div></div>
       <div class="card"><h2>Números repetidos en el periodo (${rep.length})</h2>${UI.table(['Número', { t: 'Veces', c: 'r' }, 'Primera', 'Última'], rep.slice(0, 40).map(o => `<tr><td>${UI.num3(U.pad3(o.i))}</td><td class="r">${o.f}</td><td>${U.fmtDate(st.rows[st.first[o.i]].fecha)}</td><td>${U.fmtDate(st.rows[st.last[o.i]].fecha)}</td></tr>`))}</div>
     </div>`;
-    UI.chart('chChg', { type: 'bar', data: { labels: [...'0123456789'].map(d => '+' + d), datasets: [0, 1, 2].map(p => ({ label: 'Posición ' + Stats.POS[p], data: st.changes[p].map(c => n1 ? +(100 * c / n1).toFixed(1) : 0), backgroundColor: [COLORS.a1, COLORS.a2, COLORS.a3][p], borderColor: '#131f33', borderWidth: 1 })).concat([UI.refLine('Teórico 10%', 10, 10)]) } });
+    UI.chart('chChg', { type: 'bar', data: { labels: [...'0123456789'].map(d => '+' + d), datasets: [0, 1, 2].map(p => ({ label: 'Posición ' + Stats.POS[p], data: st.changes[p].map(c => n1 ? +(100 * c / n1).toFixed(1) : 0), backgroundColor: [COLORS.a1, COLORS.a2, COLORS.a3][p], borderColor: COLORS.surface, borderWidth: 1 })).concat([UI.refLine('Teórico 10%', 10, 10)]) } });
   },
   paridad(box, st) {
     const T = Stats.theory;
@@ -135,7 +135,7 @@ const StatTabs = {
     <div class="card"><h2>Comparación de resultados históricos: primera mitad vs segunda mitad</h2><div class="sub">${s1.n ? `${U.fmtDate(s1.rows[0].fecha)} – ${U.fmtDate(s1.rows[s1.n - 1].fecha)} (${s1.n} sorteos) vs ${U.fmtDate(s2.rows[0].fecha)} – ${U.fmtDate(s2.rows[s2.n - 1].fecha)} (${s2.n} sorteos)` : 'Se necesitan al menos 2 sorteos.'}</div>
       <div class="grid g3">${[0, 1, 2].map(p => `<div><h3>Posición ${Stats.POS[p]}</h3><div class="chart-box"><canvas id="chH${p}"></canvas></div></div>`).join('')}</div></div>`;
     UI.chart('chMes', { type: 'line', data: { labels: months.map(([k]) => U.MESES[+k.slice(5) - 1] + ' ' + k.slice(0, 4)), datasets: [{ label: 'Sorteos', data: months.map(m => m[1]), borderColor: COLORS.gold, backgroundColor: 'rgba(217,181,74,.12)', fill: true, pointRadius: 3 }] }, options: { plugins: { legend: { display: false } } } });
-    [0, 1, 2].forEach(p => UI.chart('chH' + p, { type: 'bar', data: { labels: [...'0123456789'], datasets: [{ label: '1.ª mitad', data: s1.pos[p].map(c => s1.n ? +(100 * c / s1.n).toFixed(1) : 0), backgroundColor: COLORS.a2, borderColor: '#131f33', borderWidth: 1 }, { label: '2.ª mitad', data: s2.pos[p].map(c => s2.n ? +(100 * c / s2.n).toFixed(1) : 0), backgroundColor: COLORS.a1, borderColor: '#131f33', borderWidth: 1 }] } }));
+    [0, 1, 2].forEach(p => UI.chart('chH' + p, { type: 'bar', data: { labels: [...'0123456789'], datasets: [{ label: '1.ª mitad', data: s1.pos[p].map(c => s1.n ? +(100 * c / s1.n).toFixed(1) : 0), backgroundColor: COLORS.a2, borderColor: COLORS.surface, borderWidth: 1 }, { label: '2.ª mitad', data: s2.pos[p].map(c => s2.n ? +(100 * c / s2.n).toFixed(1) : 0), backgroundColor: COLORS.a1, borderColor: COLORS.surface, borderWidth: 1 }] } }));
   },
 };
 

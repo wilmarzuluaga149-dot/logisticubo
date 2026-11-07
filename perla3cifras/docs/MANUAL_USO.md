@@ -53,6 +53,13 @@ No hace falta ir a ningún módulo para actualizar:
   primera vez que se abre y nunca se duplica.
 * Todo esto se puede activar o desactivar en **Configuración → Actualización automática**.
 
+### Colores y temas (versión 1.3)
+Pulse el botón **🎨** de la barra superior (o vaya a *Configuración → Apariencia*) y elija un tema: **Azul industrial**,
+**Negro**, **Blanco**, **Blanco y negro (alto contraste)**, Grafito, Esmeralda, Océano, Vino o Arena. También puede elegir
+sus propios colores (fondo, paneles, texto, acento y secundario): el cambio se ve al instante y queda guardado. El botón
+*Volver al tema original* restablece los colores de fábrica. Los colores de los tres algoritmos en los gráficos no cambian,
+para que siempre se reconozca cuál es cuál.
+
 ### 3b. Importar y analizar (el camino más rápido)
 Un solo lugar para meter números **cada vez que lo necesite** y obtener el resultado al instante. Cuatro formas:
 * **Archivo Excel / CSV:** arrastre el archivo o haga clic para buscarlo. Sirve con 10, 1000, 5000 o más filas, **con o sin fechas**:

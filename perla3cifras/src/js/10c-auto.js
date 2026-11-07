@@ -177,7 +177,9 @@ const ImportRapido = {
     const btn = document.createElement('button'); btn.className = 'btn gold sm'; btn.id = 'btnImportar'; btn.textContent = '⇪ Importar archivo';
     btn.title = 'Elija un archivo Excel o CSV: se guarda y se analiza automáticamente';
     const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.xlsx,.xls,.csv,.txt'; inp.hidden = true; inp.id = 'globalFile';
-    top.prepend(inp); top.prepend(st); top.prepend(btn);
+    const bt = document.createElement('button'); bt.className = 'btn sm'; bt.id = 'btnTema'; bt.textContent = '🎨'; bt.title = 'Cambiar colores (temas, blanco, negro o personalizados)';
+    bt.onclick = () => Tema.abrirRapido();
+    top.prepend(inp); top.prepend(st); top.prepend(bt); top.prepend(btn);
     btn.onclick = () => inp.click();
     inp.onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) this.archivo(f); };
     // Soltar un archivo en cualquier parte de la aplicación

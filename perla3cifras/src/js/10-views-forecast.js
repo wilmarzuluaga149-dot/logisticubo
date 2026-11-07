@@ -224,7 +224,7 @@ UI.views.aciertos = (el) => {
     </div>`;
   ['acDesde', 'acHasta', 'acO'].forEach(id => document.getElementById(id).onchange = () => { AcV.desde = UI.val('acDesde'); AcV.hasta = UI.val('acHasta'); AcV.origen = UI.val('acO'); UI.render(); });
   document.getElementById('acX').onclick = () => { try { const wb = XL.book(); XLSX.utils.book_append_sheet(wb, XL.hojaAciertos(f), 'ACIERTOS'); XLSX.utils.book_append_sheet(wb, XL.hojaComparativo(f), 'COMPARATIVO'); XL.save(wb, `PERLA3_ACIERTOS_${U.stamp()}.xlsx`); } catch (err) { UI.toast(err.message, 'err'); } };
-  UI.chart('chMesAc', { type: 'bar', data: { labels: meses.map(k => U.MESES[+k.slice(5) - 1] + ' ' + k.slice(2, 4)), datasets: [1, 2, 3].map(a => ({ label: 'A' + a + ' (D+C)', data: meses.map(m => (per[a].porMes[m]?.D || 0) + (per[a].porMes[m]?.C || 0)), backgroundColor: ALG_COLOR[a], borderColor: '#131f33', borderWidth: 1 })) }, options: { scales: { y: { ticks: { precision: 0 } } } } });
+  UI.chart('chMesAc', { type: 'bar', data: { labels: meses.map(k => U.MESES[+k.slice(5) - 1] + ' ' + k.slice(2, 4)), datasets: [1, 2, 3].map(a => ({ label: 'A' + a + ' (D+C)', data: meses.map(m => (per[a].porMes[m]?.D || 0) + (per[a].porMes[m]?.C || 0)), backgroundColor: ALG_COLOR[a], borderColor: COLORS.surface, borderWidth: 1 })) }, options: { scales: { y: { ticks: { precision: 0 } } } } });
   const go = document.getElementById('btGo');
   if (go) {
     go.onclick = async () => {
@@ -279,10 +279,10 @@ UI.views.comparador = (el) => {
   document.getElementById('cmX').onclick = () => { try { const wb = XL.book(); XLSX.utils.book_append_sheet(wb, XL.hojaComparativo(f), 'COMPARATIVO'); XL.save(wb, `PERLA3_COMPARATIVO_${U.stamp()}.xlsx`); } catch (err) { UI.toast(err.message, 'err'); } };
   const labels = [1, 2, 3].map(a => 'A' + a + ' ' + Algo.NOMBRES[a]);
   UI.chart('cmBar', { type: 'bar', data: { labels, datasets: [
-    { label: 'Directos', data: [1, 2, 3].map(a => per[a].D), backgroundColor: COLORS.green, borderColor: '#131f33', borderWidth: 1 },
-    { label: 'Combinados', data: [1, 2, 3].map(a => per[a].C), backgroundColor: COLORS.gold, borderColor: '#131f33', borderWidth: 1 },
+    { label: 'Directos', data: [1, 2, 3].map(a => per[a].D), backgroundColor: COLORS.green, borderColor: COLORS.surface, borderWidth: 1 },
+    { label: 'Combinados', data: [1, 2, 3].map(a => per[a].C), backgroundColor: COLORS.gold, borderColor: COLORS.surface, borderWidth: 1 },
     { label: 'Esperado azar (D+C)', data: [1, 2, 3].map(a => +(per[a].eD + per[a].eC).toFixed(2)), backgroundColor: 'rgba(229,88,107,.45)', borderColor: COLORS.ref, borderWidth: 1 }] }, options: { scales: { y: { ticks: { precision: 0 } } } } });
-  UI.chart('cmPos', { type: 'bar', data: { labels: ['0/3', '1/3', '2/3', '3/3'], datasets: [1, 2, 3].map(a => ({ label: 'A' + a, data: per[a].mejorPos.map(c => per[a].evaluados ? +(100 * c / per[a].evaluados).toFixed(1) : 0), backgroundColor: ALG_COLOR[a], borderColor: '#131f33', borderWidth: 1 })) } });
+  UI.chart('cmPos', { type: 'bar', data: { labels: ['0/3', '1/3', '2/3', '3/3'], datasets: [1, 2, 3].map(a => ({ label: 'A' + a, data: per[a].mejorPos.map(c => per[a].evaluados ? +(100 * c / per[a].evaluados).toFixed(1) : 0), backgroundColor: ALG_COLOR[a], borderColor: COLORS.surface, borderWidth: 1 })) } });
   const fechas = [...new Set([1, 2, 3].flatMap(a => per[a].serie.map(x => x.fecha)))].sort();
   const serieAt = (a, key) => { let j = 0, v = 0; const s = per[a].serie; return fechas.map(fe => { while (j < s.length && s[j].fecha <= fe) { v = key === 'obs' ? s[j].D + s[j].C : s[j].eD + s[j].eC; j++; } return +v.toFixed(3); }); };
   UI.chart('cmLine', { type: 'line', data: { labels: fechas.map(U.fmtDate), datasets: [1, 2, 3].flatMap(a => [

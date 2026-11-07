@@ -1,7 +1,14 @@
 /* =====================================================================
    Infraestructura de interfaz: menú, navegación, modales, avisos, gráficos
    ===================================================================== */
-const COLORS = { a1: '#b38b12', a2: '#4f86f0', a3: '#109c6a', gold: '#d9b54a', green: '#2fbf7f', grid: 'rgba(148,170,205,.12)', ink2: '#a9b6ca', muted: '#7486a1', ref: '#e5586b' };
+// Colores de series (fijos: el color sigue a la entidad) + colores de interfaz leídos del tema activo
+const COLORS = {
+  a1: '#b38b12', a2: '#4f86f0', a3: '#109c6a', ref: '#e5586b',
+  get gold() { return Tema.css('--gold') || '#d9b54a'; }, get green() { return Tema.css('--green') || '#2fbf7f'; },
+  get grid() { return Tema.css('--grid') || 'rgba(148,170,205,.12)'; }, get ink2() { return Tema.css('--ink2') || '#a9b6ca'; },
+  get muted() { return Tema.css('--muted') || '#7486a1'; }, get surface() { return Tema.css('--panel') || '#131f33'; },
+  get input() { return Tema.css('--input') || '#0c1626'; }, get ink() { return Tema.css('--ink') || '#e6ecf5'; }, get line2() { return Tema.css('--line2') || '#2f4363'; },
+};
 const ALG_COLOR = { 1: COLORS.a1, 2: COLORS.a2, 3: COLORS.a3 };
 
 const MENU = [
@@ -146,7 +153,7 @@ const UI = {
     const base = {
       responsive: true, maintainAspectRatio: false, animation: { duration: 350 },
       interaction: { mode: 'index', intersect: false },
-      plugins: { legend: { labels: { boxWidth: 12, boxHeight: 12, usePointStyle: true } }, tooltip: { backgroundColor: '#0c1626', borderColor: '#2f4363', borderWidth: 1, titleColor: '#e6ecf5', bodyColor: '#e6ecf5', padding: 10 } },
+      plugins: { legend: { labels: { boxWidth: 12, boxHeight: 12, usePointStyle: true } }, tooltip: { backgroundColor: COLORS.input, borderColor: COLORS.line2, borderWidth: 1, titleColor: COLORS.ink, bodyColor: COLORS.ink, padding: 10 } },
       scales: config.type === 'doughnut' ? undefined : { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: COLORS.grid } } },
     };
     config.options = UI.merge(base, config.options || {});

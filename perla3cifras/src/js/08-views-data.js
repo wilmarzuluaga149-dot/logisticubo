@@ -46,7 +46,7 @@ UI.views.inicio = (el) => {
   UI.chart('chPos', {
     type: 'bar', data: {
       labels: [...'0123456789'],
-      datasets: [0, 1, 2].map(p => ({ label: 'Posición ' + Stats.POS[p], data: st.pos[p].map(c => st.n ? +(100 * c / st.n).toFixed(1) : 0), backgroundColor: [COLORS.a1, COLORS.a2, COLORS.a3][p], borderColor: '#131f33', borderWidth: 1 }))
+      datasets: [0, 1, 2].map(p => ({ label: 'Posición ' + Stats.POS[p], data: st.pos[p].map(c => st.n ? +(100 * c / st.n).toFixed(1) : 0), backgroundColor: [COLORS.a1, COLORS.a2, COLORS.a3][p], borderColor: COLORS.surface, borderWidth: 1 }))
         .concat([UI.refLine('Teórico 10%', 10, 10)]),
     }, options: { scales: { y: { title: { display: true, text: '% de sorteos' } }, x: { title: { display: true, text: 'Cifra' } } }, plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y}%` } } } },
   });
@@ -139,7 +139,7 @@ UI.views.historico = (el) => {
       return `<tr><td>${U.fmtDate(r.fecha)}</td><td>${U.esc(Store.loteriaNombre(r.loteriaId))}</td><td>${UI.num3(r.numero)}</td>
         <td class="c"><span class="dg">${r.numero[0]}</span></td><td class="c"><span class="dg">${r.numero[1]}</span></td><td class="c"><span class="dg">${r.numero[2]}</span></td>
         <td class="c">${b(1)}</td><td class="c">${b(2)}</td><td class="c">${b(3)}</td>
-        <td class="c">${h.top[1] ? `<span class="n3" style="font-size:12px;color:#e9c869">${h.top[1]}</span>` : ''}</td><td class="c">${h.top[2] ? `<span class="n3" style="font-size:12px;color:#9dbcff">${h.top[2]}</span>` : ''}</td><td class="c">${h.top[3] ? `<span class="n3" style="font-size:12px;color:#6fe0b0">${h.top[3]}</span>` : ''}</td>
+        <td class="c">${h.top[1] ? `<span class="n3" style="font-size:12px;color:var(--a1t)">${h.top[1]}</span>` : ''}</td><td class="c">${h.top[2] ? `<span class="n3" style="font-size:12px;color:var(--a2t)">${h.top[2]}</span>` : ''}</td><td class="c">${h.top[3] ? `<span class="n3" style="font-size:12px;color:var(--a3t)">${h.top[3]}</span>` : ''}</td>
         <td class="c">${h.D.map(x => `<span class="badge d">${x}</span>`).join(' ')}</td><td class="c">${h.C.map(x => `<span class="badge c">${x}</span>`).join(' ')}</td>
         <td><button class="btn sm" data-e="${r.id}" title="Editar">✎</button> <button class="btn sm danger" data-d="${r.id}" title="Eliminar">✕</button></td></tr>`;
     });

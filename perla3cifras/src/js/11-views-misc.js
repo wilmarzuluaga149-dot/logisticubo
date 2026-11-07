@@ -44,7 +44,7 @@ UI.views.informes = (el) => {
       { titulo: 'Últimos 30 resultados', tabla: { head: ['Fecha', 'Lotería', 'Número', 'A', 'B', 'C'], body: recientes.map(r => [U.fmtDate(r.fecha), Store.loteriaNombre(r.loteriaId), r.numero, r.numero[0], r.numero[1], r.numero[2]]) } },
     ], `PERLA3_INFORME_${U.slug(nombre)}_${U.stamp()}.pdf`);
   };
-  UI.chart('iCh1', { type: 'bar', data: { labels: [...'0123456789'], datasets: [0, 1, 2].map(p => ({ label: Stats.POS[p], data: st.pos[p], backgroundColor: [COLORS.a1, COLORS.a2, COLORS.a3][p], borderColor: '#131f33', borderWidth: 1 })) }, options: { plugins: { title: { display: true, text: 'Frecuencia por posición' } } } });
+  UI.chart('iCh1', { type: 'bar', data: { labels: [...'0123456789'], datasets: [0, 1, 2].map(p => ({ label: Stats.POS[p], data: st.pos[p], backgroundColor: [COLORS.a1, COLORS.a2, COLORS.a3][p], borderColor: COLORS.surface, borderWidth: 1 })) }, options: { plugins: { title: { display: true, text: 'Frecuencia por posición' } } } });
   UI.chart('iCh2', { type: 'bar', data: { labels: ['A1', 'A2', 'A3'], datasets: [{ label: 'Directos', data: [1, 2, 3].map(a => hs.per[a].D), backgroundColor: COLORS.green }, { label: 'Combinados', data: [1, 2, 3].map(a => hs.per[a].C), backgroundColor: COLORS.gold }] }, options: { plugins: { title: { display: true, text: 'Aciertos por algoritmo' } }, scales: { y: { ticks: { precision: 0 } } } } });
 };
 
@@ -174,6 +174,7 @@ UI.views.config = async (el) => {
         <div class="small muted" style="margin-top:8px">Los parámetros propios de cada algoritmo se ajustan en sus módulos (Algoritmo 1, 2 y 3).</div>
       </div>
     </div>
+    <div class="card" id="cfTema"><h2>Apariencia · colores</h2>${Tema.html()}</div>
     <div class="card"><h2>Actualización automática</h2>
       <div class="grid g2">
         <div>
@@ -235,6 +236,7 @@ UI.views.config = async (el) => {
     if (v === 'ok') { await Store.borrarTodo(); UI.toast('Todos los datos fueron borrados.'); UI.render(); }
   };
   Backup.bind();
+  Tema.bind(document.getElementById('cfTema'));
   try {
     const sp = document.getElementById('cfSpace'), pe = document.getElementById('cfPersist');
     if (navigator.storage?.estimate) { const e = await navigator.storage.estimate(); if (!sp.isConnected) return; sp.textContent = `${(e.usage / 1048576).toFixed(2)} MB de ${(e.quota / 1048576).toFixed(0)} MB disponibles`; }
@@ -253,6 +255,8 @@ UI.views.ayuda = (el) => {
       <li><b>Histórico:</b> registre resultados con fecha, lotería y número. Use «Pegar varios…» para copiar bloques desde Excel, o importe un archivo en el módulo <b>Excel</b>.</li>
       <li>Seleccione la <b>Lotería activa</b> en la barra superior: las estadísticas, el análisis de cifras y los algoritmos usarán esa lotería.</li>
       <li>Para practicar puede cargar <b>datos de ejemplo ficticios</b> en Configuración.</li></ol>
+    <h3>Colores</h3>
+    <p>Con el botón <b>🎨</b> de la barra superior puede elegir el tema (Blanco, Negro, Blanco y negro, Azul industrial y otros) o sus propios colores. Se guarda solo.</p>
     <h3>Todo se actualiza solo</h3>
     <p>Use el botón <b>⇪ Importar archivo</b> de la barra superior o suelte el archivo sobre cualquier pantalla: se guarda y se analiza al instante. Después de cada dato nuevo la aplicación recalcula sola la prueba histórica y el pronóstico de los 3 algoritmos para el próximo sorteo, y actualiza todas las pantallas. Con internet, al abrir descarga sola los resultados nuevos de Medellín y Santander (datos.gov.co). Se configura en <b>Configuración → Actualización automática</b>.</p>
     <h3>Importar y analizar (lo más rápido)</h3>
@@ -292,6 +296,7 @@ window.addEventListener('unhandledrejection', (e) => { console.error(e.reason); 
 (async function boot() {
   try {
     await Store.load();
+    Tema.aplicar();
     Store.setSaving('ok');
     UI.init();
     ImportRapido.init();

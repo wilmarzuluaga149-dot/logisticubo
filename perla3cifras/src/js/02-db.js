@@ -32,6 +32,7 @@ const DEFAULT_CONFIG = {
   autoSorteos: 100,                 // sorteos recientes por lotería que se evalúan automáticamente
   importarDirecto: true,            // al elegir/arrastrar un archivo se importa sin pasar por la revisión
   actualizarEnLinea: true,          // al abrir, descarga resultados nuevos de fuentes oficiales (datos.gov.co)
+  tema: { id: 'industrial', colores: null },
 };
 
 const DB = {

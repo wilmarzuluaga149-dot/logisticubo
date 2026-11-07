@@ -490,8 +490,8 @@ function iaResultado() {
   R.grupos.forEach((g, gi) => {
     UI.chart('iaCh' + gi, { type: 'bar', data: { labels: ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'],
       datasets: [
-        { label: `Números nuevos (${g.stNuevos.n})`, data: [0, 1, 2].flatMap(p => g.stNuevos.pos[p].map(c => g.stNuevos.n ? +(100 * c / g.stNuevos.n).toFixed(1) : 0)), backgroundColor: COLORS.gold, borderColor: '#131f33', borderWidth: 1 },
-        { label: `Histórico completo (${g.stHist.n})`, data: [0, 1, 2].flatMap(p => g.stHist.pos[p].map(c => g.stHist.n ? +(100 * c / g.stHist.n).toFixed(1) : 0)), backgroundColor: COLORS.a2, borderColor: '#131f33', borderWidth: 1 },
+        { label: `Números nuevos (${g.stNuevos.n})`, data: [0, 1, 2].flatMap(p => g.stNuevos.pos[p].map(c => g.stNuevos.n ? +(100 * c / g.stNuevos.n).toFixed(1) : 0)), backgroundColor: COLORS.gold, borderColor: COLORS.surface, borderWidth: 1 },
+        { label: `Histórico completo (${g.stHist.n})`, data: [0, 1, 2].flatMap(p => g.stHist.pos[p].map(c => g.stHist.n ? +(100 * c / g.stHist.n).toFixed(1) : 0)), backgroundColor: COLORS.a2, borderColor: COLORS.surface, borderWidth: 1 },
         UI.refLine('Teórico 10%', 10, 30)] },
       options: { scales: { y: { title: { display: true, text: '% de sorteos' } } } } });
     const b = document.getElementById('iaSave' + gi);
