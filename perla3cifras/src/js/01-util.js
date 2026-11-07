@@ -2,7 +2,7 @@
 /* =====================================================================
    PERLA 3 CIFRAS PRO — utilidades generales
    ===================================================================== */
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const APP_BUILD = '2026-11-07';
 const DB_NAME = 'perla3cifras_pro';
 const DB_VERSION = 1;
@@ -119,6 +119,8 @@ const U = {
   stamp() { const d = new Date(); const p = x => String(x).padStart(2, '0'); return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`; },
   slug(s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w]+/g, '_').replace(/^_|_$/g, '').toUpperCase() || 'X'; },
   normText(s) { return String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase(); },
+  ORIGEN: { manual: 'MANUAL', auto: 'AUTOMATICO', backtest: 'PRUEBA HISTORICA' },
+  origenTxt(o, bonito = false) { const t = U.ORIGEN[o] || 'MANUAL'; return bonito ? { MANUAL: 'manual', AUTOMATICO: 'automático', 'PRUEBA HISTORICA': 'prueba histórica' }[t] : t; },
   ALL_NUMS: Array.from({ length: 1000 }, (_, i) => String(i).padStart(3, '0')),
 };
 

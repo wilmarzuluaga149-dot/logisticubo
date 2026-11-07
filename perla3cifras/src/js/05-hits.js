@@ -108,7 +108,8 @@ const Hits = {
       for (const p of Store.pronosticos) {
         const key = `${p.loteriaId}|${p.fechaObjetivo}|${p.algoritmo}`;
         const prev = m.get(key);
-        if (!prev || (prev.origen === 'backtest' && p.origen === 'manual') || (prev.origen === p.origen && p.creado > prev.creado)) m.set(key, p);
+        const pr = o => ({ manual: 3, auto: 2, backtest: 1 }[o] || 0);
+        if (!prev || pr(p.origen) > pr(prev.origen) || (prev.origen === p.origen && p.creado > prev.creado)) m.set(key, p);
       }
       return m;
     });

@@ -159,7 +159,7 @@ async function iaProcesar(registros, { guardar, modoDup, k, evalLimit, onProgres
     const guardados = [];
     if (g.lot) {
       const porFecha = new Map(g.nuevos.map(r => [r.fecha, r.numero]));
-      for (const p of Store.pronosticos) if (p.loteriaId === g.lot.id && p.origen === 'manual' && porFecha.has(p.fechaObjetivo)) guardados.push({ p, ev: Hits.evaluateNum(p, porFecha.get(p.fechaObjetivo)) });
+      for (const p of Store.pronosticos) if (p.loteriaId === g.lot.id && p.origen !== 'backtest' && porFecha.has(p.fechaObjetivo)) guardados.push({ p, ev: Hits.evaluateNum(p, porFecha.get(p.fechaObjetivo)) });
     }
     res.grupos.push({
       nombre: g.nombre, loteriaId: g.lot ? g.lot.id : null, reemplazados: g.reemplazados || 0,
@@ -198,19 +198,18 @@ function iaTabArchivo() {
       <div class="small muted">Excel (.xlsx, .xls) o CSV/TXT · con o sin fechas · sin límite práctico de filas</div>
       ${IA.src ? `<div class="small ok" style="margin-top:6px">Archivo cargado: <b>${U.esc(IA.src.name)}</b> (${U.fmt(IA.src.aoa.length)} filas)</div>` : ''}
     </div>
+    <label class="small" style="display:block;margin-top:8px"><input type="checkbox" id="iaDirecto" ${Store.config.importarDirecto ? 'checked' : ''}> Importar y analizar directamente al elegir el archivo (sin revisión, cuando trae fecha, lotería y número)</label>
     <input type="file" id="iaFile" accept=".xlsx,.xls,.csv,.txt" hidden>
     <div class="small muted" style="margin-top:8px">Formatos aceptados: columnas FECHA · LOTERÍA · NÚMERO (en cualquier orden), o solo una columna de números. <a href="#" id="iaTpl">Descargar plantilla</a>.</div>`;
   const inp = document.getElementById('iaFile'), drop = document.getElementById('iaDrop');
-  const leer = async (file) => {
-    try { const d = await XL.leer(file); IA.src = { ...d, name: file.name, file }; IA.opts = null; IA.result = null; UI.render(); }
-    catch (err) { UI.toast('No se pudo leer el archivo: ' + err.message, 'err'); }
-  };
+  const leer = (file) => iaLeerArchivo(file);
   drop.onclick = () => inp.click();
   drop.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inp.click(); } };
   inp.onchange = (e) => { if (e.target.files[0]) leer(e.target.files[0]); };
   drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('over'); };
   drop.ondragleave = () => drop.classList.remove('over');
   drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove('over'); if (e.dataTransfer.files[0]) leer(e.dataTransfer.files[0]); };
+  document.getElementById('iaDirecto').onchange = (e) => Store.setConfig('importarDirecto', e.target.checked);
   document.getElementById('iaTpl').onclick = (e) => { e.preventDefault(); try { XL.save(XL.plantilla(), 'PERLA3_PLANTILLA_IMPORTACION.xlsx'); } catch (err) { UI.toast(err.message, 'err'); } };
 }
 
@@ -329,17 +328,44 @@ function iaTabNumero() {
   if (q.numero) run();
 }
 
+/* ---------- Opciones detectadas automáticamente ---------- */
+function iaOpcionesPorDefecto(d) {
+  const det = iaDetectar(d.aoa);
+  const lotDef = det.loteria >= 0 ? '' : (UI.ctxLoteria ? Store.loteriaNombre(UI.ctxLoteria) : (Store.loterias[0]?.nombre || ''));
+  // ¿Los números vienen con 4 cifras (chance)? Entonces se toman las 3 últimas.
+  const muestra = d.aoa.slice(det.hasHeader ? 1 : 0, 200).map(r => String(r[det.numero] ?? '').replace(/\D/g, '')).filter(Boolean);
+  const largos = muestra.filter(x => x.length >= 4 && !/^0+\d{3}$/.test(x)).length;
+  return { fecha: det.fecha, numero: det.numero, loteria: det.loteria, hasHeader: det.hasHeader, ncol: det.ncol,
+    loteriaNombre: lotDef, formatoFecha: Store.config.formatoFecha, ultimas3: Store.config.ultimas3 || (muestra.length > 0 && largos / muestra.length > 0.5), modoDup: 'omitir',
+    orden: 'antiguo_primero', fechaFinal: U.todayISO(), todasCeldas: det.ncol > 1 && det.fecha < 0 && det.loteria < 0 && !det.hasHeader };
+}
+
+/** Lee un archivo y, si trae FECHA, LOTERÍA y NÚMERO, lo importa y analiza directamente (sin revisión). */
+async function iaLeerArchivo(file) {
+  let d;
+  try { d = await XL.leer(file); } catch (err) { UI.toast('No se pudo leer el archivo: ' + err.message, 'err'); return; }
+  IA.src = { ...d, name: file.name, file }; IA.result = null;
+  IA.opts = iaOpcionesPorDefecto(IA.src);
+  const o = IA.opts;
+  if (Store.config.importarDirecto && o.fecha >= 0 && o.loteria >= 0) {
+    const r = iaConstruir(d.aoa, o);
+    if (r.registros.length) {
+      if (UI.current === 'importar') UI.render();
+      UI.toast(`Importando ${U.fmt(r.registros.length)} resultados de "${file.name}"…`, 'ok', 4000);
+      await iaEjecutar(r.registros, { guardar: true, modoDup: 'omitir', errores: r.errores.length, directo: true });
+      return;
+    }
+  }
+  // Falta información (lotería o fechas): se muestra la revisión para completarla
+  if (UI.current === 'importar') UI.render();
+  if (Store.config.importarDirecto) UI.toast('Revise las opciones: el archivo no indica ' + (o.fecha < 0 ? 'las fechas' : 'la lotería') + '.', 'warn', 6000);
+}
+
 /* ---------- Revisión del archivo / texto ---------- */
 function iaRevision() {
   const d = IA.src, box = document.getElementById('iaRev');
   if (!d.aoa.length) { box.innerHTML = '<div class="card"><div class="note warn">No se encontraron datos.</div></div>'; return; }
-  if (!IA.opts) {
-    const det = iaDetectar(d.aoa);
-    const lotDef = det.loteria >= 0 ? '' : (UI.ctxLoteria ? Store.loteriaNombre(UI.ctxLoteria) : (Store.loterias[0]?.nombre || ''));
-    IA.opts = { fecha: det.fecha, numero: det.numero, loteria: det.loteria, hasHeader: det.hasHeader, ncol: det.ncol,
-      loteriaNombre: lotDef, formatoFecha: Store.config.formatoFecha, ultimas3: Store.config.ultimas3, modoDup: 'omitir',
-      orden: 'antiguo_primero', fechaFinal: U.todayISO(), todasCeldas: det.ncol > 1 && det.fecha < 0 && det.loteria < 0 && !det.hasHeader };
-  }
+  if (!IA.opts) IA.opts = iaOpcionesPorDefecto(d);
   const o = IA.opts, ncol = Math.max(o.ncol, 1);
   const colOpts = (sel, none) => (none ? `<option value="-1" ${sel < 0 ? 'selected' : ''}>${none}</option>` : '') + Array.from({ length: ncol }, (_, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>Columna ${String.fromCharCode(65 + i)}${o.hasHeader && d.aoa[0][i] !== undefined ? ' – ' + U.esc(d.aoa[0][i]) : ''}</option>`).join('');
   const lotNames = Store.loterias.map(l => l.nombre);
@@ -413,7 +439,7 @@ function iaRevision() {
   document.getElementById('iaSolo').onclick = () => go(false);
 }
 
-async function iaEjecutar(registros, { guardar, modoDup = 'omitir', errores = 0 }) {
+async function iaEjecutar(registros, { guardar, modoDup = 'omitir', errores = 0, directo = false }) {
   if (IA.running) return;
   IA.running = true;
   const bar = document.getElementById('iaBar'), msg = document.getElementById('iaMsg');

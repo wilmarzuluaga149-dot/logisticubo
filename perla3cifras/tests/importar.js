@@ -17,6 +17,7 @@ const iso = (d) => d.toISOString().slice(0, 10);
   page.on('pageerror', e => errors.push(e.message + ' @ ' + (e.stack || '').split('\n')[1]));
   await page.goto(APP); await page.waitForFunction(() => window.P3);
   const ev = (fn, a) => page.evaluate(fn, a);
+  await ev(() => P3.Store.setConfig('importarDirecto', false)); // aquí se prueba el modo con revisión (el modo directo está en auto.js)
   const esperar = async () => { await page.waitForFunction(() => document.querySelector('#iaOut .card h2'), null, { timeout: 180000 }); await page.waitForTimeout(200); };
 
   console.log('1. Archivo de 1000 números SIN fechas (una columna)');

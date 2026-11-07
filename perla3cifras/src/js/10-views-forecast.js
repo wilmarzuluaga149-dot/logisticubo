@@ -148,7 +148,7 @@ function algView(a) {
           <button class="btn gold" id="qGo">Generar con Algoritmo ${a}</button></div><div id="qOut"></div>` : UI.needData(1, null)}
       </div>
       <div class="card"><h2>Pronósticos guardados (${prons.length})</h2>
-        ${UI.table(['Sorteo', 'Lotería', 'Origen', 'Generado', { t: 'Cand.', c: 'r' }, 'Top 5', 'Evaluación', ''], prons.slice(0, 60).map(p => `<tr><td>${U.fmtDate(p.fechaObjetivo)}</td><td>${U.esc(Store.loteriaNombre(p.loteriaId))}</td><td>${p.origen === 'backtest' ? '<span class="muted">prueba hist.</span>' : 'manual'}</td><td class="small">${U.fmtDateTime(p.creado)}</td><td class="r">${p.candidatos.length}</td>
+        ${UI.table(['Sorteo', 'Lotería', 'Origen', 'Generado', { t: 'Cand.', c: 'r' }, 'Top 5', 'Evaluación', ''], prons.slice(0, 60).map(p => `<tr><td>${U.fmtDate(p.fechaObjetivo)}</td><td>${U.esc(Store.loteriaNombre(p.loteriaId))}</td><td>${(p.origen === 'manual' ? 'manual' : `<span class="muted">${U.origenTxt(p.origen, true)}</span>`)}</td><td class="small">${U.fmtDateTime(p.creado)}</td><td class="r">${p.candidatos.length}</td>
           <td>${p.candidatos.slice(0, 5).map(c => `<span class="n3" style="font-size:12px">${c.n}</span>`).join(' ')}</td><td class="small">${evalLine(p)}</td>
           <td><button class="btn sm" data-ver="${p.id}">Ver</button> <button class="btn sm danger" data-del="${p.id}">✕</button></td></tr>`))}
         ${prons.length > 60 ? `<div class="small muted">Se muestran 60 de ${prons.length}. Exporte a Excel para ver todos.</div>` : ''}
@@ -192,7 +192,7 @@ UI.views.aciertos = (el) => {
       Solo se evalúan pronósticos generados con datos anteriores al sorteo. <a href="#config">Cambiar reglas</a>.</div></div>
     <div class="card no-print"><div class="toolbar" style="margin:0">
       <div class="field"><span>Lotería</span><b>${L ? U.esc(Store.loteriaNombre(L)) : 'Todas'}</b></div>${UI.periodFields('ac', AcV)}
-      <label class="field">Origen<select id="acO"><option value="todos">Todos</option><option value="manual" ${AcV.origen === 'manual' ? 'selected' : ''}>Manuales</option><option value="backtest" ${AcV.origen === 'backtest' ? 'selected' : ''}>Prueba histórica</option></select></label>
+      <label class="field">Origen<select id="acO"><option value="todos">Todos</option><option value="manual" ${AcV.origen === 'manual' ? 'selected' : ''}>Manuales</option><option value="auto" ${AcV.origen === 'auto' ? 'selected' : ''}>Automáticos</option><option value="backtest" ${AcV.origen === 'backtest' ? 'selected' : ''}>Prueba histórica</option></select></label>
       <button class="btn" id="acX">Exportar aciertos (Excel)</button></div></div>
     <div class="kpis">
       <div class="kpi"><div class="l">Pronósticos</div><div class="v">${tot('pronosticos')}</div><div class="s">${tot('evaluados')} evaluados · ${tot('pendientes')} pendientes</div></div>
@@ -220,7 +220,7 @@ UI.views.aciertos = (el) => {
       <div class="card"><h2>Aciertos por periodo (mensual)</h2><div class="chart-box"><canvas id="chMesAc"></canvas></div></div>
     </div>
     <div class="card"><h2>Historial de aciertos (${lista.length})</h2>
-      ${UI.table(['Fecha', 'Lotería', 'Algoritmo', 'Tipo', 'Resultado', 'Candidato', { t: 'Posición en lista', c: 'r' }, 'Origen'], lista.slice(0, 200).map(({ p, ev }) => `<tr><td>${U.fmtDate(p.fechaObjetivo)}</td><td>${U.esc(Store.loteriaNombre(p.loteriaId))}</td><td>${UI.algBadge(p.algoritmo)}</td><td>${ev.directo ? '<span class="badge d">D-GANADOR</span>' : '<span class="badge c">C-GANADOR</span>'}</td><td>${UI.num3(ev.resultado)}</td><td>${UI.num3(ev.directo ? ev.resultado : p.candidatos[ev.rankC - 1].n)}</td><td class="r">${ev.directo ? ev.rank : ev.rankC} de ${p.candidatos.length}</td><td class="small">${p.origen === 'backtest' ? 'prueba histórica' : 'manual'}</td></tr>`))}
+      ${UI.table(['Fecha', 'Lotería', 'Algoritmo', 'Tipo', 'Resultado', 'Candidato', { t: 'Posición en lista', c: 'r' }, 'Origen'], lista.slice(0, 200).map(({ p, ev }) => `<tr><td>${U.fmtDate(p.fechaObjetivo)}</td><td>${U.esc(Store.loteriaNombre(p.loteriaId))}</td><td>${UI.algBadge(p.algoritmo)}</td><td>${ev.directo ? '<span class="badge d">D-GANADOR</span>' : '<span class="badge c">C-GANADOR</span>'}</td><td>${UI.num3(ev.resultado)}</td><td>${UI.num3(ev.directo ? ev.resultado : p.candidatos[ev.rankC - 1].n)}</td><td class="r">${ev.directo ? ev.rank : ev.rankC} de ${p.candidatos.length}</td><td class="small">${U.origenTxt(p.origen, true)}</td></tr>`))}
     </div>`;
   ['acDesde', 'acHasta', 'acO'].forEach(id => document.getElementById(id).onchange = () => { AcV.desde = UI.val('acDesde'); AcV.hasta = UI.val('acHasta'); AcV.origen = UI.val('acO'); UI.render(); });
   document.getElementById('acX').onclick = () => { try { const wb = XL.book(); XLSX.utils.book_append_sheet(wb, XL.hojaAciertos(f), 'ACIERTOS'); XLSX.utils.book_append_sheet(wb, XL.hojaComparativo(f), 'COMPARATIVO'); XL.save(wb, `PERLA3_ACIERTOS_${U.stamp()}.xlsx`); } catch (err) { UI.toast(err.message, 'err'); } };
@@ -262,7 +262,7 @@ UI.views.comparador = (el) => {
   el.innerHTML = `
     <div class="card no-print"><div class="toolbar" style="margin:0">
       <label class="field">Lotería<select id="cmL">${UI.loteriaOptions(CmpV.loteriaId)}</select></label>${UI.periodFields('cm', CmpV)}
-      <label class="field">Origen<select id="cmO"><option value="todos">Todos</option><option value="manual" ${CmpV.origen === 'manual' ? 'selected' : ''}>Manuales</option><option value="backtest" ${CmpV.origen === 'backtest' ? 'selected' : ''}>Prueba histórica</option></select></label>
+      <label class="field">Origen<select id="cmO"><option value="todos">Todos</option><option value="manual" ${CmpV.origen === 'manual' ? 'selected' : ''}>Manuales</option><option value="auto" ${CmpV.origen === 'auto' ? 'selected' : ''}>Automáticos</option><option value="backtest" ${CmpV.origen === 'backtest' ? 'selected' : ''}>Prueba histórica</option></select></label>
       <button class="btn" id="cmX">Exportar comparativo (Excel)</button></div></div>
     ${anyEval ? '' : `<div class="note warn">Aún no hay pronósticos evaluados con estos filtros. Ejecute una <a href="#aciertos">prueba histórica cronológica</a> o guarde pronósticos y registre luego los resultados.</div>`}
     <div class="card"><h2>Comparativo de rendimiento</h2>

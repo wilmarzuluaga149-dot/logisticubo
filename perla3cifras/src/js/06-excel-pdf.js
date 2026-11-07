@@ -51,7 +51,7 @@ const XL = {
       p.candidatos.forEach((c, i) => {
         let est = ev.estado === 'pendiente' ? 'PENDIENTE' : '';
         if (ev.estado === 'evaluado') est = c.n === ev.resultado ? 'D-GANADOR' : (U.isPerm(c.n, ev.resultado) && ev.combinado ? 'C-GANADOR' : 'SIN ACIERTO');
-        aoa.push([p.id, 'A' + p.algoritmo, Store.loteriaNombre(p.loteriaId), p.fechaObjetivo, p.fechaCorte || '', p.nHist, p.origen === 'backtest' ? 'PRUEBA HISTORICA' : 'MANUAL', p.creado, i + 1, c.n, c.score, ev.resultado || '', est, conRazon ? (c.razon || '') : '']);
+        aoa.push([p.id, 'A' + p.algoritmo, Store.loteriaNombre(p.loteriaId), p.fechaObjetivo, p.fechaCorte || '', p.nHist, U.origenTxt(p.origen), p.creado, i + 1, c.n, c.score, ev.resultado || '', est, conRazon ? (c.razon || '') : '']);
       });
     }
     return this.sheet(aoa, [9, 11], [6, 10, 22, 13, 13, 10, 16, 22, 9, 11, 11, 11, 13, 80]);
@@ -60,7 +60,7 @@ const XL = {
     const aoa = [['FECHA_OBJETIVO', 'LOTERIA', 'ORIGEN', 'CANDIDATOS', 'TOP_1', 'LISTA', 'RESULTADO', 'D', 'C', 'MEJOR_COINCIDENCIA_POSICIONAL']];
     for (const p of prons.filter(x => x.algoritmo === alg)) {
       const ev = Hits.evaluate(p);
-      aoa.push([p.fechaObjetivo, Store.loteriaNombre(p.loteriaId), p.origen === 'backtest' ? 'PRUEBA HISTORICA' : 'MANUAL', p.candidatos.length, p.candidatos[0]?.n || '',
+      aoa.push([p.fechaObjetivo, Store.loteriaNombre(p.loteriaId), U.origenTxt(p.origen), p.candidatos.length, p.candidatos[0]?.n || '',
         p.candidatos.map(c => c.n).join(' '), ev.resultado || '', ev.directo ? 'SI' : (ev.estado === 'evaluado' ? 'NO' : ''), ev.combinado ? 'SI' : (ev.estado === 'evaluado' ? 'NO' : ''), ev.estado === 'evaluado' ? ev.mejorPos : '']);
     }
     return this.sheet(aoa, [4, 5, 6], [13, 22, 16, 11, 8, 60, 11, 5, 5, 14]);
@@ -70,7 +70,7 @@ const XL = {
     const aoa = [['FECHA', 'LOTERIA', 'ALGORITMO', 'TIPO', 'RESULTADO', 'CANDIDATO', 'POSICION_EN_LISTA', 'ORIGEN']];
     for (const { p, ev } of lista) {
       const cand = ev.directo ? ev.resultado : p.candidatos[ev.rankC - 1]?.n;
-      aoa.push([p.fechaObjetivo, Store.loteriaNombre(p.loteriaId), 'A' + p.algoritmo, ev.directo ? 'D-GANADOR' : 'C-GANADOR', ev.resultado, cand || '', ev.directo ? ev.rank : ev.rankC, p.origen === 'backtest' ? 'PRUEBA HISTORICA' : 'MANUAL']);
+      aoa.push([p.fechaObjetivo, Store.loteriaNombre(p.loteriaId), 'A' + p.algoritmo, ev.directo ? 'D-GANADOR' : 'C-GANADOR', ev.resultado, cand || '', ev.directo ? ev.rank : ev.rankC, U.origenTxt(p.origen)]);
     }
     return this.sheet(aoa, [4, 5], [12, 22, 10, 12, 10, 10, 16, 16]);
   },

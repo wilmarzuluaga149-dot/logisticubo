@@ -36,6 +36,23 @@ pronósticos se borrarán.
   * *D-Ganador / C-Ganador:* algoritmos que acertaron.
   Se llenan cuando hay un pronóstico guardado o de prueba histórica para ese sorteo (si hay ambos, prevalece el manual).
 
+### Todo se actualiza solo (versión 1.2)
+No hace falta ir a ningún módulo para actualizar:
+* **Botón «⇪ Importar archivo»** (barra superior, en todas las pantallas) o **soltar el archivo** sobre cualquier pantalla:
+  si el archivo trae FECHA, LOTERÍA y NÚMERO se guarda y se analiza al instante, sin revisión ni botones. Si falta algo
+  (por ejemplo la lotería), se muestra la revisión para completarlo. Los números de 4 cifras se convierten solos a sus 3 últimas.
+* **Recálculo automático:** cada vez que entra un resultado (archivo, lista pegada, un resultado, descarga en línea) se
+  ejecuta sola la prueba histórica de los sorteos recientes de esa lotería y se genera el **pronóstico de los 3 algoritmos
+  para el próximo sorteo** (origen «automático»). Cuando llega el resultado de ese sorteo, el pronóstico queda evaluado y se
+  genera el siguiente. Se actualizan Inicio, Histórico, Estadísticas, Algoritmos, Control de aciertos, Comparador e Informes.
+  El aviso «⟳ Actualizando…» en la barra superior indica que está trabajando.
+* **Actualización en línea al abrir:** con internet, descarga sola los resultados nuevos de la **Lotería de Medellín** y la
+  **Lotería de Santander** desde datos.gov.co (fuente oficial). Los chances no tienen fuente oficial abierta: se actualizan
+  con un archivo.
+* **Histórico incluido:** una copia personal de la aplicación puede traer el histórico dentro del archivo; se carga sola la
+  primera vez que se abre y nunca se duplica.
+* Todo esto se puede activar o desactivar en **Configuración → Actualización automática**.
+
 ### 3b. Importar y analizar (el camino más rápido)
 Un solo lugar para meter números **cada vez que lo necesite** y obtener el resultado al instante. Cuatro formas:
 * **Archivo Excel / CSV:** arrastre el archivo o haga clic para buscarlo. Sirve con 10, 1000, 5000 o más filas, **con o sin fechas**:

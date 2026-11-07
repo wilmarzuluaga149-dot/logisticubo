@@ -14,7 +14,7 @@ integración con Excel 365, informes PDF y copias de seguridad.
 | Archivo | Contenido |
 |---|---|
 | `PERLA3CIFRAS_PRO.html` | **La aplicación completa en un solo archivo** (incluye Chart.js, SheetJS y jsPDF). Funciona sin conexión y sin instalar nada. |
-| `docs/MANUAL_PERLA3CIFRAS_PRO.pdf` | Los tres manuales en un solo PDF (versión 1.1.0). |
+| `docs/MANUAL_PERLA3CIFRAS_PRO.pdf` | Los tres manuales en un solo PDF (versión 1.2.0). |
 | `docs/MANUAL_USO.md` | Instrucciones de uso de los 16 módulos. |
 | `docs/MANUAL_INSTALACION.md` | Instalación en Windows, Android, publicación gratuita y actualización sin perder datos. |
 | `docs/MANUAL_EXCEL.md` | Importación y exportación con Excel 365 y CSV; estructura de las 8 hojas. |
@@ -22,20 +22,21 @@ integración con Excel 365, informes PDF y copias de seguridad.
 | `src/` | Código fuente (HTML, CSS y módulos JavaScript). |
 | `lib/` | Librerías libres usadas: Chart.js 4.4.4 (MIT), SheetJS CE 0.18.5 (Apache 2.0), jsPDF 2.5.2 y jsPDF-AutoTable 3.8.4 (MIT). |
 | `build.js` | Genera `PERLA3CIFRAS_PRO.html` a partir de `src/` y `lib/` (`node build.js`). |
-| `tests/` | Pruebas automáticas (95 comprobaciones de control de calidad). |
+| `tests/` | Pruebas automáticas (115 comprobaciones de control de calidad). |
 | `index.html`, `manifest.webmanifest`, `sw.js`, `icon.svg` | Permiten publicarla en un servidor (p. ej. GitHub Pages) e instalarla como app en el celular con uso sin conexión. |
 
 ## Inicio rápido
 
 1. Descargue `PERLA3CIFRAS_PRO.html` y ábralo con Google Chrome o Microsoft Edge (doble clic).
 2. Vaya a **Loterías** y cree su lotería, o a **Configuración → Cargar datos de ejemplo** para practicar.
-3. Use **Importar y analizar**: arrastre un archivo (con o sin fechas, de cualquier tamaño), pegue una lista o ingrese un solo resultado, y obtenga al instante el análisis y el pronóstico de los 3 algoritmos con todo lo que ya tenía más lo nuevo.
+3. Pulse **⇪ Importar archivo** (o suelte el archivo en cualquier pantalla): se guarda, se analiza y se actualizan solos todos los módulos. También puede usar **Importar y analizar**: arrastre un archivo (con o sin fechas, de cualquier tamaño), pegue una lista o ingrese un solo resultado, y obtenga al instante el análisis y el pronóstico de los 3 algoritmos con todo lo que ya tenía más lo nuevo.
 4. Use **Generar pronósticos**, ejecute la **prueba histórica** en **Control de aciertos** y compare en el **Comparador**.
 
 ## Para desarrolladores
 
 ```bash
 node build.js                    # reconstruye PERLA3CIFRAS_PRO.html
+node build.js --datos historico.json --salida MI_PERLA3.html   # copia personal con histórico incluido
 cd tests && npm install && npm test   # pruebas (Playwright + Chromium)
 ```
 

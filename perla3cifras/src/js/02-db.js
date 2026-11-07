@@ -27,6 +27,11 @@ const DEFAULT_CONFIG = {
   // Prueba histórica
   btCantidad: 10,
   btMinHist: 30,
+  // Actualización automática
+  autoActualizar: true,             // tras cada dato nuevo: prueba histórica + pronóstico del próximo sorteo
+  autoSorteos: 100,                 // sorteos recientes por lotería que se evalúan automáticamente
+  importarDirecto: true,            // al elegir/arrastrar un archivo se importa sin pasar por la revisión
+  actualizarEnLinea: true,          // al abrir, descarga resultados nuevos de fuentes oficiales (datos.gov.co)
 };
 
 const DB = {
@@ -186,6 +191,7 @@ const Store = {
     else { rec = { id: this.nextId(this.resultados), ...v, creado: new Date().toISOString() }; this.resultados.push(rec); }
     await DB.write([{ store: 'resultados', put: rec }]);
     this.changed();
+    this.avisarNuevos([rec]);
     return rec;
   },
   async deleteResultado(id) {
@@ -210,7 +216,12 @@ const Store = {
     }
     await DB.write(ops);
     this.changed();
+    this.avisarNuevos(ops.map(o => o.put));
     return { nuevos, reemplazados, omitidos };
+  },
+  /** Avisa al motor automático de los resultados nuevos o cambiados. */
+  avisarNuevos(recs) {
+    if (typeof Auto !== 'undefined' && recs.length) Auto.encolar(recs.map(r => ({ loteriaId: r.loteriaId, fecha: r.fecha })));
   },
   resultadosDe(loteriaId, { desde, hasta } = {}) {
     return this.resultados.filter(r => (loteriaId == null || r.loteriaId === loteriaId) && (!desde || r.fecha >= desde) && (!hasta || r.fecha <= hasta));

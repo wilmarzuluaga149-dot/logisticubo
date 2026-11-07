@@ -174,6 +174,22 @@ UI.views.config = async (el) => {
         <div class="small muted" style="margin-top:8px">Los parámetros propios de cada algoritmo se ajustan en sus módulos (Algoritmo 1, 2 y 3).</div>
       </div>
     </div>
+    <div class="card"><h2>Actualización automática</h2>
+      <div class="grid g2">
+        <div>
+          <label class="field"><span><input type="checkbox" id="cfAuto" ${c.autoActualizar ? 'checked' : ''}> Recalcular todo automáticamente cuando entran resultados nuevos</span></label>
+          <div class="small muted" style="margin:4px 0 10px 24px">Ejecuta la prueba histórica de los sorteos nuevos y genera el pronóstico de los 3 algoritmos para el próximo sorteo. Se actualizan Inicio, Histórico, Estadísticas, Algoritmos, Control de aciertos, Comparador e Informes.</div>
+          <label class="field">Sorteos recientes que se evalúan por lotería<select id="cfAutoN">${[50, 100, 200, 500].map(v => `<option ${v === +c.autoSorteos ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+          <label class="field" style="margin-top:8px"><span><input type="checkbox" id="cfDirecto" ${c.importarDirecto ? 'checked' : ''}> Importar directamente al elegir o soltar un archivo (sin revisión cuando trae fecha, lotería y número)</span></label>
+        </div>
+        <div>
+          <label class="field"><span><input type="checkbox" id="cfLinea" ${c.actualizarEnLinea ? 'checked' : ''}> Al abrir, descargar resultados nuevos de fuentes oficiales (datos.gov.co)</span></label>
+          <div class="small muted" style="margin:4px 0 10px 24px">Disponible hoy para <b>Lotería de Medellín</b> y <b>Lotería de Santander</b> (si existen en el sistema). Requiere internet. Los chances no tienen fuente oficial abierta: se actualizan importando un archivo.</div>
+          <div class="toolbar"><button class="btn" id="cfLineaYa">Actualizar ahora desde internet</button></div>
+          <div class="small muted">Última actualización en línea: ${Store.meta.ultimaActualizacionEnLinea ? U.fmtDateTime(Store.meta.ultimaActualizacionEnLinea.fecha) + ' (' + Store.meta.ultimaActualizacionEnLinea.nuevos + ' nuevos)' : 'nunca'} · último recálculo automático: ${U.fmtDateTime(Store.meta.ultimaActualizacionAuto)}</div>
+        </div>
+      </div>
+    </div>
     <div class="grid g2">
       <div class="card"><h2>Copias de seguridad y restauración</h2>
         <div class="toolbar"><button class="btn green" id="bkDown">Descargar copia de seguridad</button><label class="btn" for="bkFile">Restaurar copia…</label><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
@@ -201,6 +217,11 @@ UI.views.config = async (el) => {
   document.getElementById('cfRep').onchange = e => save('combinadoConRepetidas', e.target.checked);
   document.getElementById('cfSrc').onchange = e => save('fuenteDatos', e.target.value);
   document.getElementById('cfK').onchange = e => save('cantidadDefecto', +e.target.value);
+  document.getElementById('cfAuto').onchange = e => save('autoActualizar', e.target.checked);
+  document.getElementById('cfAutoN').onchange = e => save('autoSorteos', +e.target.value);
+  document.getElementById('cfDirecto').onchange = e => save('importarDirecto', e.target.checked);
+  document.getElementById('cfLinea').onchange = e => save('actualizarEnLinea', e.target.checked);
+  document.getElementById('cfLineaYa').onclick = async (e) => { e.target.disabled = true; e.target.textContent = 'Consultando…'; await EnLinea.actualizar({ silencioso: false, crear: true }); if (UI.current === 'config') UI.render(); };
   document.getElementById('cfDemo').onclick = () => Demo.cargar();
   document.getElementById('cfDemoDel').onclick = async () => {
     const ej = Store.loterias.filter(l => l.ejemplo);
@@ -232,6 +253,8 @@ UI.views.ayuda = (el) => {
       <li><b>Histórico:</b> registre resultados con fecha, lotería y número. Use «Pegar varios…» para copiar bloques desde Excel, o importe un archivo en el módulo <b>Excel</b>.</li>
       <li>Seleccione la <b>Lotería activa</b> en la barra superior: las estadísticas, el análisis de cifras y los algoritmos usarán esa lotería.</li>
       <li>Para practicar puede cargar <b>datos de ejemplo ficticios</b> en Configuración.</li></ol>
+    <h3>Todo se actualiza solo</h3>
+    <p>Use el botón <b>⇪ Importar archivo</b> de la barra superior o suelte el archivo sobre cualquier pantalla: se guarda y se analiza al instante. Después de cada dato nuevo la aplicación recalcula sola la prueba histórica y el pronóstico de los 3 algoritmos para el próximo sorteo, y actualiza todas las pantallas. Con internet, al abrir descarga sola los resultados nuevos de Medellín y Santander (datos.gov.co). Se configura en <b>Configuración → Actualización automática</b>.</p>
     <h3>Importar y analizar (lo más rápido)</h3>
     <p>En <b>Importar y analizar</b> puede, cada vez que lo necesite, arrastrar un archivo Excel o CSV (con o sin fechas, de pocos o miles de números), pegar una lista de números, registrar un solo resultado o evaluar un número. Tras una revisión previa, la aplicación une lo nuevo con lo que ya tenía (sin duplicar) y muestra: el pronóstico de los 3 algoritmos para el próximo sorteo, cómo habrían acertado con los números nuevos (usando solo los sorteos anteriores a cada uno) y la comparación con el histórico. Con «Solo analizar» no se guarda nada.</p>
     <h3>2. Columnas del histórico</h3><ul>
@@ -271,9 +294,13 @@ window.addEventListener('unhandledrejection', (e) => { console.error(e.reason); 
     await Store.load();
     Store.setSaving('ok');
     UI.init();
+    ImportRapido.init();
+    window.P3 = { U, Store, Stats, Algo, Hits, XL, PDF, UI, Demo, Importer, Backup, MathX, DB, Auto, EnLinea, DatosIncluidos, ImportRapido, version: APP_VERSION };
+    await DatosIncluidos.cargar();
+    Auto.alAbrir();
+    if (Store.config.actualizarEnLinea) setTimeout(() => EnLinea.actualizar({ silencioso: true }), 800);
     if (DB.mode !== 'idb') UI.toast('IndexedDB no está disponible: se usa almacenamiento de respaldo (limitado). Descargue copias de seguridad.', 'warn', 8000);
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
-    window.P3 = { U, Store, Stats, Algo, Hits, XL, PDF, UI, Demo, Importer, Backup, MathX, DB, version: APP_VERSION };
   } catch (err) {
     console.error(err);
     document.getElementById('view').innerHTML = `<div class="card"><h2>No se pudo iniciar</h2><p class="bad">${U.esc(err.message)}</p><p>Compruebe que el navegador permite el almacenamiento local (no use modo incógnito) e intente recargar.</p></div>`;

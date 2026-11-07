@@ -175,6 +175,10 @@ td.r,th.r{text-align:right} td.c,th.c{text-align:center}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .drop{border:2px dashed var(--line2);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;color:var(--ink2);background:rgba(12,22,38,.5);transition:border-color .15s,background .15s}
 .drop:hover,.drop.over,.drop:focus-visible{border-color:var(--gold);background:rgba(217,181,74,.06);outline:none}
+.drop-veil{position:fixed;inset:0;z-index:150;background:rgba(11,20,36,.82);display:grid;place-items:center;pointer-events:none}
+.drop-veil div{border:3px dashed var(--gold);border-radius:18px;padding:40px 50px;text-align:center;color:var(--gold);font:700 20px/1.6 inherit;background:rgba(217,181,74,.06)}
+@media (max-width:860px){#btnImportar{padding:4px 8px}}
+@media (max-width:860px){#autoState:not([hidden]){display:block;width:100%;order:9;font-size:11.5px;text-align:right}}
 
 </style>
 </head>
@@ -667,7 +671,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 /* =====================================================================
    PERLA 3 CIFRAS PRO — utilidades generales
    ===================================================================== */
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const APP_BUILD = '2026-11-07';
 const DB_NAME = 'perla3cifras_pro';
 const DB_VERSION = 1;
@@ -784,6 +788,8 @@ const U = {
   stamp() { const d = new Date(); const p = x => String(x).padStart(2, '0'); return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`; },
   slug(s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w]+/g, '_').replace(/^_|_$/g, '').toUpperCase() || 'X'; },
   normText(s) { return String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase(); },
+  ORIGEN: { manual: 'MANUAL', auto: 'AUTOMATICO', backtest: 'PRUEBA HISTORICA' },
+  origenTxt(o, bonito = false) { const t = U.ORIGEN[o] || 'MANUAL'; return bonito ? { MANUAL: 'manual', AUTOMATICO: 'automático', 'PRUEBA HISTORICA': 'prueba histórica' }[t] : t; },
   ALL_NUMS: Array.from({ length: 1000 }, (_, i) => String(i).padStart(3, '0')),
 };
 
@@ -875,6 +881,11 @@ const DEFAULT_CONFIG = {
   // Prueba histórica
   btCantidad: 10,
   btMinHist: 30,
+  // Actualización automática
+  autoActualizar: true,             // tras cada dato nuevo: prueba histórica + pronóstico del próximo sorteo
+  autoSorteos: 100,                 // sorteos recientes por lotería que se evalúan automáticamente
+  importarDirecto: true,            // al elegir/arrastrar un archivo se importa sin pasar por la revisión
+  actualizarEnLinea: true,          // al abrir, descarga resultados nuevos de fuentes oficiales (datos.gov.co)
 };
 
 const DB = {
@@ -1034,6 +1045,7 @@ const Store = {
     else { rec = { id: this.nextId(this.resultados), ...v, creado: new Date().toISOString() }; this.resultados.push(rec); }
     await DB.write([{ store: 'resultados', put: rec }]);
     this.changed();
+    this.avisarNuevos([rec]);
     return rec;
   },
   async deleteResultado(id) {
@@ -1058,7 +1070,12 @@ const Store = {
     }
     await DB.write(ops);
     this.changed();
+    this.avisarNuevos(ops.map(o => o.put));
     return { nuevos, reemplazados, omitidos };
+  },
+  /** Avisa al motor automático de los resultados nuevos o cambiados. */
+  avisarNuevos(recs) {
+    if (typeof Auto !== 'undefined' && recs.length) Auto.encolar(recs.map(r => ({ loteriaId: r.loteriaId, fecha: r.fecha })));
   },
   resultadosDe(loteriaId, { desde, hasta } = {}) {
     return this.resultados.filter(r => (loteriaId == null || r.loteriaId === loteriaId) && (!desde || r.fecha >= desde) && (!hasta || r.fecha <= hasta));
@@ -1451,7 +1468,14 @@ const Algo = {
   },
 
   /** Prueba histórica cronológica (walk-forward). Cada sorteo se pronostica solo con datos anteriores. */
-  async backtest({ loteriaId, desde, hasta, algs = [1, 2, 3], k = 10, minHist = 30, onProgress = () => { }, cancel = { v: false } }) {
+  /** Las pruebas históricas se ejecutan una detrás de otra (nunca dos a la vez sobre la misma base). */
+  _lock: Promise.resolve(),
+  backtest(opts) {
+    const run = this._lock.then(() => this._backtest(opts));
+    this._lock = run.catch(() => { });
+    return run;
+  },
+  async _backtest({ loteriaId, desde, hasta, algs = [1, 2, 3], k = 10, minHist = 30, onProgress = () => { }, cancel = { v: false } }) {
     const cfg = Store.config;
     const objetivos = Store.resultadosDe(loteriaId, { desde, hasta });
     const existentes = new Map();
@@ -1591,7 +1615,8 @@ const Hits = {
       for (const p of Store.pronosticos) {
         const key = `${p.loteriaId}|${p.fechaObjetivo}|${p.algoritmo}`;
         const prev = m.get(key);
-        if (!prev || (prev.origen === 'backtest' && p.origen === 'manual') || (prev.origen === p.origen && p.creado > prev.creado)) m.set(key, p);
+        const pr = o => ({ manual: 3, auto: 2, backtest: 1 }[o] || 0);
+        if (!prev || pr(p.origen) > pr(prev.origen) || (prev.origen === p.origen && p.creado > prev.creado)) m.set(key, p);
       }
       return m;
     });
@@ -1652,7 +1677,7 @@ const XL = {
       p.candidatos.forEach((c, i) => {
         let est = ev.estado === 'pendiente' ? 'PENDIENTE' : '';
         if (ev.estado === 'evaluado') est = c.n === ev.resultado ? 'D-GANADOR' : (U.isPerm(c.n, ev.resultado) && ev.combinado ? 'C-GANADOR' : 'SIN ACIERTO');
-        aoa.push([p.id, 'A' + p.algoritmo, Store.loteriaNombre(p.loteriaId), p.fechaObjetivo, p.fechaCorte || '', p.nHist, p.origen === 'backtest' ? 'PRUEBA HISTORICA' : 'MANUAL', p.creado, i + 1, c.n, c.score, ev.resultado || '', est, conRazon ? (c.razon || '') : '']);
+        aoa.push([p.id, 'A' + p.algoritmo, Store.loteriaNombre(p.loteriaId), p.fechaObjetivo, p.fechaCorte || '', p.nHist, U.origenTxt(p.origen), p.creado, i + 1, c.n, c.score, ev.resultado || '', est, conRazon ? (c.razon || '') : '']);
       });
     }
     return this.sheet(aoa, [9, 11], [6, 10, 22, 13, 13, 10, 16, 22, 9, 11, 11, 11, 13, 80]);
@@ -1661,7 +1686,7 @@ const XL = {
     const aoa = [['FECHA_OBJETIVO', 'LOTERIA', 'ORIGEN', 'CANDIDATOS', 'TOP_1', 'LISTA', 'RESULTADO', 'D', 'C', 'MEJOR_COINCIDENCIA_POSICIONAL']];
     for (const p of prons.filter(x => x.algoritmo === alg)) {
       const ev = Hits.evaluate(p);
-      aoa.push([p.fechaObjetivo, Store.loteriaNombre(p.loteriaId), p.origen === 'backtest' ? 'PRUEBA HISTORICA' : 'MANUAL', p.candidatos.length, p.candidatos[0]?.n || '',
+      aoa.push([p.fechaObjetivo, Store.loteriaNombre(p.loteriaId), U.origenTxt(p.origen), p.candidatos.length, p.candidatos[0]?.n || '',
         p.candidatos.map(c => c.n).join(' '), ev.resultado || '', ev.directo ? 'SI' : (ev.estado === 'evaluado' ? 'NO' : ''), ev.combinado ? 'SI' : (ev.estado === 'evaluado' ? 'NO' : ''), ev.estado === 'evaluado' ? ev.mejorPos : '']);
     }
     return this.sheet(aoa, [4, 5, 6], [13, 22, 16, 11, 8, 60, 11, 5, 5, 14]);
@@ -1671,7 +1696,7 @@ const XL = {
     const aoa = [['FECHA', 'LOTERIA', 'ALGORITMO', 'TIPO', 'RESULTADO', 'CANDIDATO', 'POSICION_EN_LISTA', 'ORIGEN']];
     for (const { p, ev } of lista) {
       const cand = ev.directo ? ev.resultado : p.candidatos[ev.rankC - 1]?.n;
-      aoa.push([p.fechaObjetivo, Store.loteriaNombre(p.loteriaId), 'A' + p.algoritmo, ev.directo ? 'D-GANADOR' : 'C-GANADOR', ev.resultado, cand || '', ev.directo ? ev.rank : ev.rankC, p.origen === 'backtest' ? 'PRUEBA HISTORICA' : 'MANUAL']);
+      aoa.push([p.fechaObjetivo, Store.loteriaNombre(p.loteriaId), 'A' + p.algoritmo, ev.directo ? 'D-GANADOR' : 'C-GANADOR', ev.resultado, cand || '', ev.directo ? ev.rank : ev.rankC, U.origenTxt(p.origen)]);
     }
     return this.sheet(aoa, [4, 5], [12, 22, 10, 12, 10, 10, 16, 16]);
   },
@@ -2044,14 +2069,14 @@ UI.views.inicio = (el) => {
   el.innerHTML = `
     ${Store.resultados.length ? '' : `<div class="card"><h2>Bienvenido a PERLA 3 CIFRAS PRO</h2>
       <p>Para comenzar: 1) cree sus loterías, 2) registre o importe resultados, 3) genere pronósticos y evalúe los algoritmos.</p>
-      <div class="toolbar"><button class="btn gold" data-go="loterias">Crear lotería</button><button class="btn" data-go="importar">Importar y analizar números</button><button class="btn" id="btnDemo">Cargar datos de ejemplo (ficticios)</button></div></div>`}
+      <div class="toolbar"><button class="btn gold" data-go="loterias">Crear lotería</button><button class="btn" onclick="document.getElementById('globalFile').click()">⇪ Elegir archivo (se importa solo)</button><button class="btn" id="btnDemo">Cargar datos de ejemplo (ficticios)</button></div></div>`}
     <div class="card no-print" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:220px"><b style="color:var(--gold)">¿Tiene números nuevos?</b> <span class="small muted">Meta un archivo, pegue una lista o un solo resultado y obtenga el análisis al instante.</span></div><button class="btn gold" data-go="importar">⇪ Importar y analizar</button></div>
     <div class="kpis">
       <div class="kpi"><div class="l">Sorteos registrados</div><div class="v">${U.fmt(rows.length)}</div><div class="s">${L ? U.esc(Store.loteriaNombre(L)) : 'todas las loterías'}</div></div>
       <div class="kpi blue"><div class="l">Loterías</div><div class="v">${Store.loterias.length}</div><div class="s">${Store.loterias.filter(l => l.ejemplo).length ? 'incluye datos de ejemplo' : 'configuradas'}</div></div>
       <div class="kpi"><div class="l">Último resultado</div><div class="v">${last ? `<span class="n3" style="font-size:24px">${last.numero}</span>` : '—'}</div><div class="s">${last ? U.esc(Store.loteriaNombre(last.loteriaId)) : 'sin datos'}</div></div>
       <div class="kpi blue"><div class="l">Fecha último sorteo</div><div class="v" style="font-size:20px">${last ? U.fmtDate(last.fecha) : '—'}</div><div class="s">${last ? U.DIAS[U.weekday(last.fecha)] : ''}</div></div>
-      <div class="kpi"><div class="l">Pronósticos</div><div class="v">${U.fmt(prons.length)}</div><div class="s">${prons.filter(p => p.origen === 'manual').length} manuales · ${prons.filter(p => p.origen === 'backtest').length} prueba hist.</div></div>
+      <div class="kpi"><div class="l">Pronósticos</div><div class="v">${U.fmt(prons.length)}</div><div class="s">${prons.filter(p => p.origen === 'manual').length} manuales · ${prons.filter(p => p.origen === 'auto').length} automáticos · ${prons.filter(p => p.origen === 'backtest').length} prueba hist.</div></div>
       <div class="kpi green"><div class="l">Aciertos directos</div><div class="v">${totD}</div><div class="s">D-Ganador (3 cifras en orden)</div></div>
       <div class="kpi green"><div class="l">Aciertos combinados</div><div class="v">${totC}</div><div class="s">C-Ganador (cifras en otro orden)</div></div>
     </div>
@@ -2616,7 +2641,7 @@ function algView(a) {
           <button class="btn gold" id="qGo">Generar con Algoritmo ${a}</button></div><div id="qOut"></div>` : UI.needData(1, null)}
       </div>
       <div class="card"><h2>Pronósticos guardados (${prons.length})</h2>
-        ${UI.table(['Sorteo', 'Lotería', 'Origen', 'Generado', { t: 'Cand.', c: 'r' }, 'Top 5', 'Evaluación', ''], prons.slice(0, 60).map(p => `<tr><td>${U.fmtDate(p.fechaObjetivo)}</td><td>${U.esc(Store.loteriaNombre(p.loteriaId))}</td><td>${p.origen === 'backtest' ? '<span class="muted">prueba hist.</span>' : 'manual'}</td><td class="small">${U.fmtDateTime(p.creado)}</td><td class="r">${p.candidatos.length}</td>
+        ${UI.table(['Sorteo', 'Lotería', 'Origen', 'Generado', { t: 'Cand.', c: 'r' }, 'Top 5', 'Evaluación', ''], prons.slice(0, 60).map(p => `<tr><td>${U.fmtDate(p.fechaObjetivo)}</td><td>${U.esc(Store.loteriaNombre(p.loteriaId))}</td><td>${(p.origen === 'manual' ? 'manual' : `<span class="muted">${U.origenTxt(p.origen, true)}</span>`)}</td><td class="small">${U.fmtDateTime(p.creado)}</td><td class="r">${p.candidatos.length}</td>
           <td>${p.candidatos.slice(0, 5).map(c => `<span class="n3" style="font-size:12px">${c.n}</span>`).join(' ')}</td><td class="small">${evalLine(p)}</td>
           <td><button class="btn sm" data-ver="${p.id}">Ver</button> <button class="btn sm danger" data-del="${p.id}">✕</button></td></tr>`))}
         ${prons.length > 60 ? `<div class="small muted">Se muestran 60 de ${prons.length}. Exporte a Excel para ver todos.</div>` : ''}
@@ -2660,7 +2685,7 @@ UI.views.aciertos = (el) => {
       Solo se evalúan pronósticos generados con datos anteriores al sorteo. <a href="#config">Cambiar reglas</a>.</div></div>
     <div class="card no-print"><div class="toolbar" style="margin:0">
       <div class="field"><span>Lotería</span><b>${L ? U.esc(Store.loteriaNombre(L)) : 'Todas'}</b></div>${UI.periodFields('ac', AcV)}
-      <label class="field">Origen<select id="acO"><option value="todos">Todos</option><option value="manual" ${AcV.origen === 'manual' ? 'selected' : ''}>Manuales</option><option value="backtest" ${AcV.origen === 'backtest' ? 'selected' : ''}>Prueba histórica</option></select></label>
+      <label class="field">Origen<select id="acO"><option value="todos">Todos</option><option value="manual" ${AcV.origen === 'manual' ? 'selected' : ''}>Manuales</option><option value="auto" ${AcV.origen === 'auto' ? 'selected' : ''}>Automáticos</option><option value="backtest" ${AcV.origen === 'backtest' ? 'selected' : ''}>Prueba histórica</option></select></label>
       <button class="btn" id="acX">Exportar aciertos (Excel)</button></div></div>
     <div class="kpis">
       <div class="kpi"><div class="l">Pronósticos</div><div class="v">${tot('pronosticos')}</div><div class="s">${tot('evaluados')} evaluados · ${tot('pendientes')} pendientes</div></div>
@@ -2688,7 +2713,7 @@ UI.views.aciertos = (el) => {
       <div class="card"><h2>Aciertos por periodo (mensual)</h2><div class="chart-box"><canvas id="chMesAc"></canvas></div></div>
     </div>
     <div class="card"><h2>Historial de aciertos (${lista.length})</h2>
-      ${UI.table(['Fecha', 'Lotería', 'Algoritmo', 'Tipo', 'Resultado', 'Candidato', { t: 'Posición en lista', c: 'r' }, 'Origen'], lista.slice(0, 200).map(({ p, ev }) => `<tr><td>${U.fmtDate(p.fechaObjetivo)}</td><td>${U.esc(Store.loteriaNombre(p.loteriaId))}</td><td>${UI.algBadge(p.algoritmo)}</td><td>${ev.directo ? '<span class="badge d">D-GANADOR</span>' : '<span class="badge c">C-GANADOR</span>'}</td><td>${UI.num3(ev.resultado)}</td><td>${UI.num3(ev.directo ? ev.resultado : p.candidatos[ev.rankC - 1].n)}</td><td class="r">${ev.directo ? ev.rank : ev.rankC} de ${p.candidatos.length}</td><td class="small">${p.origen === 'backtest' ? 'prueba histórica' : 'manual'}</td></tr>`))}
+      ${UI.table(['Fecha', 'Lotería', 'Algoritmo', 'Tipo', 'Resultado', 'Candidato', { t: 'Posición en lista', c: 'r' }, 'Origen'], lista.slice(0, 200).map(({ p, ev }) => `<tr><td>${U.fmtDate(p.fechaObjetivo)}</td><td>${U.esc(Store.loteriaNombre(p.loteriaId))}</td><td>${UI.algBadge(p.algoritmo)}</td><td>${ev.directo ? '<span class="badge d">D-GANADOR</span>' : '<span class="badge c">C-GANADOR</span>'}</td><td>${UI.num3(ev.resultado)}</td><td>${UI.num3(ev.directo ? ev.resultado : p.candidatos[ev.rankC - 1].n)}</td><td class="r">${ev.directo ? ev.rank : ev.rankC} de ${p.candidatos.length}</td><td class="small">${U.origenTxt(p.origen, true)}</td></tr>`))}
     </div>`;
   ['acDesde', 'acHasta', 'acO'].forEach(id => document.getElementById(id).onchange = () => { AcV.desde = UI.val('acDesde'); AcV.hasta = UI.val('acHasta'); AcV.origen = UI.val('acO'); UI.render(); });
   document.getElementById('acX').onclick = () => { try { const wb = XL.book(); XLSX.utils.book_append_sheet(wb, XL.hojaAciertos(f), 'ACIERTOS'); XLSX.utils.book_append_sheet(wb, XL.hojaComparativo(f), 'COMPARATIVO'); XL.save(wb, `PERLA3_ACIERTOS_${U.stamp()}.xlsx`); } catch (err) { UI.toast(err.message, 'err'); } };
@@ -2730,7 +2755,7 @@ UI.views.comparador = (el) => {
   el.innerHTML = `
     <div class="card no-print"><div class="toolbar" style="margin:0">
       <label class="field">Lotería<select id="cmL">${UI.loteriaOptions(CmpV.loteriaId)}</select></label>${UI.periodFields('cm', CmpV)}
-      <label class="field">Origen<select id="cmO"><option value="todos">Todos</option><option value="manual" ${CmpV.origen === 'manual' ? 'selected' : ''}>Manuales</option><option value="backtest" ${CmpV.origen === 'backtest' ? 'selected' : ''}>Prueba histórica</option></select></label>
+      <label class="field">Origen<select id="cmO"><option value="todos">Todos</option><option value="manual" ${CmpV.origen === 'manual' ? 'selected' : ''}>Manuales</option><option value="auto" ${CmpV.origen === 'auto' ? 'selected' : ''}>Automáticos</option><option value="backtest" ${CmpV.origen === 'backtest' ? 'selected' : ''}>Prueba histórica</option></select></label>
       <button class="btn" id="cmX">Exportar comparativo (Excel)</button></div></div>
     ${anyEval ? '' : `<div class="note warn">Aún no hay pronósticos evaluados con estos filtros. Ejecute una <a href="#aciertos">prueba histórica cronológica</a> o guarde pronósticos y registre luego los resultados.</div>`}
     <div class="card"><h2>Comparativo de rendimiento</h2>
@@ -2920,7 +2945,7 @@ async function iaProcesar(registros, { guardar, modoDup, k, evalLimit, onProgres
     const guardados = [];
     if (g.lot) {
       const porFecha = new Map(g.nuevos.map(r => [r.fecha, r.numero]));
-      for (const p of Store.pronosticos) if (p.loteriaId === g.lot.id && p.origen === 'manual' && porFecha.has(p.fechaObjetivo)) guardados.push({ p, ev: Hits.evaluateNum(p, porFecha.get(p.fechaObjetivo)) });
+      for (const p of Store.pronosticos) if (p.loteriaId === g.lot.id && p.origen !== 'backtest' && porFecha.has(p.fechaObjetivo)) guardados.push({ p, ev: Hits.evaluateNum(p, porFecha.get(p.fechaObjetivo)) });
     }
     res.grupos.push({
       nombre: g.nombre, loteriaId: g.lot ? g.lot.id : null, reemplazados: g.reemplazados || 0,
@@ -2959,19 +2984,18 @@ function iaTabArchivo() {
       <div class="small muted">Excel (.xlsx, .xls) o CSV/TXT · con o sin fechas · sin límite práctico de filas</div>
       ${IA.src ? `<div class="small ok" style="margin-top:6px">Archivo cargado: <b>${U.esc(IA.src.name)}</b> (${U.fmt(IA.src.aoa.length)} filas)</div>` : ''}
     </div>
+    <label class="small" style="display:block;margin-top:8px"><input type="checkbox" id="iaDirecto" ${Store.config.importarDirecto ? 'checked' : ''}> Importar y analizar directamente al elegir el archivo (sin revisión, cuando trae fecha, lotería y número)</label>
     <input type="file" id="iaFile" accept=".xlsx,.xls,.csv,.txt" hidden>
     <div class="small muted" style="margin-top:8px">Formatos aceptados: columnas FECHA · LOTERÍA · NÚMERO (en cualquier orden), o solo una columna de números. <a href="#" id="iaTpl">Descargar plantilla</a>.</div>`;
   const inp = document.getElementById('iaFile'), drop = document.getElementById('iaDrop');
-  const leer = async (file) => {
-    try { const d = await XL.leer(file); IA.src = { ...d, name: file.name, file }; IA.opts = null; IA.result = null; UI.render(); }
-    catch (err) { UI.toast('No se pudo leer el archivo: ' + err.message, 'err'); }
-  };
+  const leer = (file) => iaLeerArchivo(file);
   drop.onclick = () => inp.click();
   drop.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inp.click(); } };
   inp.onchange = (e) => { if (e.target.files[0]) leer(e.target.files[0]); };
   drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('over'); };
   drop.ondragleave = () => drop.classList.remove('over');
   drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove('over'); if (e.dataTransfer.files[0]) leer(e.dataTransfer.files[0]); };
+  document.getElementById('iaDirecto').onchange = (e) => Store.setConfig('importarDirecto', e.target.checked);
   document.getElementById('iaTpl').onclick = (e) => { e.preventDefault(); try { XL.save(XL.plantilla(), 'PERLA3_PLANTILLA_IMPORTACION.xlsx'); } catch (err) { UI.toast(err.message, 'err'); } };
 }
 
@@ -3090,17 +3114,44 @@ function iaTabNumero() {
   if (q.numero) run();
 }
 
+/* ---------- Opciones detectadas automáticamente ---------- */
+function iaOpcionesPorDefecto(d) {
+  const det = iaDetectar(d.aoa);
+  const lotDef = det.loteria >= 0 ? '' : (UI.ctxLoteria ? Store.loteriaNombre(UI.ctxLoteria) : (Store.loterias[0]?.nombre || ''));
+  // ¿Los números vienen con 4 cifras (chance)? Entonces se toman las 3 últimas.
+  const muestra = d.aoa.slice(det.hasHeader ? 1 : 0, 200).map(r => String(r[det.numero] ?? '').replace(/\D/g, '')).filter(Boolean);
+  const largos = muestra.filter(x => x.length >= 4 && !/^0+\d{3}$/.test(x)).length;
+  return { fecha: det.fecha, numero: det.numero, loteria: det.loteria, hasHeader: det.hasHeader, ncol: det.ncol,
+    loteriaNombre: lotDef, formatoFecha: Store.config.formatoFecha, ultimas3: Store.config.ultimas3 || (muestra.length > 0 && largos / muestra.length > 0.5), modoDup: 'omitir',
+    orden: 'antiguo_primero', fechaFinal: U.todayISO(), todasCeldas: det.ncol > 1 && det.fecha < 0 && det.loteria < 0 && !det.hasHeader };
+}
+
+/** Lee un archivo y, si trae FECHA, LOTERÍA y NÚMERO, lo importa y analiza directamente (sin revisión). */
+async function iaLeerArchivo(file) {
+  let d;
+  try { d = await XL.leer(file); } catch (err) { UI.toast('No se pudo leer el archivo: ' + err.message, 'err'); return; }
+  IA.src = { ...d, name: file.name, file }; IA.result = null;
+  IA.opts = iaOpcionesPorDefecto(IA.src);
+  const o = IA.opts;
+  if (Store.config.importarDirecto && o.fecha >= 0 && o.loteria >= 0) {
+    const r = iaConstruir(d.aoa, o);
+    if (r.registros.length) {
+      if (UI.current === 'importar') UI.render();
+      UI.toast(`Importando ${U.fmt(r.registros.length)} resultados de "${file.name}"…`, 'ok', 4000);
+      await iaEjecutar(r.registros, { guardar: true, modoDup: 'omitir', errores: r.errores.length, directo: true });
+      return;
+    }
+  }
+  // Falta información (lotería o fechas): se muestra la revisión para completarla
+  if (UI.current === 'importar') UI.render();
+  if (Store.config.importarDirecto) UI.toast('Revise las opciones: el archivo no indica ' + (o.fecha < 0 ? 'las fechas' : 'la lotería') + '.', 'warn', 6000);
+}
+
 /* ---------- Revisión del archivo / texto ---------- */
 function iaRevision() {
   const d = IA.src, box = document.getElementById('iaRev');
   if (!d.aoa.length) { box.innerHTML = '<div class="card"><div class="note warn">No se encontraron datos.</div></div>'; return; }
-  if (!IA.opts) {
-    const det = iaDetectar(d.aoa);
-    const lotDef = det.loteria >= 0 ? '' : (UI.ctxLoteria ? Store.loteriaNombre(UI.ctxLoteria) : (Store.loterias[0]?.nombre || ''));
-    IA.opts = { fecha: det.fecha, numero: det.numero, loteria: det.loteria, hasHeader: det.hasHeader, ncol: det.ncol,
-      loteriaNombre: lotDef, formatoFecha: Store.config.formatoFecha, ultimas3: Store.config.ultimas3, modoDup: 'omitir',
-      orden: 'antiguo_primero', fechaFinal: U.todayISO(), todasCeldas: det.ncol > 1 && det.fecha < 0 && det.loteria < 0 && !det.hasHeader };
-  }
+  if (!IA.opts) IA.opts = iaOpcionesPorDefecto(d);
   const o = IA.opts, ncol = Math.max(o.ncol, 1);
   const colOpts = (sel, none) => (none ? `<option value="-1" ${sel < 0 ? 'selected' : ''}>${none}</option>` : '') + Array.from({ length: ncol }, (_, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>Columna ${String.fromCharCode(65 + i)}${o.hasHeader && d.aoa[0][i] !== undefined ? ' – ' + U.esc(d.aoa[0][i]) : ''}</option>`).join('');
   const lotNames = Store.loterias.map(l => l.nombre);
@@ -3174,7 +3225,7 @@ function iaRevision() {
   document.getElementById('iaSolo').onclick = () => go(false);
 }
 
-async function iaEjecutar(registros, { guardar, modoDup = 'omitir', errores = 0 }) {
+async function iaEjecutar(registros, { guardar, modoDup = 'omitir', errores = 0, directo = false }) {
   if (IA.running) return;
   IA.running = true;
   const bar = document.getElementById('iaBar'), msg = document.getElementById('iaMsg');
@@ -3295,6 +3346,211 @@ function iaPDF(R) {
   }
   PDF.build('Importar y analizar', secs, `PERLA3_ANALISIS_IMPORTACION_${U.stamp()}.pdf`);
 }
+
+/* ---- 10c-auto.js ---- */
+/* =====================================================================
+   ACTUALIZACIÓN AUTOMÁTICA
+   · Auto: cada vez que entran resultados nuevos (por cualquier vía) se
+     recalcula todo en segundo plano: prueba histórica cronológica de los
+     sorteos recientes de esa lotería + pronóstico de los 3 algoritmos
+     para el próximo sorteo. Al terminar se refrescan las pantallas.
+   · EnLinea: al abrir la aplicación descarga los resultados nuevos de
+     fuentes oficiales con acceso libre (datos.gov.co).
+   · DatosIncluidos: si el archivo HTML trae un histórico incorporado,
+     se carga solo la primera vez.
+   · Importación rápida: botón «Importar archivo» siempre visible y
+     posibilidad de soltar un archivo sobre cualquier pantalla.
+   ===================================================================== */
+const Auto = {
+  cola: new Map(),      // loteriaId -> Set(fechas)
+  timer: null, running: false, estado: '',
+  encolar(items) {
+    if (!Store.config.autoActualizar) return;
+    for (const { loteriaId, fecha } of items) {
+      if (!this.cola.has(loteriaId)) this.cola.set(loteriaId, new Set());
+      this.cola.get(loteriaId).add(fecha);
+    }
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.run(), 400);
+  },
+  pintar(txt) {
+    this.estado = txt;
+    const el = document.getElementById('autoState');
+    if (el) { el.textContent = txt; el.hidden = !txt; }
+  },
+  async run() {
+    if (this.running) return;
+    this.running = true;
+    let total = 0;
+    try {
+      while (this.cola.size) {
+        const lotes = [...this.cola.entries()]; this.cola.clear();
+        let i = 0;
+        for (const [loteriaId, fechas] of lotes) {
+          i++;
+          if (!Store.loteria(loteriaId)) continue;
+          const nombre = Store.loteriaNombre(loteriaId);
+          const todos = Store.resultadosDe(loteriaId);
+          const N = Math.max(10, +Store.config.autoSorteos || 100);
+          const nuevas = [...fechas].sort();
+          // Se evalúan los sorteos nuevos, como máximo los N más recientes de la lotería
+          const desdeN = todos.length > N ? todos[todos.length - N].fecha : (todos[0]?.fecha || '');
+          const desde = nuevas[0] > desdeN ? nuevas[0] : desdeN;
+          const hasta = nuevas[nuevas.length - 1];
+          this.pintar(`⟳ Actualizando ${nombre} (${i}/${lotes.length})…`);
+          if (todos.length > (+Store.config.btMinHist || 30)) {
+            const r = await Algo.backtest({
+              loteriaId, desde, hasta, k: +Store.config.btCantidad || 10, minHist: +Store.config.btMinHist || 30,
+              onProgress: (x) => this.pintar(`⟳ Actualizando ${nombre} (${i}/${lotes.length}) ${Math.round(x * 100)}%`),
+            });
+            total += r.generados;
+          }
+          if (Store.loteria(loteriaId) && todos.length >= Algo.MIN_HIST) await this.pronosticoProximo(loteriaId);
+        }
+      }
+      Store.setMeta('ultimaActualizacionAuto', new Date().toISOString());
+    } catch (err) { console.error(err); UI.toast('La actualización automática falló: ' + err.message, 'err'); }
+    this.running = false;
+    this.pintar('');
+    Cache.clear();
+    // Refresca la pantalla actual si muestra datos (no interrumpe formularios ni importaciones en curso)
+    const refrescar = ['inicio', 'historico', 'estadisticas', 'cifras', 'comparador'].includes(UI.current) || (UI.current === 'aciertos' && !AcV.running);
+    const escribiendo = document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
+    if (refrescar && !escribiendo && !document.querySelector('.modal-bg')) UI.render();
+    if (total) UI.toast(`Análisis actualizado: ${total} pronósticos de prueba histórica y pronósticos del próximo sorteo listos.`);
+  },
+  /** Al abrir: prepara el pronóstico del próximo sorteo de cada lotería si todavía no existe. */
+  alAbrir() {
+    if (!Store.config.autoActualizar) return;
+    const items = [];
+    for (const l of Store.loterias) {
+      const rs = Store.resultadosDe(l.id);
+      if (rs.length < Algo.MIN_HIST) continue;
+      const prox = nextDrawDate(l.id);
+      if (!Store.pronosticos.some(p => p.origen === 'auto' && p.loteriaId === l.id && p.fechaObjetivo === prox)) items.push({ loteriaId: l.id, fecha: rs[rs.length - 1].fecha });
+    }
+    if (items.length) this.encolar(items);
+  },
+  /** Pronóstico de los 3 algoritmos para el próximo sorteo (reemplaza el automático pendiente de esa fecha). */
+  async pronosticoProximo(loteriaId) {
+    const fecha = nextDrawDate(loteriaId), k = +Store.config.cantidadDefecto || 10;
+    const lista = [1, 2, 3].map(alg => {
+      const p = Algo.generar({ alg, loteriaId, fechaObjetivo: fecha, k, origen: 'auto' });
+      const prev = Store.pronosticos.find(x => x.origen === 'auto' && x.loteriaId === loteriaId && x.algoritmo === alg && x.fechaObjetivo === fecha);
+      if (prev) p.id = prev.id;
+      return p;
+    });
+    await Store.savePronosticos(lista);
+  },
+};
+
+/* ------------------- Actualización en línea (fuentes oficiales) ------------------- */
+const EnLinea = {
+  // Santander: el conjunto oficial no trae fecha; el sorteo 5095 fue el viernes 06/11/2026 y se juega cada viernes.
+  SANT_ANCLA: { sorteo: 5095, fecha: '2026-11-06' },
+  fuentes: [
+    {
+      nombre: 'Lotería de Medellín', id: '4w3i-wxax',
+      url: (desde) => `https://www.datos.gov.co/resource/4w3i-wxax.json?$where=${encodeURIComponent(`fecha > '${desde}T00:00:00'`)}&$order=fecha&$limit=1000`,
+      map: (x) => ({ fecha: String(x.fecha).slice(0, 10), numero: x.n_mero }),
+    },
+    {
+      nombre: 'Lotería de Santander', id: '4zwu-ra3f',
+      url: () => `https://www.datos.gov.co/resource/4zwu-ra3f.json?$where=${encodeURIComponent(`premio like 'PREMIO MAYOR%' AND sorteo::number >= ${EnLinea.SANT_ANCLA.sorteo}`)}&$order=${encodeURIComponent('sorteo::number DESC')}&$limit=200`,
+      map: (x) => {
+        const s = +x.sorteo, a = EnLinea.SANT_ANCLA;
+        if (!(s >= a.sorteo)) return null;
+        return { fecha: U.addDays(a.fecha, 7 * (s - a.sorteo)), numero: x.numero };
+      },
+    },
+  ],
+  ultimo: null,
+  async actualizar({ silencioso = true, crear = false } = {}) {
+    if (!navigator.onLine) { if (!silencioso) UI.toast('Sin conexión a internet.', 'warn'); return null; }
+    const res = []; let nuevos = 0;
+    for (const f of this.fuentes) {
+      let lot = Store.findLoteriaByName(f.nombre);
+      if (!lot && !crear) continue;
+      try {
+        const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 15000);
+        const ult = lot ? Store.resultadosDe(lot.id).slice(-1)[0]?.fecha : null;
+        const r = await fetch(f.url(ult || '2000-01-01'), { signal: ctrl.signal, headers: { Accept: 'application/json' } });
+        clearTimeout(to);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const datos = await r.json();
+        const max = U.addDays(U.todayISO(), 1);
+        const filas = datos.map(f.map).filter(Boolean)
+          .map(x => ({ fecha: x.fecha, numero: U.normNum(x.numero, { ultimas3: true }) }))
+          .filter(x => x.numero && U.isISO(x.fecha) && x.fecha <= max && (!ult || x.fecha > ult));
+        if (filas.length) {
+          if (!lot) lot = await Store.saveLoteria({ nombre: f.nombre, descripcion: 'Actualizada desde datos.gov.co (' + f.id + ')' });
+          const b = await Store.bulkResultados(filas.map(x => ({ ...x, loteriaId: lot.id })), 'omitir');
+          nuevos += b.nuevos; res.push(`${f.nombre}: ${b.nuevos}`);
+        }
+      } catch (err) { console.warn('Actualización en línea', f.nombre, err); if (!silencioso) UI.toast(`No se pudo actualizar ${f.nombre}: ${err.message}`, 'warn'); }
+    }
+    this.ultimo = { fecha: new Date().toISOString(), nuevos, detalle: res };
+    await Store.setMeta('ultimaActualizacionEnLinea', this.ultimo);
+    if (nuevos) UI.toast(`Resultados nuevos descargados de datos.gov.co: ${res.join(' · ')}.`, 'ok', 7000);
+    else if (!silencioso) UI.toast('Todo al día: no hay resultados nuevos en las fuentes oficiales.');
+    return this.ultimo;
+  },
+};
+
+/* ------------------- Histórico incorporado en el archivo HTML ------------------- */
+const DatosIncluidos = {
+  async cargar() {
+    const D = window.P3_DATOS_INCLUIDOS;
+    if (!D || !Array.isArray(D.registros) || Store.meta.datosIncluidos === D.id) return null;
+    UI.toast(`Cargando el histórico incluido (${U.fmt(D.registros.length)} resultados)…`, 'ok', 5000);
+    const nombres = new Map();
+    for (const [, nombre] of D.registros) if (!nombres.has(U.normText(nombre))) nombres.set(U.normText(nombre), nombre);
+    for (const nombre of nombres.values()) if (!Store.findLoteriaByName(nombre)) await Store.saveLoteria({ nombre, descripcion: 'Histórico incluido: ' + (D.descripcion || D.id) });
+    const filas = [];
+    for (const [fecha, nombre, numero] of D.registros) {
+      const n = U.normNum(numero), l = Store.findLoteriaByName(nombre);
+      if (n && l && U.isISO(fecha)) filas.push({ fecha, loteriaId: l.id, numero: n });
+    }
+    const r = await Store.bulkResultados(filas, 'omitir');
+    await Store.setMeta('datosIncluidos', D.id);
+    UI.toast(`Histórico incluido cargado: ${r.nuevos} resultados nuevos (${r.omitidos} ya estaban). El análisis se actualiza solo.`, 'ok', 8000);
+    UI.render();
+    return r;
+  },
+};
+
+/* ------------------- Importación rápida desde cualquier pantalla ------------------- */
+const ImportRapido = {
+  init() {
+    const top = document.querySelector('.topbar-right');
+    const st = document.createElement('span'); st.id = 'autoState'; st.className = 'save-state busy'; st.hidden = true;
+    const btn = document.createElement('button'); btn.className = 'btn gold sm'; btn.id = 'btnImportar'; btn.textContent = '⇪ Importar archivo';
+    btn.title = 'Elija un archivo Excel o CSV: se guarda y se analiza automáticamente';
+    const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.xlsx,.xls,.csv,.txt'; inp.hidden = true; inp.id = 'globalFile';
+    top.prepend(inp); top.prepend(st); top.prepend(btn);
+    btn.onclick = () => inp.click();
+    inp.onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) this.archivo(f); };
+    // Soltar un archivo en cualquier parte de la aplicación
+    let veil = null;
+    const show = (on) => {
+      if (on && !veil) { veil = document.createElement('div'); veil.className = 'drop-veil'; veil.innerHTML = '<div>⇪<br>Suelte el archivo para importarlo y analizarlo</div>'; document.body.appendChild(veil); }
+      if (!on && veil) { veil.remove(); veil = null; }
+    };
+    window.addEventListener('dragover', (e) => { if ([...(e.dataTransfer?.types || [])].includes('Files')) { e.preventDefault(); show(true); } });
+    window.addEventListener('dragleave', (e) => { if (!e.relatedTarget || e.relatedTarget === document.documentElement) show(false); });
+    window.addEventListener('drop', (e) => {
+      if (!e.dataTransfer?.files?.length) return;
+      e.preventDefault(); show(false);
+      if (e.target.closest && e.target.closest('#iaDrop')) return; // la zona propia del módulo ya lo procesa
+      this.archivo(e.dataTransfer.files[0]);
+    });
+  },
+  archivo(file) {
+    IA.tab = 'archivo'; IA.result = null;
+    if (UI.current !== 'importar') UI.go('importar');
+    iaLeerArchivo(file);
+  },
+};
 
 /* ---- 11-views-misc.js ---- */
 /* =====================================================================
@@ -3473,6 +3729,22 @@ UI.views.config = async (el) => {
         <div class="small muted" style="margin-top:8px">Los parámetros propios de cada algoritmo se ajustan en sus módulos (Algoritmo 1, 2 y 3).</div>
       </div>
     </div>
+    <div class="card"><h2>Actualización automática</h2>
+      <div class="grid g2">
+        <div>
+          <label class="field"><span><input type="checkbox" id="cfAuto" ${c.autoActualizar ? 'checked' : ''}> Recalcular todo automáticamente cuando entran resultados nuevos</span></label>
+          <div class="small muted" style="margin:4px 0 10px 24px">Ejecuta la prueba histórica de los sorteos nuevos y genera el pronóstico de los 3 algoritmos para el próximo sorteo. Se actualizan Inicio, Histórico, Estadísticas, Algoritmos, Control de aciertos, Comparador e Informes.</div>
+          <label class="field">Sorteos recientes que se evalúan por lotería<select id="cfAutoN">${[50, 100, 200, 500].map(v => `<option ${v === +c.autoSorteos ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+          <label class="field" style="margin-top:8px"><span><input type="checkbox" id="cfDirecto" ${c.importarDirecto ? 'checked' : ''}> Importar directamente al elegir o soltar un archivo (sin revisión cuando trae fecha, lotería y número)</span></label>
+        </div>
+        <div>
+          <label class="field"><span><input type="checkbox" id="cfLinea" ${c.actualizarEnLinea ? 'checked' : ''}> Al abrir, descargar resultados nuevos de fuentes oficiales (datos.gov.co)</span></label>
+          <div class="small muted" style="margin:4px 0 10px 24px">Disponible hoy para <b>Lotería de Medellín</b> y <b>Lotería de Santander</b> (si existen en el sistema). Requiere internet. Los chances no tienen fuente oficial abierta: se actualizan importando un archivo.</div>
+          <div class="toolbar"><button class="btn" id="cfLineaYa">Actualizar ahora desde internet</button></div>
+          <div class="small muted">Última actualización en línea: ${Store.meta.ultimaActualizacionEnLinea ? U.fmtDateTime(Store.meta.ultimaActualizacionEnLinea.fecha) + ' (' + Store.meta.ultimaActualizacionEnLinea.nuevos + ' nuevos)' : 'nunca'} · último recálculo automático: ${U.fmtDateTime(Store.meta.ultimaActualizacionAuto)}</div>
+        </div>
+      </div>
+    </div>
     <div class="grid g2">
       <div class="card"><h2>Copias de seguridad y restauración</h2>
         <div class="toolbar"><button class="btn green" id="bkDown">Descargar copia de seguridad</button><label class="btn" for="bkFile">Restaurar copia…</label><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
@@ -3500,6 +3772,11 @@ UI.views.config = async (el) => {
   document.getElementById('cfRep').onchange = e => save('combinadoConRepetidas', e.target.checked);
   document.getElementById('cfSrc').onchange = e => save('fuenteDatos', e.target.value);
   document.getElementById('cfK').onchange = e => save('cantidadDefecto', +e.target.value);
+  document.getElementById('cfAuto').onchange = e => save('autoActualizar', e.target.checked);
+  document.getElementById('cfAutoN').onchange = e => save('autoSorteos', +e.target.value);
+  document.getElementById('cfDirecto').onchange = e => save('importarDirecto', e.target.checked);
+  document.getElementById('cfLinea').onchange = e => save('actualizarEnLinea', e.target.checked);
+  document.getElementById('cfLineaYa').onclick = async (e) => { e.target.disabled = true; e.target.textContent = 'Consultando…'; await EnLinea.actualizar({ silencioso: false, crear: true }); if (UI.current === 'config') UI.render(); };
   document.getElementById('cfDemo').onclick = () => Demo.cargar();
   document.getElementById('cfDemoDel').onclick = async () => {
     const ej = Store.loterias.filter(l => l.ejemplo);
@@ -3531,6 +3808,8 @@ UI.views.ayuda = (el) => {
       <li><b>Histórico:</b> registre resultados con fecha, lotería y número. Use «Pegar varios…» para copiar bloques desde Excel, o importe un archivo en el módulo <b>Excel</b>.</li>
       <li>Seleccione la <b>Lotería activa</b> en la barra superior: las estadísticas, el análisis de cifras y los algoritmos usarán esa lotería.</li>
       <li>Para practicar puede cargar <b>datos de ejemplo ficticios</b> en Configuración.</li></ol>
+    <h3>Todo se actualiza solo</h3>
+    <p>Use el botón <b>⇪ Importar archivo</b> de la barra superior o suelte el archivo sobre cualquier pantalla: se guarda y se analiza al instante. Después de cada dato nuevo la aplicación recalcula sola la prueba histórica y el pronóstico de los 3 algoritmos para el próximo sorteo, y actualiza todas las pantallas. Con internet, al abrir descarga sola los resultados nuevos de Medellín y Santander (datos.gov.co). Se configura en <b>Configuración → Actualización automática</b>.</p>
     <h3>Importar y analizar (lo más rápido)</h3>
     <p>En <b>Importar y analizar</b> puede, cada vez que lo necesite, arrastrar un archivo Excel o CSV (con o sin fechas, de pocos o miles de números), pegar una lista de números, registrar un solo resultado o evaluar un número. Tras una revisión previa, la aplicación une lo nuevo con lo que ya tenía (sin duplicar) y muestra: el pronóstico de los 3 algoritmos para el próximo sorteo, cómo habrían acertado con los números nuevos (usando solo los sorteos anteriores a cada uno) y la comparación con el histórico. Con «Solo analizar» no se guarda nada.</p>
     <h3>2. Columnas del histórico</h3><ul>
@@ -3570,9 +3849,13 @@ window.addEventListener('unhandledrejection', (e) => { console.error(e.reason); 
     await Store.load();
     Store.setSaving('ok');
     UI.init();
+    ImportRapido.init();
+    window.P3 = { U, Store, Stats, Algo, Hits, XL, PDF, UI, Demo, Importer, Backup, MathX, DB, Auto, EnLinea, DatosIncluidos, ImportRapido, version: APP_VERSION };
+    await DatosIncluidos.cargar();
+    Auto.alAbrir();
+    if (Store.config.actualizarEnLinea) setTimeout(() => EnLinea.actualizar({ silencioso: true }), 800);
     if (DB.mode !== 'idb') UI.toast('IndexedDB no está disponible: se usa almacenamiento de respaldo (limitado). Descargue copias de seguridad.', 'warn', 8000);
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
-    window.P3 = { U, Store, Stats, Algo, Hits, XL, PDF, UI, Demo, Importer, Backup, MathX, DB, version: APP_VERSION };
   } catch (err) {
     console.error(err);
     document.getElementById('view').innerHTML = `<div class="card"><h2>No se pudo iniciar</h2><p class="bad">${U.esc(err.message)}</p><p>Compruebe que el navegador permite el almacenamiento local (no use modo incógnito) e intente recargar.</p></div>`;

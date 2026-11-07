@@ -164,3 +164,7 @@ td.r,th.r{text-align:right} td.c,th.c{text-align:center}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .drop{border:2px dashed var(--line2);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;color:var(--ink2);background:rgba(12,22,38,.5);transition:border-color .15s,background .15s}
 .drop:hover,.drop.over,.drop:focus-visible{border-color:var(--gold);background:rgba(217,181,74,.06);outline:none}
+.drop-veil{position:fixed;inset:0;z-index:150;background:rgba(11,20,36,.82);display:grid;place-items:center;pointer-events:none}
+.drop-veil div{border:3px dashed var(--gold);border-radius:18px;padding:40px 50px;text-align:center;color:var(--gold);font:700 20px/1.6 inherit;background:rgba(217,181,74,.06)}
+@media (max-width:860px){#btnImportar{padding:4px 8px}}
+@media (max-width:860px){#autoState:not([hidden]){display:block;width:100%;order:9;font-size:11.5px;text-align:right}}

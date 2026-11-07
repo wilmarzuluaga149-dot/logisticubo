@@ -218,7 +218,14 @@ const Algo = {
   },
 
   /** Prueba histórica cronológica (walk-forward). Cada sorteo se pronostica solo con datos anteriores. */
-  async backtest({ loteriaId, desde, hasta, algs = [1, 2, 3], k = 10, minHist = 30, onProgress = () => { }, cancel = { v: false } }) {
+  /** Las pruebas históricas se ejecutan una detrás de otra (nunca dos a la vez sobre la misma base). */
+  _lock: Promise.resolve(),
+  backtest(opts) {
+    const run = this._lock.then(() => this._backtest(opts));
+    this._lock = run.catch(() => { });
+    return run;
+  },
+  async _backtest({ loteriaId, desde, hasta, algs = [1, 2, 3], k = 10, minHist = 30, onProgress = () => { }, cancel = { v: false } }) {
     const cfg = Store.config;
     const objetivos = Store.resultadosDe(loteriaId, { desde, hasta });
     const existentes = new Map();
