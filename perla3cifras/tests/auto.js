@@ -7,7 +7,7 @@ const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'p3auto-'));
 let ok = 0, fail = 0;
 const check = (c, m) => { c ? ok++ : fail++; console.log((c ? '  ✔ ' : '  ✘ ') + m); };
 const proxy = process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY } : undefined;
-const esperarAuto = (p, ms = 900000) => p.waitForFunction(() => window.P3 && !P3.Auto.running && !P3.Auto.cola.size, null, { timeout: ms, polling: 500 });
+const esperarAuto = (p, ms = 900000) => p.waitForFunction(() => window.P3 && !P3.Auto.cargando && !P3.Auto.running && !P3.Auto.cola.size && !P3.Auto.timer && (!window.P3_DATOS_INCLUIDOS || P3.Store.meta.datosIncluidos === window.P3_DATOS_INCLUIDOS.id), null, { timeout: ms, polling: 500 });
 const idle = async (p) => { await p.waitForTimeout(700); await esperarAuto(p); };
 
 (async () => {

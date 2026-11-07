@@ -29,6 +29,7 @@ const Auto = {
     if (el) { el.textContent = txt; el.hidden = !txt; }
   },
   async run() {
+    this.timer = null;
     if (this.running) return;
     this.running = true;
     let total = 0;
@@ -153,6 +154,7 @@ const DatosIncluidos = {
     const D = window.P3_DATOS_INCLUIDOS;
     if (!D || !Array.isArray(D.registros) || Store.meta.datosIncluidos === D.id) return null;
     UI.toast(`Cargando el histórico incluido (${U.fmt(D.registros.length)} resultados)…`, 'ok', 5000);
+    Auto.cargando = true; Auto.pintar(`⟳ Cargando histórico (${U.fmt(D.registros.length)})…`);
     const nombres = new Map();
     for (const [, nombre] of D.registros) if (!nombres.has(U.normText(nombre))) nombres.set(U.normText(nombre), nombre);
     for (const nombre of nombres.values()) if (!Store.findLoteriaByName(nombre)) await Store.saveLoteria({ nombre, descripcion: 'Histórico incluido: ' + (D.descripcion || D.id) });
@@ -163,6 +165,7 @@ const DatosIncluidos = {
     }
     const r = await Store.bulkResultados(filas, 'omitir');
     await Store.setMeta('datosIncluidos', D.id);
+    Auto.cargando = false; if (!Auto.running) Auto.pintar('');
     UI.toast(`Histórico incluido cargado: ${r.nuevos} resultados nuevos (${r.omitidos} ya estaban). El análisis se actualiza solo.`, 'ok', 8000);
     UI.render();
     return r;
