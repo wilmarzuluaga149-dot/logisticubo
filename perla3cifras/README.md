@@ -14,7 +14,8 @@ integración con Excel 365, informes PDF y copias de seguridad.
 | Archivo | Contenido |
 |---|---|
 | `PERLA3CIFRAS_PRO.html` | **La aplicación completa en un solo archivo** (incluye Chart.js, SheetJS y jsPDF). Funciona sin conexión y sin instalar nada. |
-| `docs/MANUAL_USO.md` | Instrucciones de uso de los 15 módulos. |
+| `docs/MANUAL_PERLA3CIFRAS_PRO.pdf` | Los tres manuales en un solo PDF (versión 1.1.0). |
+| `docs/MANUAL_USO.md` | Instrucciones de uso de los 16 módulos. |
 | `docs/MANUAL_INSTALACION.md` | Instalación en Windows, Android, publicación gratuita y actualización sin perder datos. |
 | `docs/MANUAL_EXCEL.md` | Importación y exportación con Excel 365 y CSV; estructura de las 8 hojas. |
 | `datos_ejemplo/` | `EJEMPLO_resultados_ficticios.xlsx` y `.csv`: **datos ficticios** para probar la importación. |
