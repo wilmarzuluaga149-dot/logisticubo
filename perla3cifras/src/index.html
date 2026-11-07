@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1424">
+<meta name="description" content="PERLA 3 CIFRAS PRO – análisis estadístico de resultados de loterías de tres cifras.">
+<title>PERLA 3 CIFRAS PRO</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Ccircle cx=%2232%22 cy=%2232%22 r=%2230%22 fill=%22%23d9b54a%22/%3E%3Ctext x=%2232%22 y=%2244%22 font-size=%2234%22 font-weight=%22800%22 text-anchor=%22middle%22 fill=%22%232a1f00%22%3E3%3C/text%3E%3C/svg%3E">
+<style>
+/*@@CSS@@*/
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar" aria-label="Menú principal">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true"><span>3</span></div>
+      <div>
+        <div class="brand-name">PERLA 3 CIFRAS</div>
+        <div class="brand-sub">PRO · Edición Profesional</div>
+      </div>
+    </div>
+    <nav id="menu"></nav>
+    <div class="sidebar-foot" id="sidebarFoot"></div>
+  </aside>
+  <div id="scrim" hidden></div>
+  <div id="main">
+    <header id="topbar">
+      <button id="btnMenu" class="icon-btn" aria-label="Abrir menú">☰</button>
+      <h1 id="viewTitle">Inicio</h1>
+      <div class="topbar-right">
+        <label class="ctx">
+          <span>Lotería activa</span>
+          <select id="ctxLoteria" aria-label="Lotería activa"></select>
+        </label>
+        <span id="saveState" class="save-state" title="Estado del guardado automático">● Guardado</span>
+      </div>
+    </header>
+    <main id="view" tabindex="-1"></main>
+    <footer id="footer">
+      Herramienta de análisis estadístico. Los pronósticos <b>no garantizan premios</b>: cada sorteo es aleatorio e independiente.
+    </footer>
+  </div>
+</div>
+<div id="modalRoot"></div>
+<div id="toasts" aria-live="polite"></div>
+
+<!--@@LIBS@@-->
+<script>
+/*@@APP@@*/
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "PERLA 3 CIFRAS PRO",
+  "short_name": "PERLA 3",
+  "description": "Análisis estadístico de resultados de loterías de tres cifras",
+  "start_url": "PERLA3CIFRAS_PRO.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1424",
+  "theme_color": "#0b1424",
+  "lang": "es",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
