@@ -53,6 +53,14 @@ No hace falta ir a ningún módulo para actualizar:
   primera vez que se abre y nunca se duplica.
 * Todo esto se puede activar o desactivar en **Configuración → Actualización automática**.
 
+### Número de consenso (versión 1.5)
+En **Generar pronósticos**, al pulsar GENERAR aparece arriba el **número de consenso**: el que los tres algoritmos
+juntos ponen más alto entre los 1000 posibles (promedio de sus puestos), con otros 4 de respaldo, sus puestos en A1, A2
+y A3, su reemplazo y cuántas veces ha salido. El botón *¿Cuánto ha acertado el consenso?* lo mide en los últimos 100
+sorteos (cada uno solo con datos anteriores) y lo compara con el azar. Es la selección más fuerte del análisis, pero no
+aumenta la probabilidad real de ningún número (1 entre 1000).
+La fecha del próximo sorteo ahora sigue el ritmo de cada lotería: diaria (día siguiente) o semanal (mismo día de la semana).
+
 ### Reemplazos (versión 1.4)
 En **Reemplazos** (menú, debajo de *Importar y analizar*) escriba uno o varios números de 2, 3 o 4 cifras (también 1, 5
 o 6) y pulse **REEMPLAZAR**. Cada cifra se convierte con la **tabla de cifras**, que viene cargada con

@@ -211,7 +211,7 @@ const check = (cond, msg) => { if (cond) { ok++; console.log('  ✔ ' + msg); } 
   console.log('10. PDF y generador');
   await ev(() => P3.UI.go('generar'));
   await page.selectOption('#gLot', String(demo.id)); await page.click('#gForm button[type=submit]');
-  check(await page.locator('.cand').count() === 30, 'GENERAR PRONÓSTICOS: 3 × 10 candidatos');
+  check(await page.locator('#gOut .grid .cand').count() === 30, 'GENERAR PRONÓSTICOS: 3 × 10 candidatos');
   await page.click('#gSave'); await page.waitForTimeout(200);
   check(await ev(() => P3.Store.pronosticos.filter(p => p.origen === 'manual').length) === 3, 'pronósticos guardados con fecha y hora');
   const [pdf] = await Promise.all([page.waitForEvent('download'), page.click('#gPdf')]);

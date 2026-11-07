@@ -179,6 +179,29 @@ const Algo = {
     }, focus);
   },
 
+  /** Consenso: une la clasificación completa (1–1000) de los 3 algoritmos.
+   *  Puntuación = promedio de (1000 − puesto) en A1, A2 y A3: arriba quedan los números
+   *  que los tres ponen más alto a la vez. No cambia la probabilidad real (1/1000). */
+  consenso(hist, { k = 5, seed = '', fechaObjetivo = null, cfg = Store.config } = {}) {
+    const pos = [1, 2, 3].map(a => { const m = new Map(); this.run(a, hist, { k: 1000, seed, explain: false, fechaObjetivo, cfg }).forEach((c, i) => m.set(c.n, i + 1)); return m; });
+    const cands = U.ALL_NUMS.map(n => { const r = pos.map(m => m.get(n)); return { n, ranks: { 1: r[0], 2: r[1], 3: r[2] }, peor: Math.max(...r), score: +(r.reduce((s, x) => s + (1000 - x), 0) / 3 / 9.99).toFixed(2) }; });
+    cands.sort((a, b) => b.score - a.score || a.peor - b.peor || (U.hash32(seed + '|c|' + a.n) - U.hash32(seed + '|c|' + b.n)));
+    return cands.slice(0, k).map(c => ({ ...c, razon: `Puesto en A1 #${c.ranks[1]}, A2 #${c.ranks[2]}, A3 #${c.ranks[3]} (de 1000)` }));
+  },
+  /** Mide el consenso en los últimos N sorteos, cada uno solo con los datos anteriores (sin información futura). */
+  async consensoHistorico(loteriaId, { k = 5, N = 100, onProgress = () => { } } = {}) {
+    const rows = Store.resultadosDe(loteriaId), desde = Math.max(this.MIN_HIST, rows.length - N);
+    let n = 0, D = 0, C = 0, eD = 0, eC = 0;
+    for (let i = desde; i < rows.length; i++) {
+      const r = rows[i], hist = this.historyBefore(loteriaId, r.fecha);
+      if (hist.length < this.MIN_HIST) continue;
+      const top = this.consenso(hist, { k, seed: `${loteriaId}|${r.fecha}`, fechaObjetivo: r.fecha });
+      const p = { candidatos: top }, ev = Hits.evaluateNum(p, r.numero), ex = Hits.expected(p);
+      n++; if (ev.directo) D++; if (ev.combinado) C++; eD += ex.eD; eC += ex.eC;
+      if (i % 3 === 0) { onProgress((i - desde + 1) / (rows.length - desde)); await U.sleep(0); }
+    }
+    return { n, D, C, eD, eC, indice: (eD + eC) ? (D + C) / (eD + eC) : null };
+  },
   run(alg, hist, opts) {
     if (alg === 1) return this.a1(hist, opts);
     if (alg === 2) return this.a2(hist, opts);

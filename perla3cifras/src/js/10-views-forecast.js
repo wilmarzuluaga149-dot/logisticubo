@@ -3,10 +3,15 @@
    ===================================================================== */
 const GenV = { loteriaId: null, fecha: '', k: null, alg: 'todos', last: null, saved: false };
 
+/** Fecha del próximo sorteo según el ritmo de la lotería: diaria (día siguiente) o semanal (mismo día de la semana siguiente). */
 function nextDrawDate(loteriaId) {
   const rows = Store.resultadosDe(loteriaId);
   const last = rows[rows.length - 1];
-  return last ? U.addDays(last.fecha, 1) : U.todayISO();
+  if (!last) return U.todayISO();
+  const dias = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 86400000);
+  const gaps = rows.slice(-13).map((r, i, arr) => i ? dias(arr[i - 1].fecha, r.fecha) : null).filter(g => g > 0).sort((x, y) => x - y);
+  const med = gaps.length ? gaps[Math.floor(gaps.length / 2)] : 1;
+  return U.addDays(last.fecha, med >= 5 ? 7 : 1);
 }
 
 function renderCands(p, { showWhy = true } = {}) {
@@ -44,6 +49,22 @@ function exportPronosticosXLS(prons) {
   XL.save(wb, `PERLA3_PRONOSTICOS_${U.stamp()}.xlsx`);
 }
 
+/** Tarjeta con los números de consenso de los 3 algoritmos. */
+function consensoHTML() {
+  const st = Stats.get(GenV.loteriaId, '', ''), H = GenV.consHist, r0 = GenV.cons[0];
+  const ree = (n) => (typeof Reemp !== 'undefined' && Reemp.conf().enPronosticos && Reemp.todos(n).length) ? `<div class="small">↻ reemplazo: ${Reemp.todos(n).slice(0, 4).map(x => `<b class="n3" style="font-size:13px">${x}</b>`).join(' ')}</div>` : '';
+  return `<div class="card consenso"><h2>★ Número de consenso para el ${U.fmtDate(GenV.fecha)}</h2>
+    <div class="sub">El número que los <b>tres algoritmos juntos</b> ponen más arriba, de los 1000 posibles. Es la selección más fuerte que puede dar el análisis, pero <b>no aumenta la probabilidad real</b>: cada número tiene 1 entre 1000.</div>
+    <div class="cons-top">
+      <div class="cons-main"><div class="big-num">${r0.n}</div>${ree(r0.n)}
+        <div class="small muted">A1 #${r0.ranks[1]} · A2 #${r0.ranks[2]} · A3 #${r0.ranks[3]} · salió ${st.freq[+r0.n]} veces${st.gap[+r0.n] === null ? '' : ', hace ' + st.gap[+r0.n] + ' sorteos'}</div></div>
+      <div class="cons-list">${GenV.cons.slice(1).map((c, i) => `<div class="cand"><span class="rk">#${i + 2}</span><span class="n3">${c.n}</span><span class="small">${c.score.toFixed(1)} pts</span><span class="why">${U.esc(c.razon)}${ree(c.n)}</span></div>`).join('')}</div>
+    </div>
+    <div class="toolbar" style="margin:10px 0 0">${H ? `<span class="small">En los últimos <b>${H.n}</b> sorteos, el consenso (5 números) acertó <b>${H.D}</b> directos y <b>${H.C}</b> combinados; por azar se esperaban <b>${(H.eD + H.eC).toFixed(1)}</b> → índice <b class="${H.indice > 1.2 ? 'ok' : ''}">${H.indice === null ? '—' : H.indice.toFixed(2) + '×'}</b> (1,00× = igual que el azar).</span>`
+      : `<button class="btn sm" id="gConsHist">¿Cuánto ha acertado el consenso? (últimos 100 sorteos)</button>`}</div>
+  </div>`;
+}
+
 /* ------------------------------ GENERAR ------------------------------ */
 UI.views.generar = (el) => {
   if (!Store.loterias.length) { el.innerHTML = UI.needData(1, null); return; }
@@ -76,6 +97,8 @@ UI.views.generar = (el) => {
     Object.assign(GenV, { loteriaId: +UI.val('gLot'), fecha: f, k: +UI.val('gK'), alg: UI.val('gAlg'), saved: false });
     const algs = GenV.alg === 'todos' ? [1, 2, 3] : [+GenV.alg];
     GenV.last = algs.map(a => Algo.generar({ alg: a, loteriaId: GenV.loteriaId, fechaObjetivo: f, k: GenV.k }));
+    GenV.cons = Algo.consenso(Algo.historyBefore(GenV.loteriaId, f), { k: 5, seed: `${GenV.loteriaId}|${f}`, fechaObjetivo: f });
+    GenV.consHist = null;
     drawOut();
   };
   const drawOut = () => {
@@ -86,11 +109,18 @@ UI.views.generar = (el) => {
         <button class="btn green" id="gSave" ${GenV.saved ? 'disabled' : ''}>${GenV.saved ? '✔ Guardado' : 'Guardar pronóstico'}</button>
         <button class="btn" id="gXls">Exportar a Excel</button><button class="btn" id="gPdf">Exportar a PDF</button>
         <span class="small muted">Generado ${U.fmtDateTime(GenV.last[0].creado)} · ${GenV.last[0].nHist} sorteos analizados${common.size ? ` · <b>${common.size}</b> candidatos coinciden en los tres algoritmos: ${[...common].map(UI.num3).join(' ')}` : ''}</span></div></div>
+      ${GenV.cons ? consensoHTML() : ''}
       <div class="grid ${GenV.last.length > 1 ? 'g3' : ''}">${GenV.last.map(p => `<div class="card"><h2>${UI.algBadge(p.algoritmo)} ${Algo.NOMBRES[p.algoritmo]}</h2>
         <div class="small" style="margin-bottom:8px">${evalLine(p)}</div>${renderCands(p, { showWhy: true })}</div>`).join('')}</div>`;
     document.getElementById('gSave').onclick = async () => {
       await Store.savePronosticos(GenV.last.map(p => ({ ...p }))); GenV.saved = true;
       UI.toast(`${GenV.last.length} pronóstico(s) guardado(s) con fecha y hora.`); drawOut();
+    };
+    const bc = document.getElementById('gConsHist');
+    if (bc) bc.onclick = async () => {
+      bc.disabled = true; const t = bc.textContent;
+      GenV.consHist = await Algo.consensoHistorico(GenV.loteriaId, { k: 5, N: 100, onProgress: x => { bc.textContent = `Midiendo… ${Math.round(x * 100)}%`; } });
+      bc.textContent = t; drawOut();
     };
     document.getElementById('gXls').onclick = () => { try { exportPronosticosXLS(GenV.last); } catch (err) { UI.toast(err.message, 'err'); } };
     document.getElementById('gPdf').onclick = () => exportPronosticosPDF(GenV.last);

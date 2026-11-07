@@ -184,3 +184,8 @@ td.r,th.r{text-align:right} td.c,th.c{text-align:center}
 .reemp{display:inline-block;margin:0 6px 2px 0;padding:1px 8px;border-radius:999px;background:rgba(79,134,240,.12);border:1px solid var(--line2);font:12px var(--mono);color:var(--a2t)}
 .reemp b{color:var(--ink)}
 @media (max-width:860px){.re-cifras{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.consenso{border-color:var(--gold-d);box-shadow:inset 0 0 0 1px rgba(217,181,74,.15)}
+.cons-top{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:16px;align-items:start}
+.cons-main{text-align:center;padding:14px;border:1px solid var(--line2);border-radius:12px;background:var(--input)}
+.cons-list{display:grid;gap:6px}
+@media (max-width:860px){.cons-top{grid-template-columns:1fr}}
