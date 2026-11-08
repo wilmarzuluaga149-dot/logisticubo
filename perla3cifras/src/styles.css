@@ -194,3 +194,12 @@ td.r,th.r{text-align:right} td.c,th.c{text-align:center}
 .seq-nums{display:flex;flex-wrap:wrap;gap:8px}
 .seq-n{display:inline-flex;gap:6px;align-items:baseline;padding:6px 10px;border:1px solid var(--line2);border-radius:8px;background:var(--input)}
 .seq-n .n3{font-size:18px}
+.seq-cols{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px}
+.seq-col{border:1px solid var(--line2);border-radius:12px;background:var(--input);padding:10px 14px;min-width:150px}
+.seq-col-h{text-align:center;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.seq-col-h .n3{font-size:20px}
+.seq-col-r{display:flex;align-items:baseline;gap:4px;padding:3px 0;border-bottom:1px dashed var(--rowline)}
+.seq-col-r.first .seq-dig{color:var(--gold)}
+.seq-dig{font:700 22px/1.1 var(--mono);width:22px;text-align:center;color:var(--ink)}
+.seq-col-r .small{margin-left:auto;padding-left:10px}
+[hidden]{display:none!important}

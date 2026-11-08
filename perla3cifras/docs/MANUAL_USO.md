@@ -54,11 +54,14 @@ No hace falta ir a ningún módulo para actualizar:
 * Todo esto se puede activar o desactivar en **Configuración → Actualización automática**.
 
 ### Secuencias (versión 1.7)
-Opción **Secuencias** del menú. Escriba uno o varios números: desde la cifra con la que empieza, la secuencia
-1,2,3,4,5,6,7,8,9,0 sigue **hacia arriba hasta el 0** y **hacia abajo hasta el 1**.
-Ejemplo con 613: arriba **613, 713, 813, 913, 013** · abajo **513, 413, 313, 213, 113**.
-Se puede elegir que avance la primera, la segunda, la tercera o todas las cifras a la vez (613, 724, 835, 946, 057).
-Muestra cuántas veces salió cada número en la lotería activa y se exporta a Excel.
+Opción **Secuencias** del menú. Escriba uno o varios números de tres cifras (el número base).
+1. **Secuencia (columna):** las tres cifras bajan de una en una a la vez, 10 filas (después del 0 sigue el 9).
+   Base 613: 613, 502, 491, 380, 279, 168, 057, 946, 835, 724. Base 168: 168, 057, 946, 835, 724, 613, 502, 491, 380, 279.
+2. **Suma fila por fila:** a la fila 1 se le suma 1 en cada cifra, a la fila 2 se le suma 2… y a la fila 10 se le suma 0.
+   Con la columna que baja, todas las filas dan el mismo número: base + 111 (base 168 → 279).
+3. **Combinado total:** todas las combinaciones de los resultados (279 → 279, 297, 729, 792, 927, 972).
+También se puede elegir la columna que **sube**, o la secuencia **por cifra** (desde la cifra inicial, arriba hasta el 0 y
+abajo hasta el 1: 613 → 713, 813, 913, 013 · 513, 413, 313, 213, 113). Muestra cuántas veces salió cada número y se exporta a Excel.
 
 ### Restar un código y combinaciones (versión 1.7)
 En **Código 555** elija **Operación: Restar** y escriba el código (por ejemplo **613**): 142 − 613 = **539**

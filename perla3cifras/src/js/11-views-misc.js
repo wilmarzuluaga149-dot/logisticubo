@@ -256,7 +256,7 @@ UI.views.ayuda = (el) => {
       <li>Seleccione la <b>Lotería activa</b> en la barra superior: las estadísticas, el análisis de cifras y los algoritmos usarán esa lotería.</li>
       <li>Para practicar puede cargar <b>datos de ejemplo ficticios</b> en Configuración.</li></ol>
     <h3>Secuencias</h3>
-    <p>En <b>Secuencias</b> escriba un número: desde la cifra con la que empieza sigue hacia arriba hasta el 0 y hacia abajo hasta el 1 (613 → 713, 813, 913, 013 · 513, 413, 313, 213, 113).</p>
+    <p>En <b>Secuencias</b> escriba un número base de tres cifras: las tres cifras bajan de una en una (168 → 057, 946, 835…), luego se suma fila por fila (fila 1 +1 … fila 10 +0) y se muestran todas las combinaciones. También hay columna que sube y secuencia por cifra.</p>
     <h3>Código 555</h3>
     <p>En <b>Código 555</b> se suma o se resta un código (555, 5, 613 u otro) a los números de la lotería elegida (por defecto Medellín): 142 + 555 = 697. Muestra el número con código para el próximo sorteo y si esos números salieron después.</p>
     <h3>Reemplazos</h3>
