@@ -1,0 +1,57 @@
+INFORME DE PRUEBAS — NEGOCIO PRO 360 ENTERPRISE
+Generado: 05/11/2026 19:45
+
+1. PRUEBAS POR ETAPAS (motor de cálculo LibreOffice, libro completo recalculado en cada etapa)
+   E0 Crear producto PT-001 y cliente CT-001:
+      [E0] fórmulas=38033 errores=0 · Stock PT-001 = 0; tránsito = 0
+   E1 Registrar compra OC-PRUEBA (pendiente):
+      [E1] fórmulas=38060 errores=0 · Tránsito PT-001: 0 → 40
+   E2 Recibir mercancía (estado Recibida):
+      [E2] fórmulas=38060 errores=0 · Stock PT-001: 0 → 40; Tránsito PT-001: 40 → 0; CxP: 40,943,416 → 41,439,416; Inventario $: 39,142,842 → 39,542,842
+   E3 Registrar venta FV-PRUEBA a crédito:
+      [E3] fórmulas=38094 errores=0 · Stock PT-001: 40 → 28; CxC: 32,073,644 → 32,287,844; Ventas: 236,031,715 → 236,211,715; Inventario $: 39,542,842 → 39,422,842
+   E4 Registrar abono RC-PRUEBA:
+      [E4] fórmulas=38097 errores=0 · CxC: 32,287,844 → 32,187,844; Caja total: 69,416,707 → 69,516,707
+   E5 Registrar gasto GS-PRUEBA en efectivo:
+      [E5] fórmulas=38101 errores=0 · Caja total: 69,516,707 → 69,466,707; Efectivo: 3,363,424 → 3,313,424; Gastos: 41,636,000 → 41,686,000
+   E6 Registrar y anular FV-PRUEBA-AN:
+      [E6] fórmulas=38135 errores=0 · sin cambios en los indicadores monitoreados
+
+2. ARCHIVO CON MACROS: vbaProject.bin de 56832 bytes, 36 módulos (ThisWorkbook, 34 hojas, NP360).
+
+3. RECÁLCULO COMPLETO DE LOS ENTREGABLES (copias)
+   NEGOCIO_PRO_360.xlsx: estado=success fórmulas=38135 errores=0
+   NEGOCIO_PRO_360.xlsm: estado=success fórmulas=38135 errores=0
+
+4. HOJA PRUEBAS (esperado vs. obtenido, tras recalcular)
+    1. Crear producto: esperado=1 obtenido=1 → ✔ OK
+    2. Registrar compra: esperado=496000 obtenido=496000 → ✔ OK
+    3. Compra pendiente NO suma inventario: esperado=0 obtenido=0 → ✔ OK
+    4. Recibir mercancía: esperado=Recibida obtenido=Recibida → ✔ OK
+    5. Comprobar aumento del inventario: esperado=40 obtenido=40 → ✔ OK
+    6. Registrar venta: esperado=214200 obtenido=214200 → ✔ OK
+    7. Comprobar disminución del inventario: esperado=28 obtenido=28 → ✔ OK
+    8. Venta a crédito no entra a caja (sin doble conteo): esperado=100000 obtenido=100000 → ✔ OK
+    9. Registrar abono: esperado=100000 obtenido=100000 → ✔ OK
+   10. Verificar cartera (factura): esperado=114200 obtenido=114200 → ✔ OK
+   11. Verificar cartera (cliente): esperado=114200 obtenido=114200 → ✔ OK
+   12. Registrar gasto: esperado=50000 obtenido=50000 → ✔ OK
+   13. Comprobar flujo de caja: esperado=✔ Cuadra obtenido=✔ Cuadra → ✔ OK
+   14. Venta anulada no descuenta inventario: esperado=28 obtenido=28 → ✔ OK
+   15. Venta anulada no genera ingreso: esperado=0 obtenido=0 → ✔ OK
+   16. Actualizar dashboard (consistencia): esperado=Coinciden obtenido=Coinciden → ✔ OK
+   17. Inventario por movimientos cuadra: esperado=0 obtenido=0 → ✔ OK
+   18. Validación de datos sin errores: esperado=0 obtenido=0 → ✔ OK
+   RESULTADO: 18 de 18 OK
+
+5. CERRAR Y VOLVER A ABRIR
+   .xlsx reabierto: {'hojas': 34, 'tablas': 23, 'nombres': 259, 'formulas': 38135, 'validaciones': 170, 'graficos': 4}
+   .xlsm reabierto: {'hojas': 34, 'tablas': 23, 'nombres': 259, 'formulas': 38135, 'validaciones': 170, 'graficos': 4}
+   Estructura idéntica entre .xlsx y .xlsm: True
+
+6. VBA (verificación estática; la EJECUCIÓN requiere Excel para Windows)
+   Nombres/tablas/columnas usados por las macros que no existen en el libro: 0
+
+7. EXPORTACIÓN PDF
+   PDF de ejemplo Informe_ejemplo.pdf: 59,210 bytes
+   PDF de ejemplo Dashboard_ejemplo.pdf: 89,262 bytes
