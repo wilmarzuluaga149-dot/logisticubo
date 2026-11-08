@@ -57,9 +57,10 @@ No hace falta ir a ningún módulo para actualizar:
 Opción **Secuencias** del menú. Escriba uno o varios números de tres cifras (el número base).
 1. **Secuencia (columna):** las tres cifras bajan de una en una a la vez, 10 filas (después del 0 sigue el 9).
    Base 613: 613, 502, 491, 380, 279, 168, 057, 946, 835, 724. Base 168: 168, 057, 946, 835, 724, 613, 502, 491, 380, 279.
-2. **Sumando y restando 613** (número editable): a cada número de la secuencia se le suma y se le resta, cifra por
-   cifra, sin llevar ni pedir prestado. Base 168: +613 → 771, 660, 559, 448, 337, 226, 115, 004, 993, 882 ·
-   −613 → 555, 444, 333, 222, 111, 000, 999, 888, 777, 666. Al final se muestran todas sus combinaciones sin repetir.
+2. **Por cifra −6 +1 +3** (patrón editable): a la primera cifra se le resta 6, a la segunda se le suma 1 y a la tercera
+   se le suma 3, sin llevar. Base 755: 7−6=1 · 5+1=6 · 5+3=8 → **168**; la columna completa da 168, 057, 946, 835, 724,
+   613, 502, 491, 380, 279. También se muestra cada número **restando 613** (sin pedir prestado) y, al final, todas las
+   combinaciones sin repetir.
 3. **Suma fila por fila:** a la fila 1 se le suma 1 en cada cifra, a la fila 2 se le suma 2… y a la fila 10 se le suma 0.
    Con la columna que baja, todas las filas dan el mismo número: base + 111 (base 168 → 279).
 4. **Combinado total:** todas las combinaciones de los resultados (279 → 279, 297, 729, 792, 927, 972).
