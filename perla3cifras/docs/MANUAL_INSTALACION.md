@@ -6,7 +6,7 @@ conexión a Internet: todas las librerías están incluidas dentro del archivo.
 ## Aplicaciones instalables (versión 1.3)
 
 ### Android – archivo APK
-1. Copie `PERLA3CIFRAS_PRO_1.7.0.apk` al teléfono (cable USB, Drive, WhatsApp o correo).
+1. Copie `PERLA3CIFRAS_PRO_1.7.1.apk` al teléfono (cable USB, Drive, WhatsApp o correo).
 2. Ábralo desde *Archivos* o *Descargas*. Android pedirá permitir **«Instalar apps desconocidas»** para esa aplicación
    (Archivos, Chrome o WhatsApp): actívelo una sola vez y vuelva atrás.
 3. Pulse **Instalar**. Si aparece *Play Protect*, elija **Instalar de todas formas** (la app no está en Google Play).
@@ -17,7 +17,7 @@ conexión a Internet: todas las librerías están incluidas dentro del archivo.
   si el APK nuevo está firmado con la **misma clave**; guarde el archivo de clave que recibió con la entrega.
 
 ### Windows – instalador
-1. Ejecute `PERLA3CIFRAS_PRO_1.7.0_instalador.exe`.
+1. Ejecute `PERLA3CIFRAS_PRO_1.7.1_instalador.exe`.
 2. Si Windows SmartScreen muestra *«Windows protegió su PC»*, pulse **Más información → Ejecutar de todas formas**
    (el instalador no tiene firma digital comercial).
 3. Elija la carpeta (por defecto, la de su usuario; no requiere administrador) y termine. Se crean accesos directos en el
@@ -25,7 +25,7 @@ conexión a Internet: todas las librerías están incluidas dentro del archivo.
 * Los datos se guardan en `%APPDATA%\PERLA 3 CIFRAS PRO`; los archivos exportados, en **Descargas\PERLA3**.
 * **Actualizar:** ejecute el instalador nuevo; los datos se conservan. **Desinstalar:** Configuración de Windows →
   Aplicaciones → PERLA 3 CIFRAS PRO (los datos no se borran).
-* **Versión portátil:** `PERLA3CIFRAS_PRO_1.7.0_portable.exe` funciona sin instalar (por ejemplo desde una memoria USB).
+* **Versión portátil:** `PERLA3CIFRAS_PRO_1.7.1_portable.exe` funciona sin instalar (por ejemplo desde una memoria USB).
 * Teclas: **F11** pantalla completa, **F5** recargar, **Ctrl+P** imprimir.
 
 ## Navegadores recomendados

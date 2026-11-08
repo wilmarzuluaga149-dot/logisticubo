@@ -2,7 +2,7 @@
 /* =====================================================================
    PERLA 3 CIFRAS PRO — utilidades generales
    ===================================================================== */
-const APP_VERSION = '1.7.0';
+const APP_VERSION = '1.7.1';
 const APP_BUILD = '2026-11-07';
 const DB_NAME = 'perla3cifras_pro';
 const DB_VERSION = 1;

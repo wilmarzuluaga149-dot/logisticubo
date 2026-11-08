@@ -47,7 +47,7 @@ const Secuencia = {
   },
 };
 
-const SeV = { texto: '', pos: '0', modo: 'baja' };
+const SeV = { texto: '', pos: '0', modo: 'baja', codigo: '613' };
 UI.views.secuencias = (el) => {
   const L = UI.ctxLoteria;
   el.innerHTML = `
@@ -56,6 +56,7 @@ UI.views.secuencias = (el) => {
       <div class="toolbar">
         <label class="field grow">Números<input id="seN" value="${U.esc(SeV.texto)}" placeholder="Ej.: 613   o varios: 613 142 25" inputmode="numeric" autocomplete="off"></label>
         <label class="field">Forma<select id="seM"><option value="baja" ${SeV.modo === 'baja' ? 'selected' : ''}>Columna: todas las cifras bajan de 1 en 1</option><option value="sube" ${SeV.modo === 'sube' ? 'selected' : ''}>Columna: todas las cifras suben de 1 en 1</option><option value="cifra" ${SeV.modo === 'cifra' ? 'selected' : ''}>Por cifra: arriba hasta el 0 y abajo hasta el 1</option></select></label>
+        <label class="field" id="seCw" ${SeV.modo === 'cifra' ? 'hidden' : ''}>Sumar y restar<input id="seC" class="num3" maxlength="6" inputmode="numeric" value="${U.esc(SeV.codigo)}" style="width:110px" title="Se suma y se resta a cada número de la secuencia, cifra por cifra, sin llevar"></label>
         <label class="field" id="sePw" ${SeV.modo === 'cifra' ? '' : 'hidden'}>Cifra que avanza<select id="seP"><option value="0" ${SeV.pos === '0' ? 'selected' : ''}>La primera (con la que empieza)</option><option value="1" ${SeV.pos === '1' ? 'selected' : ''}>La segunda</option><option value="2" ${SeV.pos === '2' ? 'selected' : ''}>La tercera</option><option value="todas" ${SeV.pos === 'todas' ? 'selected' : ''}>Todas las cifras a la vez</option></select></label>
         <button class="btn gold big" id="seGo">VER SECUENCIA</button>
         <button class="btn" id="seX" disabled>Exportar a Excel</button>
@@ -66,6 +67,8 @@ UI.views.secuencias = (el) => {
   let ultimo = null;
   const ver = () => {
     SeV.texto = UI.val('seN'); SeV.pos = UI.val('seP'); SeV.modo = UI.val('seM');
+    const codTxt = UI.val('seC').trim(); if (/^\d{1,6}$/.test(codTxt)) SeV.codigo = codTxt; else if (codTxt) UI.toast('El número para sumar y restar debe tener de 1 a 6 cifras.', 'err');
+    document.getElementById('seCw').hidden = SeV.modo === 'cifra';
     document.getElementById('sePw').hidden = SeV.modo !== 'cifra';
     const toks = SeV.texto.split(/[\s,;]+/).filter(Boolean), ok = toks.filter(t => /^\d{1,6}$/.test(t)), malos = toks.filter(t => !/^\d{1,6}$/.test(t));
     const box = document.getElementById('seOut');
@@ -80,13 +83,21 @@ UI.views.secuencias = (el) => {
         ultimo.map(s => {
           const filas = Secuencia.sumaFilas(s.arriba), res = [...new Set(filas.map(f => f.r))], comb = Secuencia.combinarTodo(res);
           s.filas = filas; s.resultados = res; s.combinados = comb;
+          const cod = SeV.codigo, mas = s.arriba.map(x => Codigo.aplicar(x, cod, 'cifras', 'sumar')), menos = s.arriba.map(x => Codigo.aplicar(x, cod, 'cifras', 'restar'));
+          const combPM = Secuencia.combinarTodo([...new Set([...mas, ...menos])]);
+          s.mas = mas; s.menos = menos; s.combPM = combPM;
+          const colOp = (titulo, sub, arr, sg) => `<div class="seq-col"><div class="seq-col-h"><b>${titulo}</b><div class="small muted">${sub}</div></div>${arr.map((r, i) => `<div class="seq-col-r"><span class="small muted" style="width:86px;white-space:nowrap">${s.arriba[i]} ${sg} ${U.esc(cod)}</span><span class="seq-dig">${r.split('').join('</span><span class="seq-dig">')}</span>${veces(r)}</div>`).join('')}</div>`;
           return `<div class="card" style="margin-top:12px"><h3 style="margin-top:0">Base ${UI.num3(s.n)}</h3>
           <div class="seq-cols" style="margin-top:0">
             <div class="seq-col"><div class="seq-col-h"><b>1. Secuencia</b><div class="small muted">${dir < 0 ? '▼ bajan' : '▲ suben'}</div></div>${s.arriba.map((x, i) => `<div class="seq-col-r ${i ? '' : 'first'}"><span class="seq-dig">${x.split('').join('</span><span class="seq-dig">')}</span>${veces(x)}</div>`).join('')}</div>
-            <div class="seq-col"><div class="seq-col-h"><b>2. Suma fila por fila</b><div class="small muted">fila 1 +1 … fila 10 +0</div></div>${filas.map(f => `<div class="seq-col-r"><span class="small muted" style="width:86px;white-space:nowrap">${f.n} + ${f.k}${f.k}${f.k}</span><span class="seq-dig">${f.r.split('').join('</span><span class="seq-dig">')}</span>${veces(f.r)}</div>`).join('')}</div>
-            <div class="seq-col" style="flex:1;min-width:220px"><div class="seq-col-h"><b>3. Combinado total</b><div class="small muted">${res.length} resultado${res.length > 1 ? 's' : ''} → ${comb.length} combinaciones</div></div>
+            ${colOp('2. Sumando ' + U.esc(cod), 'cifra por cifra, sin llevar', mas, '+')}
+            ${colOp('3. Restando ' + U.esc(cod), 'cifra por cifra, sin pedir prestado', menos, '−')}
+            <div class="seq-col"><div class="seq-col-h"><b>4. Suma fila por fila</b><div class="small muted">fila 1 +1 … fila 10 +0</div></div>${filas.map(f => `<div class="seq-col-r"><span class="small muted" style="width:86px;white-space:nowrap">${f.n} + ${f.k}${f.k}${f.k}</span><span class="seq-dig">${f.r.split('').join('</span><span class="seq-dig">')}</span>${veces(f.r)}</div>`).join('')}</div>
+            <div class="seq-col" style="flex:1;min-width:220px"><div class="seq-col-h"><b>5. Combinado total</b><div class="small muted">de la suma fila por fila: ${res.length} resultado${res.length > 1 ? 's' : ''} → ${comb.length} combinaciones</div></div>
               ${res.length === 1 && dir < 0 ? `<div class="note" style="margin:6px 0">Con la columna que baja, todas las filas dan el mismo número: base + 111 = <b>${res[0]}</b>.</div>` : ''}
-              <div class="seq-nums">${comb.map(x => `<span class="seq-n">${UI.num3(x)} ${veces(x)}</span>`).join('')}</div></div>
+              <div class="seq-nums">${comb.map(x => `<span class="seq-n">${UI.num3(x)} ${veces(x)}</span>`).join('')}</div>
+              <div class="seq-col-h" style="margin-top:14px"><b>6. Combinado de +${U.esc(cod)} y −${U.esc(cod)}</b><div class="small muted">${combPM.length} números sin repetir</div></div>
+              <div class="seq-nums">${combPM.map(x => `<span class="seq-n">${UI.num3(x)} ${veces(x)}</span>`).join('')}</div></div>
           </div></div>`;
         }).join('');
       document.getElementById('seX').disabled = false;
@@ -106,7 +117,9 @@ UI.views.secuencias = (el) => {
   document.getElementById('seGo').onclick = ver;
   document.getElementById('seN').onkeydown = (e) => { if (e.key === 'Enter') ver(); };
   document.getElementById('seP').onchange = () => { if (UI.val('seN')) ver(); };
-  document.getElementById('seM').onchange = () => { document.getElementById('sePw').hidden = UI.val('seM') !== 'cifra'; SeV.modo = UI.val('seM'); if (UI.val('seN')) ver(); };
+  document.getElementById('seC').onchange = () => { if (UI.val('seN')) ver(); };
+  document.getElementById('seC').onkeydown = (e) => { if (e.key === 'Enter') ver(); };
+  document.getElementById('seM').onchange = () => { document.getElementById('seCw').hidden = UI.val('seM') === 'cifra'; document.getElementById('sePw').hidden = UI.val('seM') !== 'cifra'; SeV.modo = UI.val('seM'); if (UI.val('seN')) ver(); };
   document.getElementById('seX').onclick = () => {
     try {
       if (!ultimo) return;
@@ -115,7 +128,10 @@ UI.views.secuencias = (el) => {
         s.arriba.forEach((x, i) => aoa.push([s.n, s.columna ? (SeV.modo === 'sube' ? 'COLUMNA (SUBEN)' : 'COLUMNA (BAJAN)') : 'ARRIBA', i + 1, x]));
         s.abajo.forEach((x, i) => aoa.push([s.n, 'ABAJO', i + 1, x]));
         (s.filas || []).forEach(f => aoa.push([s.n, 'SUMA FILA ' + f.fila + ' (+' + f.k + f.k + f.k + ')', f.fila, f.r]));
+        (s.mas || []).forEach((x, i) => aoa.push([s.n, 'SUMANDO ' + SeV.codigo, i + 1, x]));
+        (s.menos || []).forEach((x, i) => aoa.push([s.n, 'RESTANDO ' + SeV.codigo, i + 1, x]));
         (s.combinados || []).forEach((x, i) => aoa.push([s.n, 'COMBINADO TOTAL', i + 1, x]));
+        (s.combPM || []).forEach((x, i) => aoa.push([s.n, 'COMBINADO +/- ' + SeV.codigo, i + 1, x]));
       }
       const wb = XL.book(); XLSX.utils.book_append_sheet(wb, XL.sheet(aoa, [0, 3], [10, 12, 8, 12]), 'SECUENCIAS'); XL.save(wb, `PERLA3_SECUENCIAS_${U.stamp()}.xlsx`);
     } catch (err) { UI.toast(err.message, 'err'); }

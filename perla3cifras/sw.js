@@ -1,5 +1,5 @@
 /* Service worker: permite usar la aplicación sin conexión cuando se publica en un servidor (p. ej. GitHub Pages). */
-const CACHE = 'perla3-pro-v1.7.0';
+const CACHE = 'perla3-pro-v1.7.1';
 const FILES = ['./', './index.html', './PERLA3CIFRAS_PRO.html', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

@@ -92,6 +92,12 @@ let ok = 0, fail = 0; const check = (c, m) => { c ? ok++ : fail++; console.log((
   await p.fill('#seN', '168'); await p.click('#seGo');
   const t168 = await p.textContent('#seOut');
   check(t168.includes('Suma fila por fila') && t168.includes('Combinado total') && t168.includes('972') && t168.includes('base + 111'), 'pantalla con base 168: secuencia, suma fila por fila y combinado total');
+  const pm = await p.$$eval('#seOut .seq-col', cols => cols.slice(1, 3).map(c => [...c.querySelectorAll('.seq-col-r')].map(r => [...r.querySelectorAll('.seq-dig')].map(d => d.textContent).join('')).join(' ')));
+  check(pm[0] === '771 660 559 448 337 226 115 004 993 882', 'base 168 + 613 sin llevar: 771 660 559 448 337 226 115 004 993 882');
+  check(pm[1] === '555 444 333 222 111 000 999 888 777 666', 'base 168 − 613 sin pedir prestado: 555 444 333 222 111 000 999 888 777 666');
+  await p.fill('#seC', '555'); await p.dispatchEvent('#seC', 'change'); await p.waitForTimeout(300);
+  check((await p.textContent('#seOut')).includes('Sumando 555') && (await p.$eval('#seOut .seq-col:nth-child(2) .seq-col-r', r => [...r.querySelectorAll('.seq-dig')].map(d => d.textContent).join(''))) === '613', 'el número es editable: 168 + 555 = 613');
+  await p.fill('#seC', '613'); await p.dispatchEvent('#seC', 'change'); await p.waitForTimeout(200);
   await p.selectOption('#seM', 'cifra'); await p.waitForTimeout(200);
   await p.fill('#seN', '613 25'); await p.click('#seGo');
   const sq = await p.textContent('#seOut');
