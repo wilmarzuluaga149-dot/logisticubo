@@ -53,6 +53,20 @@ No hace falta ir a ningún módulo para actualizar:
   primera vez que se abre y nunca se duplica.
 * Todo esto se puede activar o desactivar en **Configuración → Actualización automática**.
 
+### Pegar resultados de la página (versión 1.8)
+En el **Inicio** hay una casilla fija: **📋 Pegar resultados de la página**. Copie los resultados de la página (por
+ejemplo ganarchance.com) **tal como aparecen** y péguelos:
+
+    Culona
+    6752
+    Paisita día
+    3711La 5ta: 6
+
+Pulse **INGRESAR RESULTADOS**: se guardan y se actualiza todo el análisis. La aplicación reconoce el nombre de cada
+lotería, toma las 3 últimas cifras (6752 → 752) e ignora «La 5ta», la serie y el signo. Si el texto copiado trae
+«Resultados de hoy domingo 8 de noviembre» o «Resultados de ayer…», usa esa fecha; si no, la fecha de la casilla (hoy).
+Pegar dos veces no duplica; si un número cambió, se corrige. También funciona en *Importar y analizar → Pegar números*.
+
 ### Secuencias (versión 1.7)
 Opción **Secuencias** del menú. Escriba uno o varios números de tres cifras (el número base).
 1. **Secuencia (columna):** las tres cifras bajan de una en una a la vez, 10 filas (después del 0 sigue el 9).

@@ -216,15 +216,17 @@ function iaTabArchivo() {
 function iaTabPegar() {
   const box = document.getElementById('iaIn');
   box.innerHTML = `
-    <p class="small muted">Pegue una lista de números (separados por espacios, comas o en líneas) o filas copiadas de Excel con fecha, lotería y número.</p>
+    <p class="small muted">Pegue los resultados <b>copiados de la página tal como aparecen</b> (nombre de la lotería y debajo su número), una lista de números o filas copiadas de Excel con fecha, lotería y número.</p>
     <textarea id="iaTxt" placeholder="Ejemplos:&#10;123 456 007 089 541&#10;— o —&#10;05/01/2026;Mi Lotería;007&#10;06/01/2026;Mi Lotería;125">${U.esc(IA.pegado || '')}</textarea>
-    <div class="toolbar" style="margin-top:8px"><button class="btn gold" id="iaLeerTxt">Revisar números pegados</button><span class="small muted" id="iaTxtInfo"></span></div>`;
+    <div class="toolbar" style="margin-top:8px"><label class="field">Fecha (si el texto no la trae)<input type="date" id="iaTxtF" value="${U.todayISO()}" max="${U.addDays(U.todayISO(), 1)}"></label><button class="btn gold" id="iaLeerTxt">Ingresar / revisar números pegados</button><span class="small muted" id="iaTxtInfo"></span></div>`;
   const ta = document.getElementById('iaTxt');
   const info = () => { const t = ta.value.match(/\d+/g); document.getElementById('iaTxtInfo').textContent = t ? `${t.length} valores numéricos detectados` : ''; };
   ta.oninput = U.debounce(info, 200); info();
   document.getElementById('iaLeerTxt').onclick = () => {
     const txt = ta.value; IA.pegado = txt;
     if (!txt.trim()) { UI.toast('Pegue primero los números.', 'warn'); return; }
+    // ¿Texto copiado de una página de resultados (nombre + número)? Se ingresa directamente.
+    if (/[a-záéíóúñ]{3}/i.test(txt) && !/;|\t/.test(txt) && Pagina.parsear(txt).registros.length) { Pagina.ingresar(txt, UI.val('iaTxtF') || U.todayISO()); return; }
     const lineas = txt.split(/\r?\n/).filter(l => l.trim());
     const conFecha = lineas.some(l => /\d{1,4}[-/.]\d{1,2}[-/.]\d{1,4}/.test(l));
     let aoa;
