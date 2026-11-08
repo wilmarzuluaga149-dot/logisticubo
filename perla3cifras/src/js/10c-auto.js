@@ -164,6 +164,15 @@ const DatosIncluidos = {
       if (n && l && U.isISO(fecha)) filas.push({ fecha, loteriaId: l.id, numero: n });
     }
     const r = await Store.bulkResultados(filas, 'omitir');
+    // Limpieza: registros duplicados que traían versiones anteriores del histórico (se borran solo si coinciden exactamente)
+    const aBorrar = [];
+    if (Array.isArray(D.eliminar)) for (const [fecha, nombre, numero] of D.eliminar) {
+      const l = Store.findLoteriaByName(nombre), x = l && Store.resultadoDe(l.id, fecha);
+      if (x && x.numero === U.normNum(numero)) aBorrar.push(x.id);
+    }
+    await Store.deleteResultados(aBorrar);
+    const borrados = aBorrar.length;
+    if (borrados) UI.toast(`Se limpiaron ${borrados} resultados duplicados de versiones anteriores.`, 'ok', 6000);
     await Store.setMeta('datosIncluidos', D.id);
     Auto.cargando = false; if (!Auto.running) Auto.pintar('');
     UI.toast(`Histórico incluido cargado: ${r.nuevos} resultados nuevos (${r.omitidos} ya estaban). El análisis se actualiza solo.`, 'ok', 8000);

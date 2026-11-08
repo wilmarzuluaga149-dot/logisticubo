@@ -34,6 +34,8 @@ const DEFAULT_CONFIG = {
   actualizarEnLinea: true,          // al abrir, descarga resultados nuevos de fuentes oficiales (datos.gov.co)
   tema: { id: 'industrial', colores: null },
   // Reemplazos indicados por el usuario: 0=5, 1=6, 2=7, 3=8, 4=9 (y al revés). 142 -> 697
+  // Código que se suma a los números de una lotería (opción del menú «Código 555»)
+  codigo: { codigo: '555', modo: 'cifras', op: 'sumar', loteria: 'Lotería de Medellín', ventana: 10, filas: 30 },
   reemplazos: { cifras: { 0: ['5'], 1: ['6'], 2: ['7'], 3: ['8'], 4: ['9'], 5: ['0'], 6: ['1'], 7: ['2'], 8: ['3'], 9: ['4'] }, numeros: {}, enPronosticos: true },
 };
 
@@ -196,6 +198,13 @@ const Store = {
     this.changed();
     this.avisarNuevos([rec]);
     return rec;
+  },
+  async deleteResultados(ids) {
+    if (!ids.length) return;
+    const set = new Set(ids);
+    this.resultados = this.resultados.filter(r => !set.has(r.id));
+    await DB.write(ids.map(id => ({ store: 'resultados', del: id })));
+    this.changed();
   },
   async deleteResultado(id) {
     this.resultados = this.resultados.filter(r => r.id !== id);

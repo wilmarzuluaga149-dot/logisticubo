@@ -255,6 +255,10 @@ UI.views.ayuda = (el) => {
       <li><b>Histórico:</b> registre resultados con fecha, lotería y número. Use «Pegar varios…» para copiar bloques desde Excel, o importe un archivo en el módulo <b>Excel</b>.</li>
       <li>Seleccione la <b>Lotería activa</b> en la barra superior: las estadísticas, el análisis de cifras y los algoritmos usarán esa lotería.</li>
       <li>Para practicar puede cargar <b>datos de ejemplo ficticios</b> en Configuración.</li></ol>
+    <h3>Secuencias</h3>
+    <p>En <b>Secuencias</b> escriba un número: desde la cifra con la que empieza sigue hacia arriba hasta el 0 y hacia abajo hasta el 1 (613 → 713, 813, 913, 013 · 513, 413, 313, 213, 113).</p>
+    <h3>Código 555</h3>
+    <p>En <b>Código 555</b> se suma o se resta un código (555, 5, 613 u otro) a los números de la lotería elegida (por defecto Medellín): 142 + 555 = 697. Muestra el número con código para el próximo sorteo y si esos números salieron después.</p>
     <h3>Reemplazos</h3>
     <p>En <b>Reemplazos</b> escriba números de 2, 3 o 4 cifras y se convierten cifra por cifra con su tabla (0=5, 1=6, 2=7, 3=8, 4=9 y al revés). Ejemplo: 142 → 697. La tabla se puede cambiar y también hay una tabla de números completos.</p>
     <h3>Colores</h3>

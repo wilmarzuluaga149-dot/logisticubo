@@ -18,6 +18,8 @@ const MENU = [
   { id: 'historico', ico: '☰', t: 'Histórico de resultados' },
   { id: 'importar', ico: '⇪', t: 'Importar y analizar' },
   { id: 'reemplazos', ico: '↻', t: 'Reemplazos' },
+  { id: 'codigo', ico: '＋', t: 'Código 555' },
+  { id: 'secuencias', ico: '⇅', t: 'Secuencias' },
   { grp: 'Análisis' },
   { id: 'estadisticas', ico: '▤', t: 'Estadísticas' },
   { id: 'cifras', ico: '◫', t: 'Análisis de cifras' },

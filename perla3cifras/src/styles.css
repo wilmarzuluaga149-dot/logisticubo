@@ -189,3 +189,8 @@ td.r,th.r{text-align:right} td.c,th.c{text-align:center}
 .cons-main{text-align:center;padding:14px;border:1px solid var(--line2);border-radius:12px;background:var(--input)}
 .cons-list{display:grid;gap:6px}
 @media (max-width:860px){.cons-top{grid-template-columns:1fr}}
+.seq-fila{display:flex;gap:10px;align-items:center;margin:8px 0 4px}
+.seq-et{font-weight:700;color:var(--gold);min-width:80px}
+.seq-nums{display:flex;flex-wrap:wrap;gap:8px}
+.seq-n{display:inline-flex;gap:6px;align-items:baseline;padding:6px 10px;border:1px solid var(--line2);border-radius:8px;background:var(--input)}
+.seq-n .n3{font-size:18px}

@@ -53,6 +53,28 @@ No hace falta ir a ningún módulo para actualizar:
   primera vez que se abre y nunca se duplica.
 * Todo esto se puede activar o desactivar en **Configuración → Actualización automática**.
 
+### Secuencias (versión 1.7)
+Opción **Secuencias** del menú. Escriba uno o varios números: desde la cifra con la que empieza, la secuencia
+1,2,3,4,5,6,7,8,9,0 sigue **hacia arriba hasta el 0** y **hacia abajo hasta el 1**.
+Ejemplo con 613: arriba **613, 713, 813, 913, 013** · abajo **513, 413, 313, 213, 113**.
+Se puede elegir que avance la primera, la segunda, la tercera o todas las cifras a la vez (613, 724, 835, 946, 057).
+Muestra cuántas veces salió cada número en la lotería activa y se exporta a Excel.
+
+### Restar un código y combinaciones (versión 1.7)
+En **Código 555** elija **Operación: Restar** y escriba el código (por ejemplo **613**): 142 − 613 = **539**
+(cifra por cifra, sin pedir prestado; o resta normal tomando las 3 últimas cifras). Cada resultado muestra sus
+**combinaciones** (las mismas cifras en otro orden): 539 → 593, 359, 395, 953, 935.
+
+### Código 555 (versión 1.6)
+Opción **Código 555** del menú. Suma un código a los números de una lotería (por defecto la **Lotería de Medellín**).
+El código es opcional: **555**, **5** (se suma a cada cifra, igual que 555) o cualquier otro de 1 a 6 cifras.
+* **Cifra por cifra, sin llevar** (por defecto): 142 + 555 = 697 · 678 + 555 = 123 · 007 + 555 = 552.
+* **Suma normal**: 678 + 555 = 1233 → se toman las 3 últimas cifras: 233.
+Muestra el último resultado con el código (número para el próximo sorteo), los números de consenso con el código, la
+tabla de resultados con su número + código y si ese número salió en los sorteos siguientes (directo o combinado),
+comparado con lo esperado por azar. También permite aplicar el código a cualquier número de 2, 3 o 4 cifras.
+Exportable a Excel. Los resultados guardados no se modifican.
+
 ### Número de consenso (versión 1.5)
 En **Generar pronósticos**, al pulsar GENERAR aparece arriba el **número de consenso**: el que los tres algoritmos
 juntos ponen más alto entre los 1000 posibles (promedio de sus puestos), con otros 4 de respaldo, sus puestos en A1, A2
