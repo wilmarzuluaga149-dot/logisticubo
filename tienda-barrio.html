@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#059669" />
+  <title>Mi Tienda de Barrio</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    if (window.tailwind) tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857' } },
+          fontFamily: { sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'] }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
+    .sheet { transition: transform .28s ease; }
+    .sheet.closed { transform: translateY(100%); }
+    .backdrop { transition: opacity .28s ease; }
+    .pb-safe { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+    @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+    .pop { animation: pop .25s ease; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+
+  <!-- ===================== ENCABEZADO / TIENDA ===================== -->
+  <header class="sticky top-0 z-30 bg-brand-600 text-white shadow-md">
+    <div class="max-w-5xl mx-auto px-4 pt-3 pb-3">
+      <div class="flex items-center gap-3">
+        <div class="text-2xl" aria-hidden="true">🏪</div>
+        <div class="flex-1 min-w-0">
+          <label for="storeSelect" class="block text-[11px] uppercase tracking-wide text-brand-100">Tu tienda cercana</label>
+          <select id="storeSelect"
+            class="w-full bg-transparent font-bold text-base sm:text-lg truncate focus:outline-none cursor-pointer appearance-none pr-6"
+            style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22 fill=%22white%22><path d=%22M5.5 7.5l4.5 4.5 4.5-4.5z%22/></svg>');background-repeat:no-repeat;background-position:right center;background-size:1.1rem;">
+          </select>
+        </div>
+      </div>
+      <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+        <span id="storeStatus" class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-semibold"></span>
+        <span id="storeMeta" class="text-brand-100"></span>
+      </div>
+
+      <!-- Buscador -->
+      <div class="mt-3 relative">
+        <span class="absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">🔍</span>
+        <input id="searchInput" type="search" placeholder="Buscar arroz, leche, jabón..." autocomplete="off"
+          class="w-full rounded-xl bg-white text-slate-800 placeholder-slate-400 pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/40" />
+      </div>
+    </div>
+
+    <!-- Categorías -->
+    <nav class="bg-white text-slate-700 border-b border-slate-200">
+      <div id="categoryTabs" class="max-w-5xl mx-auto px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar"></div>
+    </nav>
+  </header>
+
+  <!-- ===================== CATÁLOGO ===================== -->
+  <main class="max-w-5xl mx-auto px-4 pt-4 pb-32">
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <p id="resultCount" class="text-sm text-slate-500"></p>
+      <div class="inline-flex rounded-lg bg-white p-1 shadow-sm text-xs font-semibold" role="group" aria-label="Filtrar por disponibilidad">
+        <button data-stock="all" class="stock-btn px-3 py-1.5 rounded-md">Todos</button>
+        <button data-stock="available" class="stock-btn px-3 py-1.5 rounded-md">Disponibles</button>
+        <button data-stock="soldout" class="stock-btn px-3 py-1.5 rounded-md">Agotados</button>
+      </div>
+    </div>
+
+    <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+
+    <div id="emptyState" class="hidden text-center py-16 text-slate-500">
+      <div class="text-5xl mb-3">🧐</div>
+      <p class="font-semibold">No encontramos productos</p>
+      <p class="text-sm">Prueba con otra palabra o categoría.</p>
+    </div>
+  </main>
+
+  <!-- ===================== BARRA FLOTANTE DEL CARRITO ===================== -->
+  <div id="cartBar" class="fixed bottom-0 inset-x-0 z-30 px-4 pb-safe pt-2 pointer-events-none translate-y-full transition-transform duration-300">
+    <button id="openCartBtn"
+      class="pointer-events-auto max-w-5xl mx-auto w-full flex items-center gap-3 rounded-2xl bg-slate-900 text-white px-4 py-3 shadow-2xl active:scale-[.99] transition">
+      <span class="relative text-2xl">🧺
+        <span id="cartBadge" class="absolute -top-2 -right-3 min-w-[1.4rem] h-[1.4rem] rounded-full bg-brand-500 text-[11px] font-bold flex items-center justify-center px-1">0</span>
+      </span>
+      <span class="flex-1 text-left ml-2">
+        <span class="block text-xs text-slate-300">Ver mi lista de mercado</span>
+        <span id="cartBarTotal" class="block font-bold text-lg leading-tight">$0</span>
+      </span>
+      <span class="font-semibold text-brand-500 text-sm">Continuar ›</span>
+    </button>
+  </div>
+
+  <!-- ===================== PANEL (BOTTOM SHEET) ===================== -->
+  <div id="backdrop" class="backdrop fixed inset-0 z-40 bg-black/50 opacity-0 pointer-events-none"></div>
+  <section id="cartSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"
+    class="sheet closed fixed bottom-0 inset-x-0 z-50 max-w-2xl mx-auto bg-white rounded-t-3xl shadow-2xl max-h-[92vh] flex flex-col">
+    <div class="pt-2 flex justify-center"><span class="h-1.5 w-12 rounded-full bg-slate-300"></span></div>
+    <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100">
+      <h2 id="sheetTitle" class="text-lg font-bold">🧺 Mi lista de mercado</h2>
+      <button id="closeCartBtn" class="h-9 w-9 rounded-full bg-slate-100 text-slate-600 text-xl leading-none" aria-label="Cerrar">×</button>
+    </div>
+
+    <div class="overflow-y-auto px-5 py-4 space-y-5">
+      <!-- Ítems -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-semibold text-slate-700">Productos seleccionados</h3>
+          <button id="clearCartBtn" class="text-xs text-red-500 font-semibold">Vaciar lista</button>
+        </div>
+        <ul id="cartItems" class="divide-y divide-slate-100"></ul>
+      </div>
+
+      <!-- Totales -->
+      <div class="rounded-2xl bg-slate-50 p-4 text-sm space-y-1.5">
+        <div class="flex justify-between"><span class="text-slate-500">Subtotal</span><span id="sumSubtotal" class="font-semibold">$0</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Domicilio estimado</span><span id="sumDelivery" class="font-semibold">$0</span></div>
+        <p id="freeDeliveryHint" class="text-xs text-brand-700"></p>
+        <div class="flex justify-between pt-2 border-t border-slate-200 text-base">
+          <span class="font-bold">Total a pagar</span><span id="sumTotal" class="font-extrabold text-brand-700">$0</span>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <form id="orderForm" novalidate class="space-y-3">
+        <h3 class="font-semibold text-slate-700">Datos de entrega</h3>
+        <div>
+          <label for="custName" class="block text-xs font-semibold text-slate-600 mb-1">Nombre completo *</label>
+          <input id="custName" name="name" type="text" autocomplete="name" placeholder="Ej: María Gómez"
+            class="field w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+          <p class="err hidden text-xs text-red-500 mt-1">Escribe tu nombre.</p>
+        </div>
+        <div>
+          <label for="custPhone" class="block text-xs font-semibold text-slate-600 mb-1">Celular / contacto *</label>
+          <input id="custPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Ej: 300 123 4567"
+            class="field w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+          <p class="err hidden text-xs text-red-500 mt-1">Ingresa un número válido (ej: 300 123 4567).</p>
+        </div>
+        <div>
+          <label for="custAddress" class="block text-xs font-semibold text-slate-600 mb-1">Dirección exacta *</label>
+          <input id="custAddress" name="address" type="text" autocomplete="street-address" placeholder="Ej: Cra 45 #70 Sur-12, Apto 301"
+            class="field w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+          <p class="err hidden text-xs text-red-500 mt-1">Necesitamos la dirección para el domicilio.</p>
+        </div>
+        <div>
+          <label for="custNotes" class="block text-xs font-semibold text-slate-600 mb-1">Indicaciones (opcional)</label>
+          <input id="custNotes" name="notes" type="text" placeholder="Ej: Timbre dañado, llamar al llegar"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+        </div>
+        <fieldset>
+          <legend class="block text-xs font-semibold text-slate-600 mb-1">Método de pago *</legend>
+          <div id="paymentOptions" class="grid grid-cols-3 gap-2"></div>
+        </fieldset>
+        <div id="cashChangeWrap">
+          <label for="cashChange" class="block text-xs font-semibold text-slate-600 mb-1">¿Con cuánto vas a pagar? (opcional)</label>
+          <input id="cashChange" type="text" inputmode="numeric" placeholder="Ej: 50000"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+        </div>
+      </form>
+    </div>
+
+    <div class="border-t border-slate-100 px-5 pt-3 pb-safe bg-white rounded-b-none">
+      <p id="closedNotice" class="hidden mb-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2"></p>
+      <button id="sendBtn" type="button"
+        class="w-full rounded-2xl bg-[#25D366] hover:bg-[#1ebe5b] active:scale-[.99] transition text-white font-extrabold text-base py-4 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+        📲 Enviar Pedido por WhatsApp
+      </button>
+    </div>
+  </section>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] hidden rounded-xl bg-slate-900 text-white text-sm px-4 py-2.5 shadow-xl"></div>
+
+  <script>
+  (() => {
+    'use strict';
+
+    /* ============================================================
+     * 1. DATOS DE PRUEBA
+     * ============================================================ */
+    const STORES = [
+      {
+        id: 'don-luis', name: 'Granero Don Luis', zone: 'Sabaneta',
+        whatsapp: '573001234567', openHour: 6, closeHour: 21,
+        deliveryFee: 3000, freeDeliveryFrom: 80000,
+        soldOut: ['p05', 'p13', 'p22']
+      },
+      {
+        id: 'la-esquina', name: 'Surtitienda La Esquina', zone: 'Envigado',
+        whatsapp: '573109876543', openHour: 7, closeHour: 22,
+        deliveryFee: 2500, freeDeliveryFrom: 60000,
+        soldOut: ['p02', 'p09', 'p17', 'p20']
+      },
+      {
+        id: 'dona-rosa', name: 'Minimercado Doña Rosa', zone: 'Itagüí',
+        whatsapp: '573205551234', openHour: 5, closeHour: 23,
+        deliveryFee: 4000, freeDeliveryFrom: 100000,
+        soldOut: ['p07', 'p14']
+      }
+    ];
+
+    const CATEGORIES = [
+      { id: 'all',       label: 'Todo',       icon: '🛒' },
+      { id: 'abarrotes', label: 'Abarrotes',  icon: '🥫' },
+      { id: 'lacteos',   label: 'Lácteos',    icon: '🥛' },
+      { id: 'frescos',   label: 'Frescos',    icon: '🥬' },
+      { id: 'aseo',      label: 'Aseo',       icon: '🧼' },
+      { id: 'bebidas',   label: 'Bebidas',    icon: '🥤' }
+    ];
+
+    // "stock" es el valor base; cada tienda puede marcar agotados en su lista soldOut.
+    const PRODUCTS = [
+      { id: 'p01', name: 'Arroz Diana',            unit: '1 kg',        price: 4900,  category: 'abarrotes', icon: '🍚', stock: true },
+      { id: 'p02', name: 'Aceite Premier',         unit: '1.000 ml',    price: 11500, category: 'abarrotes', icon: '🫒', stock: true },
+      { id: 'p03', name: 'Panela Cuadrada',        unit: '500 g',       price: 3200,  category: 'abarrotes', icon: '🟫', stock: true },
+      { id: 'p04', name: 'Fríjol Cargamanto',      unit: '500 g',       price: 6800,  category: 'abarrotes', icon: '🫘', stock: true },
+      { id: 'p05', name: 'Café Sello Rojo',        unit: '250 g',       price: 9900,  category: 'abarrotes', icon: '☕', stock: true },
+      { id: 'p06', name: 'Azúcar Manuelita',       unit: '1 kg',        price: 4600,  category: 'abarrotes', icon: '🧂', stock: true },
+      { id: 'p07', name: 'Pasta Doria Spaghetti',  unit: '500 g',       price: 3900,  category: 'abarrotes', icon: '🍝', stock: true },
+      { id: 'p08', name: 'Atún en aceite',         unit: 'Lata 170 g',  price: 6500,  category: 'abarrotes', icon: '🐟', stock: false },
+      { id: 'p09', name: 'Leche Entera Colanta',   unit: '1.100 ml',    price: 4300,  category: 'lacteos',   icon: '🥛', stock: true },
+      { id: 'p10', name: 'Huevos AA',              unit: 'Panal x30',   price: 17500, category: 'lacteos',   icon: '🥚', stock: true },
+      { id: 'p11', name: 'Queso Campesino',        unit: '500 g',       price: 10800, category: 'lacteos',   icon: '🧀', stock: true },
+      { id: 'p12', name: 'Kumis Alpina',           unit: '1.000 g',     price: 7200,  category: 'lacteos',   icon: '🍶', stock: true },
+      { id: 'p13', name: 'Mantequilla',            unit: '250 g',       price: 6900,  category: 'lacteos',   icon: '🧈', stock: true },
+      { id: 'p14', name: 'Arepas de Maíz',         unit: 'Paquete x5',  price: 3500,  category: 'frescos',   icon: '🫓', stock: true },
+      { id: 'p15', name: 'Plátano Maduro',         unit: 'Unidad',      price: 1200,  category: 'frescos',   icon: '🍌', stock: true },
+      { id: 'p16', name: 'Tomate Chonto',          unit: 'Libra',       price: 2800,  category: 'frescos',   icon: '🍅', stock: true },
+      { id: 'p17', name: 'Papa Pastusa',           unit: 'Libra',       price: 1900,  category: 'frescos',   icon: '🥔', stock: true },
+      { id: 'p18', name: 'Cebolla Cabezona',       unit: 'Libra',       price: 2400,  category: 'frescos',   icon: '🧅', stock: true },
+      { id: 'p19', name: 'Aguacate Hass',          unit: 'Unidad',      price: 3500,  category: 'frescos',   icon: '🥑', stock: false },
+      { id: 'p20', name: 'Detergente Fab',         unit: '1 kg',        price: 12900, category: 'aseo',      icon: '🧺', stock: true },
+      { id: 'p21', name: 'Jabón Rey en barra',     unit: '300 g',       price: 3600,  category: 'aseo',      icon: '🧼', stock: true },
+      { id: 'p22', name: 'Papel Higiénico Familia',unit: 'Paquete x4',  price: 8900,  category: 'aseo',      icon: '🧻', stock: true },
+      { id: 'p23', name: 'Lavaloza Axion',         unit: '450 g',       price: 5800,  category: 'aseo',      icon: '🍽️', stock: true },
+      { id: 'p24', name: 'Coca-Cola',              unit: '1,5 L',       price: 5500,  category: 'bebidas',   icon: '🥤', stock: true },
+      { id: 'p25', name: 'Agua Cristal',           unit: '600 ml',      price: 1800,  category: 'bebidas',   icon: '💧', stock: true },
+      { id: 'p26', name: 'Jugo Hit Mango',         unit: '1 L',         price: 4200,  category: 'bebidas',   icon: '🧃', stock: true },
+      { id: 'p27', name: 'Cerveza Águila',         unit: 'Six pack',    price: 16500, category: 'bebidas',   icon: '🍺', stock: false },
+      { id: 'p28', name: 'Pony Malta',             unit: '330 ml',      price: 2300,  category: 'bebidas',   icon: '🍼', stock: true }
+    ];
+
+    const PAYMENTS = [
+      { id: 'efectivo',  label: 'Efectivo',  sub: 'contra entrega', icon: '💵' },
+      { id: 'nequi',     label: 'Nequi',     sub: 'transferencia',  icon: '💜' },
+      { id: 'daviplata', label: 'Daviplata', sub: 'transferencia',  icon: '❤️' }
+    ];
+
+    /* ============================================================
+     * 2. ESTADO + PERSISTENCIA LIGERA
+     * ============================================================ */
+    const LS_KEY = 'tiendaBarrio.v1';
+    const load = () => { try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; } };
+    const saved = load();
+
+    const state = {
+      storeId: STORES.some(s => s.id === saved.storeId) ? saved.storeId : STORES[0].id,
+      category: 'all',
+      stockFilter: 'all',      // all | available | soldout
+      query: '',
+      cart: (saved.cart && typeof saved.cart === 'object') ? saved.cart : {},   // { productId: qty }
+      customer: Object.assign({ name: '', phone: '', address: '', notes: '', payment: 'efectivo', cash: '' }, saved.customer || {})
+    };
+
+    const persist = () => {
+      try { localStorage.setItem(LS_KEY, JSON.stringify({ storeId: state.storeId, cart: state.cart, customer: state.customer })); } catch { /* sin almacenamiento */ }
+    };
+
+    /* ============================================================
+     * 3. UTILIDADES
+     * ============================================================ */
+    const $ = sel => document.querySelector(sel);
+    const money = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+    const fmt = n => money.format(n).replace(/\s/g, ' ');
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const normalize = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const MAX_QTY = 99;
+
+    const currentStore = () => STORES.find(s => s.id === state.storeId);
+    const isAvailable = p => p.stock && !currentStore().soldOut.includes(p.id);
+    const isOpen = store => { const h = new Date().getHours(); return h >= store.openHour && h < store.closeHour; };
+    const hourLabel = h => `${((h + 11) % 12) + 1}${h < 12 ? 'am' : 'pm'}`;
+
+    let toastTimer;
+    const toast = msg => {
+      const t = $('#toast');
+      t.textContent = msg; t.classList.remove('hidden');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add('hidden'), 2200);
+    };
+
+    /* ============================================================
+     * 4. CÁLCULOS DEL CARRITO
+     * ============================================================ */
+    const cartLines = () => Object.entries(state.cart)
+      .map(([id, qty]) => ({ product: PRODUCTS.find(p => p.id === id), qty }))
+      .filter(l => l.product && l.qty > 0 && isAvailable(l.product));
+
+    const totals = () => {
+      const lines = cartLines();
+      const subtotal = lines.reduce((acc, l) => acc + l.product.price * l.qty, 0);
+      const units = lines.reduce((acc, l) => acc + l.qty, 0);
+      const store = currentStore();
+      const delivery = subtotal === 0 || subtotal >= store.freeDeliveryFrom ? 0 : store.deliveryFee;
+      return { lines, subtotal, units, delivery, total: subtotal + delivery };
+    };
+
+    // Quita del carrito los productos que están agotados en la tienda actual.
+    const pruneCart = () => {
+      let removed = 0;
+      for (const id of Object.keys(state.cart)) {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (!p || !isAvailable(p) || !(state.cart[id] > 0)) { delete state.cart[id]; removed++; }
+      }
+      return removed;
+    };
+
+    const setQty = (id, qty) => {
+      qty = Math.max(0, Math.min(MAX_QTY, qty | 0));
+      if (qty === 0) delete state.cart[id]; else state.cart[id] = qty;
+      persist();
+      renderProducts();
+      renderCart();
+    };
+
+    /* ============================================================
+     * 5. RENDER: TIENDA
+     * ============================================================ */
+    function renderStoreSelect() {
+      $('#storeSelect').innerHTML = STORES.map(s =>
+        `<option class="text-slate-800" value="${s.id}" ${s.id === state.storeId ? 'selected' : ''}>${esc(s.name)} - ${esc(s.zone)}</option>`
+      ).join('');
+    }
+
+    function renderStoreStatus() {
+      const s = currentStore();
+      const open = isOpen(s);
+      const badge = $('#storeStatus');
+      badge.className = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-semibold ' +
+        (open ? 'bg-white text-brand-700' : 'bg-amber-100 text-amber-800');
+      badge.innerHTML = open
+        ? '<span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span></span> Abierto · Recibiendo pedidos'
+        : '<span class="h-2 w-2 rounded-full bg-amber-500"></span> Cerrado · Pedido programado';
+      $('#storeMeta').textContent =
+        `🕒 ${hourLabel(s.openHour)} – ${hourLabel(s.closeHour)} · 🛵 Domicilio ${fmt(s.deliveryFee)} (gratis desde ${fmt(s.freeDeliveryFrom)})`;
+
+      const notice = $('#closedNotice');
+      if (open) notice.classList.add('hidden');
+      else {
+        notice.textContent = `⏰ ${s.name} está cerrada ahora. Puedes enviar tu pedido y lo despacharán al abrir (${hourLabel(s.openHour)}).`;
+        notice.classList.remove('hidden');
+      }
+    }
+
+    /* ============================================================
+     * 6. RENDER: FILTROS
+     * ============================================================ */
+    function renderCategories() {
+      $('#categoryTabs').innerHTML = CATEGORIES.map(c => {
+        const active = c.id === state.category;
+        return `<button data-cat="${c.id}" aria-pressed="${active}"
+          class="shrink-0 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold border transition
+          ${active ? 'bg-brand-600 border-brand-600 text-white shadow' : 'bg-white border-slate-200 text-slate-600 hover:border-brand-500'}">
+          <span aria-hidden="true">${c.icon}</span>${esc(c.label)}</button>`;
+      }).join('');
+    }
+
+    function renderStockFilter() {
+      document.querySelectorAll('.stock-btn').forEach(b => {
+        const active = b.dataset.stock === state.stockFilter;
+        b.setAttribute('aria-pressed', active);
+        b.className = 'stock-btn px-3 py-1.5 rounded-md transition ' +
+          (active ? 'bg-brand-600 text-white' : 'text-slate-500 hover:text-slate-800');
+      });
+    }
+
+    /* ============================================================
+     * 7. RENDER: CATÁLOGO
+     * ============================================================ */
+    function filteredProducts() {
+      const q = normalize(state.query.trim());
+      return PRODUCTS.filter(p => {
+        if (state.category !== 'all' && p.category !== state.category) return false;
+        const avail = isAvailable(p);
+        if (state.stockFilter === 'available' && !avail) return false;
+        if (state.stockFilter === 'soldout' && avail) return false;
+        if (q && !normalize(`${p.name} ${p.unit} ${p.category}`).includes(q)) return false;
+        return true;
+      }).sort((a, b) => Number(isAvailable(b)) - Number(isAvailable(a))); // disponibles primero
+    }
+
+    function productCard(p) {
+      const avail = isAvailable(p);
+      const qty = state.cart[p.id] || 0;
+      const checked = qty > 0;
+
+      if (!avail) {
+        return `
+        <article class="relative rounded-2xl bg-white p-3 shadow-sm border border-slate-200 opacity-50 grayscale select-none" aria-disabled="true">
+          <span class="absolute top-2 left-2 z-10 rounded-md bg-red-600 text-white text-[10px] font-extrabold tracking-wider px-2 py-0.5">AGOTADO</span>
+          <div class="aspect-square rounded-xl bg-slate-100 flex items-center justify-center text-5xl">${p.icon}</div>
+          <h3 class="mt-2 text-sm font-semibold leading-tight line-clamp-2">${esc(p.name)}</h3>
+          <p class="text-xs text-slate-500">${esc(p.unit)}</p>
+          <p class="mt-1 font-bold text-slate-400 line-through">${fmt(p.price)}</p>
+          <div class="mt-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-semibold text-center py-2">No disponible</div>
+        </article>`;
+      }
+
+      return `
+      <article class="relative rounded-2xl bg-white p-3 shadow-sm border-2 transition ${checked ? 'border-brand-500 ring-4 ring-brand-500/10' : 'border-transparent'}">
+        <label class="absolute top-2 right-2 z-10 cursor-pointer" title="Agregar a la lista">
+          <input type="checkbox" class="sr-only peer" data-check="${p.id}" ${checked ? 'checked' : ''} aria-label="Agregar ${esc(p.name)}" />
+          <span class="h-8 w-8 rounded-full border-2 flex items-center justify-center text-lg font-black transition
+            peer-focus-visible:ring-4 peer-focus-visible:ring-brand-500/40
+            ${checked ? 'bg-brand-600 border-brand-600 text-white' : 'bg-white border-slate-300 text-transparent hover:border-brand-500'}">✓</span>
+        </label>
+        <button type="button" data-toggle="${p.id}" class="block w-full text-left" aria-label="Seleccionar ${esc(p.name)}">
+          <div class="aspect-square rounded-xl ${checked ? 'bg-brand-50' : 'bg-slate-50'} flex items-center justify-center text-5xl">${p.icon}</div>
+          <h3 class="mt-2 text-sm font-semibold leading-tight line-clamp-2">${esc(p.name)}</h3>
+          <p class="text-xs text-slate-500">${esc(p.unit)}</p>
+          <p class="mt-1 font-extrabold text-brand-700">${fmt(p.price)}</p>
+        </button>
+        <div class="mt-2 flex items-center justify-between rounded-xl bg-slate-100 p-1">
+          <button type="button" data-dec="${p.id}" class="h-8 w-8 rounded-lg bg-white shadow-sm font-bold text-lg disabled:opacity-40" ${qty === 0 ? 'disabled' : ''} aria-label="Restar">−</button>
+          <span class="font-bold text-sm tabular-nums" aria-live="polite">${qty}</span>
+          <button type="button" data-inc="${p.id}" class="h-8 w-8 rounded-lg bg-brand-600 text-white shadow-sm font-bold text-lg disabled:opacity-40" ${qty >= MAX_QTY ? 'disabled' : ''} aria-label="Sumar">+</button>
+        </div>
+      </article>`;
+    }
+
+    function renderProducts() {
+      const list = filteredProducts();
+      $('#productGrid').innerHTML = list.map(productCard).join('');
+      $('#emptyState').classList.toggle('hidden', list.length > 0);
+      const avail = list.filter(isAvailable).length;
+      $('#resultCount').textContent = `${list.length} productos · ${avail} disponibles`;
+    }
+
+    /* ============================================================
+     * 8. RENDER: CARRITO
+     * ============================================================ */
+    function renderCart() {
+      const t = totals();
+      const store = currentStore();
+
+      // Barra flotante
+      $('#cartBadge').textContent = t.units;
+      $('#cartBarTotal').textContent = fmt(t.total);
+      $('#cartBar').classList.toggle('translate-y-full', t.units === 0);
+
+      // Lista
+      $('#cartItems').innerHTML = t.lines.length
+        ? t.lines.map(({ product: p, qty }) => `
+          <li class="flex items-center gap-3 py-2.5">
+            <span class="text-2xl" aria-hidden="true">${p.icon}</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold truncate">${esc(p.name)}</p>
+              <p class="text-xs text-slate-500">${esc(p.unit)} · ${fmt(p.price)} c/u</p>
+            </div>
+            <div class="flex items-center gap-1">
+              <button type="button" data-dec="${p.id}" class="h-7 w-7 rounded-lg bg-slate-100 font-bold" aria-label="Restar">−</button>
+              <span class="w-6 text-center text-sm font-bold tabular-nums">${qty}</span>
+              <button type="button" data-inc="${p.id}" class="h-7 w-7 rounded-lg bg-slate-100 font-bold" aria-label="Sumar">+</button>
+            </div>
+            <span class="w-20 text-right text-sm font-bold tabular-nums">${fmt(p.price * qty)}</span>
+          </li>`).join('')
+        : '<li class="py-6 text-center text-sm text-slate-500">Tu lista está vacía. Marca los ✓ de los productos que necesitas.</li>';
+
+      // Totales
+      $('#sumSubtotal').textContent = fmt(t.subtotal);
+      $('#sumDelivery').textContent = t.subtotal === 0 ? fmt(0) : (t.delivery === 0 ? '¡Gratis! 🎉' : fmt(t.delivery));
+      $('#sumTotal').textContent = fmt(t.total);
+      const missing = store.freeDeliveryFrom - t.subtotal;
+      $('#freeDeliveryHint').textContent = (t.subtotal > 0 && missing > 0)
+        ? `Agrega ${fmt(missing)} más y el domicilio es gratis.` : '';
+
+      $('#sendBtn').disabled = t.lines.length === 0;
+    }
+
+    /* ============================================================
+     * 9. FORMULARIO
+     * ============================================================ */
+    function renderPayments() {
+      $('#paymentOptions').innerHTML = PAYMENTS.map(m => {
+        const active = state.customer.payment === m.id;
+        return `<label class="cursor-pointer">
+          <input type="radio" name="payment" value="${m.id}" class="sr-only peer" ${active ? 'checked' : ''} />
+          <span class="flex flex-col items-center rounded-xl border-2 px-2 py-2 text-center transition peer-focus-visible:ring-4 peer-focus-visible:ring-brand-500/30
+            ${active ? 'border-brand-500 bg-brand-50' : 'border-slate-200 bg-white'}">
+            <span class="text-xl" aria-hidden="true">${m.icon}</span>
+            <span class="text-xs font-bold">${m.label}</span>
+            <span class="text-[10px] text-slate-500">${m.sub}</span>
+          </span></label>`;
+      }).join('');
+      $('#cashChangeWrap').classList.toggle('hidden', state.customer.payment !== 'efectivo');
+    }
+
+    function fillForm() {
+      $('#custName').value = state.customer.name;
+      $('#custPhone').value = state.customer.phone;
+      $('#custAddress').value = state.customer.address;
+      $('#custNotes').value = state.customer.notes;
+      $('#cashChange').value = state.customer.cash;
+    }
+
+    const digits = s => String(s).replace(/\D/g, '');
+
+    function validate() {
+      const c = state.customer;
+      const checks = [
+        ['#custName', c.name.trim().length >= 2],
+        ['#custPhone', /^(57)?3\d{9}$/.test(digits(c.phone)) || /^\d{7,10}$/.test(digits(c.phone))],
+        ['#custAddress', c.address.trim().length >= 5]
+      ];
+      let firstBad = null;
+      for (const [sel, ok] of checks) {
+        const input = $(sel);
+        input.classList.toggle('border-red-400', !ok);
+        input.parentElement.querySelector('.err').classList.toggle('hidden', ok);
+        if (!ok && !firstBad) firstBad = input;
+      }
+      if (firstBad) { firstBad.focus(); firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      return !firstBad;
+    }
+
+    /* ============================================================
+     * 10. MENSAJE DE WHATSAPP
+     * ============================================================ */
+    function buildMessage() {
+      const store = currentStore();
+      const t = totals();
+      const c = state.customer;
+      const pay = PAYMENTS.find(p => p.id === c.payment);
+      const now = new Date();
+      const fecha = now.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' });
+      const hora = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+
+      const items = t.lines.map(({ product: p, qty }) =>
+        `✅ ${qty} x ${p.name} (${p.unit}) — ${fmt(p.price * qty)}`);
+
+      const cash = digits(c.cash);
+      const lines = [
+        `🛒 *NUEVO PEDIDO — ${store.name.toUpperCase()}*`,
+        `📅 ${fecha} · ${hora}`,
+        isOpen(store) ? null : `⏰ _Pedido programado: despachar al abrir_`,
+        '',
+        `📝 *LISTA DE MERCADO* (${t.units} ${t.units === 1 ? 'unidad' : 'unidades'})`,
+        ...items,
+        '',
+        `💰 Subtotal: ${fmt(t.subtotal)}`,
+        `🛵 Domicilio: ${t.delivery === 0 ? 'Gratis' : fmt(t.delivery)}`,
+        `*💵 TOTAL A PAGAR: ${fmt(t.total)}*`,
+        '',
+        `👤 *DATOS DE ENTREGA*`,
+        `• Nombre: ${c.name.trim()}`,
+        `• Celular: ${c.phone.trim()}`,
+        `• Dirección: ${c.address.trim()}`,
+        c.notes.trim() ? `• Indicaciones: ${c.notes.trim()}` : null,
+        `• Pago: ${pay.icon} ${pay.label}${pay.id === 'efectivo' ? ' (contra entrega)' : ''}`,
+        (pay.id === 'efectivo' && cash) ? `• Paga con: ${fmt(+cash)} (cambio: ${fmt(Math.max(0, +cash - t.total))})` : null,
+        '',
+        `🙏 ¡Gracias! Quedo atento(a) a la confirmación.`
+      ];
+      // Las líneas opcionales ausentes son null y se descartan.
+      return lines.filter(l => l !== null).join('\n');
+    }
+
+    function sendOrder() {
+      if (cartLines().length === 0) { toast('Tu lista está vacía'); return; }
+      if (!validate()) { toast('Revisa los datos de entrega'); return; }
+      const store = currentStore();
+      const url = `https://wa.me/${store.whatsapp}?text=${encodeURIComponent(buildMessage())}`;
+      window.open(url, '_blank', 'noopener');
+    }
+
+    /* ============================================================
+     * 11. PANEL (abrir / cerrar)
+     * ============================================================ */
+    const openSheet = () => {
+      $('#cartSheet').classList.remove('closed');
+      $('#backdrop').classList.remove('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeSheet = () => {
+      $('#cartSheet').classList.add('closed');
+      $('#backdrop').classList.add('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = '';
+    };
+
+    /* ============================================================
+     * 12. EVENTOS
+     * ============================================================ */
+    // Delegación para catálogo y carrito (botones +/−, chulitos, tarjeta)
+    document.addEventListener('click', e => {
+      const el = e.target.closest('[data-inc],[data-dec],[data-toggle]');
+      if (!el) return;
+      if (el.dataset.inc) { setQty(el.dataset.inc, (state.cart[el.dataset.inc] || 0) + 1); bump(); }
+      else if (el.dataset.dec) setQty(el.dataset.dec, (state.cart[el.dataset.dec] || 0) - 1);
+      else if (el.dataset.toggle) { const id = el.dataset.toggle; setQty(id, state.cart[id] ? 0 : 1); if (state.cart[id]) bump(); }
+    });
+
+    $('#productGrid').addEventListener('change', e => {
+      const id = e.target.dataset.check;
+      if (!id) return;
+      setQty(id, e.target.checked ? Math.max(1, state.cart[id] || 0) : 0);
+      if (e.target.checked) bump();
+    });
+
+    const bump = () => { const b = $('#cartBadge'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); };
+
+    $('#categoryTabs').addEventListener('click', e => {
+      const b = e.target.closest('[data-cat]'); if (!b) return;
+      state.category = b.dataset.cat; renderCategories(); renderProducts();
+    });
+
+    document.querySelectorAll('.stock-btn').forEach(b => b.addEventListener('click', () => {
+      state.stockFilter = b.dataset.stock; renderStockFilter(); renderProducts();
+    }));
+
+    $('#searchInput').addEventListener('input', e => { state.query = e.target.value; renderProducts(); });
+
+    $('#storeSelect').addEventListener('change', e => {
+      state.storeId = e.target.value;
+      const removed = pruneCart();
+      persist();
+      renderStoreStatus(); renderProducts(); renderCart();
+      toast(removed ? `Tienda cambiada. ${removed} producto(s) agotado(s) se quitaron de tu lista.` : `Ahora compras en ${currentStore().name}`);
+    });
+
+    $('#openCartBtn').addEventListener('click', openSheet);
+    $('#closeCartBtn').addEventListener('click', closeSheet);
+    $('#backdrop').addEventListener('click', closeSheet);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+    $('#clearCartBtn').addEventListener('click', () => {
+      if (!Object.keys(state.cart).length) return;
+      if (!confirm('¿Vaciar toda la lista de mercado?')) return;
+      state.cart = {}; persist(); renderProducts(); renderCart(); closeSheet();
+    });
+
+    const bindField = (sel, key) => $(sel).addEventListener('input', e => {
+      state.customer[key] = e.target.value; persist();
+      const err = e.target.parentElement.querySelector('.err');
+      if (err && !err.classList.contains('hidden')) { err.classList.add('hidden'); e.target.classList.remove('border-red-400'); }
+    });
+    bindField('#custName', 'name');
+    bindField('#custPhone', 'phone');
+    bindField('#custAddress', 'address');
+    bindField('#custNotes', 'notes');
+    bindField('#cashChange', 'cash');
+
+    $('#paymentOptions').addEventListener('change', e => {
+      if (e.target.name !== 'payment') return;
+      state.customer.payment = e.target.value; persist(); renderPayments();
+    });
+
+    $('#sendBtn').addEventListener('click', sendOrder);
+
+    /* ============================================================
+     * 13. INICIO
+     * ============================================================ */
+    pruneCart();
+    renderStoreSelect();
+    renderStoreStatus();
+    renderCategories();
+    renderStockFilter();
+    renderPayments();
+    fillForm();
+    renderProducts();
+    renderCart();
+    setInterval(renderStoreStatus, 60000); // refresca Abierto/Cerrado cada minuto
+  })();
+  </script>
+</body>
+</html>
