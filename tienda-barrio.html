@@ -1,0 +1,2647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#059669" />
+  <title>Mi Tienda de Barrio</title>
+  <!-- Aplicación instalable (PC y celular) cuando se abre desde internet -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Mi Tienda" />
+  <!-- Estilos Tailwind compilados e incluidos aquí: el diseño funciona sin internet -->
+  <style id="tw">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.pointer-events-auto{pointer-events:auto}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0}.inset-x-0{left:0;right:0}.inset-x-3{left:.75rem;right:.75rem}.inset-x-4{left:1rem;right:1rem}.inset-y-0{top:0;bottom:0}.-right-3{right:-.75rem}.-top-2{top:-.5rem}.bottom-0{bottom:0}.bottom-2{bottom:.5rem}.bottom-4{bottom:1rem}.left-1\/2{left:50%}.left-2{left:.5rem}.left-3{left:.75rem}.right-2{right:.5rem}.top-0{top:0}.top-2{top:.5rem}.top-4{top:1rem}.z-10{z-index:10}.z-30{z-index:30}.z-40{z-index:40}.z-50{z-index:50}.z-\[55\]{z-index:55}.z-\[56\]{z-index:56}.z-\[60\]{z-index:60}.z-\[70\]{z-index:70}.col-span-2{grid-column:span 2/span 2}.m-3{margin:.75rem}.mx-3{margin-left:.75rem;margin-right:.75rem}.mx-auto{margin-left:auto;margin-right:auto}.-mt-2{margin-top:-.5rem}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.ml-2{margin-left:.5rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.aspect-square{aspect-ratio:1/1}.h-0\.5{height:.125rem}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-16{height:4rem}.h-2{height:.5rem}.h-32{height:8rem}.h-44{height:11rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-\[1\.4rem\]{height:1.4rem}.h-full{height:100%}.max-h-\[45vh\]{max-height:45vh}.max-h-\[92vh\]{max-height:92vh}.max-h-\[95vh\]{max-height:95vh}.min-h-screen{min-height:100vh}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-16{width:4rem}.w-2{width:.5rem}.w-20{width:5rem}.w-32{width:8rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-72{width:18rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-full{width:100%}.w-max{width:-moz-max-content;width:max-content}.min-w-0{min-width:0}.min-w-\[1\.4rem\]{min-width:1.4rem}.min-w-\[4\.6rem\]{min-width:4.6rem}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-5xl{max-width:64rem}.max-w-6xl{max-width:72rem}.max-w-\[80\%\]{max-width:80%}.max-w-\[90vw\]{max-width:90vw}.max-w-lg{max-width:32rem}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%}.-translate-x-1\/2,.translate-y-full{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-full{--tw-translate-y:100%}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes ping{75%,to{transform:scale(2);opacity:0}}.animate-ping{animation:ping 1s cubic-bezier(0,0,.2,1) infinite}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.scroll-mt-4{scroll-margin-top:1rem}.list-decimal{list-style-type:decimal}.appearance-none{-webkit-appearance:none;-moz-appearance:none;appearance:none}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid-cols-7{grid-template-columns:repeat(7,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.space-y-0\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.125rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.125rem*var(--tw-space-y-reverse))}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem*var(--tw-space-y-reverse))}.divide-y>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px*(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px*var(--tw-divide-y-reverse))}.divide-slate-100>:not([hidden])~:not([hidden]){--tw-divide-opacity:1;border-color:rgb(241 245 249/var(--tw-divide-opacity,1))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.break-all{word-break:break-all}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-md{border-radius:.375rem}.rounded-xl{border-radius:.75rem}.rounded-t-3xl{border-top-left-radius:1.5rem;border-top-right-radius:1.5rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-b-4{border-bottom-width:4px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138/var(--tw-border-opacity,1))}.border-blue-100{--tw-border-opacity:1;border-color:rgb(219 234 254/var(--tw-border-opacity,1))}.border-brand-500{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.border-brand-600{--tw-border-opacity:1;border-color:rgb(5 150 105/var(--tw-border-opacity,1))}.border-red-200{--tw-border-opacity:1;border-color:rgb(254 202 202/var(--tw-border-opacity,1))}.border-red-400{--tw-border-opacity:1;border-color:rgb(248 113 113/var(--tw-border-opacity,1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225/var(--tw-border-opacity,1))}.border-slate-900{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.border-transparent{border-color:transparent}.border-white\/90{border-color:hsla(0,0%,100%,.9)}.bg-\[\#25D366\]{--tw-bg-opacity:1;background-color:rgb(37 211 102/var(--tw-bg-opacity,1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199/var(--tw-bg-opacity,1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11/var(--tw-bg-opacity,1))}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0/var(--tw-bg-opacity,1))}.bg-black\/50{background-color:rgba(0,0,0,.5)}.bg-black\/70{background-color:rgba(0,0,0,.7)}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254/var(--tw-bg-opacity,1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255/var(--tw-bg-opacity,1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235/var(--tw-bg-opacity,1))}.bg-brand-100{--tw-bg-opacity:1;background-color:rgb(209 250 229/var(--tw-bg-opacity,1))}.bg-brand-50{--tw-bg-opacity:1;background-color:rgb(236 253 245/var(--tw-bg-opacity,1))}.bg-brand-500{--tw-bg-opacity:1;background-color:rgb(16 185 129/var(--tw-bg-opacity,1))}.bg-brand-600{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity,1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255/var(--tw-bg-opacity,1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226/var(--tw-bg-opacity,1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242/var(--tw-bg-opacity,1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68/var(--tw-bg-opacity,1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-300{--tw-bg-opacity:1;background-color:rgb(203 213 225/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-slate-900\/70{background-color:rgba(15,23,42,.7)}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-white\/10{background-color:hsla(0,0%,100%,.1)}.bg-white\/15{background-color:hsla(0,0%,100%,.15)}.object-cover{-o-object-fit:cover;object-fit:cover}.p-1{padding:.25rem}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-3\.5{padding-left:.875rem;padding-right:.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-3\.5{padding-top:.875rem;padding-bottom:.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-10{padding-bottom:2.5rem}.pb-2{padding-bottom:.5rem}.pb-3{padding-bottom:.75rem}.pb-32{padding-bottom:8rem}.pl-10{padding-left:2.5rem}.pl-12{padding-left:3rem}.pl-4{padding-left:1rem}.pr-3{padding-right:.75rem}.pr-4{padding-right:1rem}.pr-6{padding-right:1.5rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.font-sans{font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)}.leading-none{line-height:1}.leading-tight{line-height:1.25}.tracking-tighter{letter-spacing:-.05em}.tracking-wide{letter-spacing:.025em}.tracking-wider{letter-spacing:.05em}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14/var(--tw-text-opacity,1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216/var(--tw-text-opacity,1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138/var(--tw-text-opacity,1))}.text-brand-100{--tw-text-opacity:1;color:rgb(209 250 229/var(--tw-text-opacity,1))}.text-brand-500{--tw-text-opacity:1;color:rgb(16 185 129/var(--tw-text-opacity,1))}.text-brand-700{--tw-text-opacity:1;color:rgb(4 120 87/var(--tw-text-opacity,1))}.text-purple-700{--tw-text-opacity:1;color:rgb(126 34 206/var(--tw-text-opacity,1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-red-700{--tw-text-opacity:1;color:rgb(185 28 28/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.line-through{text-decoration-line:line-through}.placeholder-slate-400::-moz-placeholder{--tw-placeholder-opacity:1;color:rgb(148 163 184/var(--tw-placeholder-opacity,1))}.placeholder-slate-400::placeholder{--tw-placeholder-opacity:1;color:rgb(148 163 184/var(--tw-placeholder-opacity,1))}.opacity-0{opacity:0}.opacity-50{opacity:.5}.opacity-75{opacity:.75}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-2xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-\[0_0_0_9999px_rgba\(0\2c 0\2c 0\2c \.45\)\]{--tw-shadow:0 0 0 9999px rgba(0,0,0,.45);--tw-shadow-colored:0 0 0 9999px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-\[0_0_8px_2px_rgba\(239\2c 68\2c 68\2c \.7\)\]{--tw-shadow:0 0 8px 2px rgba(239,68,68,.7);--tw-shadow-colored:0 0 8px 2px var(--tw-shadow-color)}.shadow-\[0_0_8px_2px_rgba\(239\2c 68\2c 68\2c \.7\)\],.shadow-lg{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-md{--tw-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color),0 2px 4px -2px var(--tw-shadow-color)}.shadow-md,.shadow-sm{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)}.ring-2,.ring-4{box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-4{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color)}.ring-brand-500{--tw-ring-opacity:1;--tw-ring-color:rgb(16 185 129/var(--tw-ring-opacity,1))}.ring-brand-500\/10{--tw-ring-color:rgba(16,185,129,.1)}.grayscale{--tw-grayscale:grayscale(100%)}.filter,.grayscale{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.duration-300{transition-duration:.3s}.ease-in-out{transition-timing-function:cubic-bezier(.4,0,.2,1)}.after\:absolute:after{content:var(--tw-content);position:absolute}.after\:left-0\.5:after{content:var(--tw-content);left:.125rem}.after\:left-1:after{content:var(--tw-content);left:.25rem}.after\:top-0\.5:after{content:var(--tw-content);top:.125rem}.after\:top-1:after{content:var(--tw-content);top:.25rem}.after\:h-5:after{content:var(--tw-content);height:1.25rem}.after\:w-5:after{content:var(--tw-content);width:1.25rem}.after\:rounded-full:after{content:var(--tw-content);border-radius:9999px}.after\:bg-white:after{content:var(--tw-content);--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.after\:shadow:after{content:var(--tw-content);--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.after\:transition:after{content:var(--tw-content);transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.hover\:border-brand-500:hover{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.hover\:bg-\[\#1ebe5b\]:hover{--tw-bg-opacity:1;background-color:rgb(30 190 91/var(--tw-bg-opacity,1))}.hover\:bg-white\/25:hover{background-color:hsla(0,0%,100%,.25)}.hover\:text-slate-800:hover{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.focus\:border-brand-500:focus{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-4:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus\:ring-brand-500\/30:focus{--tw-ring-color:rgba(16,185,129,.3)}.focus\:ring-brand-500\/40:focus{--tw-ring-color:rgba(16,185,129,.4)}.active\:scale-\[\.98\]:active{--tw-scale-x:.98;--tw-scale-y:.98}.active\:scale-\[\.98\]:active,.active\:scale-\[\.99\]:active{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:scale-\[\.99\]:active{--tw-scale-x:.99;--tw-scale-y:.99}.disabled\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\:opacity-40:disabled{opacity:.4}.disabled\:opacity-50:disabled{opacity:.5}.peer:checked~.peer-checked\:border-brand-500{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.peer:checked~.peer-checked\:bg-brand-50{--tw-bg-opacity:1;background-color:rgb(236 253 245/var(--tw-bg-opacity,1))}.peer:checked~.peer-checked\:bg-brand-600{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity,1))}.peer:checked~.peer-checked\:text-brand-700{--tw-text-opacity:1;color:rgb(4 120 87/var(--tw-text-opacity,1))}.peer:checked~.peer-checked\:after\:translate-x-5:after{content:var(--tw-content);--tw-translate-x:1.25rem;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.peer:focus-visible~.peer-focus-visible\:ring-4{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.peer:focus-visible~.peer-focus-visible\:ring-brand-500\/30{--tw-ring-color:rgba(16,185,129,.3)}.peer:focus-visible~.peer-focus-visible\:ring-brand-500\/40{--tw-ring-color:rgba(16,185,129,.4)}@media (min-width:640px){.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:items-center{align-items:center}.sm\:rounded-3xl{border-radius:1.5rem}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}}@media (min-width:1024px){.lg\:sticky{position:sticky}.lg\:top-0{top:0}.lg\:block{display:block}.lg\:inline{display:inline}.lg\:flex{display:flex}.lg\:\!hidden{display:none!important}.lg\:hidden{display:none}.lg\:w-60{width:15rem}.lg\:min-w-0{min-width:0}.lg\:flex-1{flex:1 1 0%}.lg\:shrink-0{flex-shrink:0}.lg\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:grid-cols-\[minmax\(0\2c 1fr\)_380px\]{grid-template-columns:minmax(0,1fr) 380px}.lg\:flex-row{flex-direction:row}.lg\:flex-col{flex-direction:column}.lg\:items-center{align-items:center}.lg\:gap-1{gap:.25rem}.lg\:gap-3{gap:.75rem}.lg\:rounded-xl{border-radius:.75rem}.lg\:border-b-0{border-bottom-width:0}.lg\:bg-brand-600{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity,1))}.lg\:px-3{padding-left:.75rem;padding-right:.75rem}.lg\:py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.lg\:pb-4{padding-bottom:1rem}.lg\:pt-5{padding-top:1.25rem}.lg\:text-left{text-align:left}.lg\:text-base{font-size:1rem;line-height:1.5rem}.lg\:text-sm{font-size:.875rem;line-height:1.25rem}.lg\:hover\:bg-white\/10:hover{background-color:hsla(0,0%,100%,.1)}}@media (min-width:1280px){.xl\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}</style>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
+    .sheet { transition: transform .28s ease; }
+    .sheet.closed { transform: translateY(100%); }
+    .backdrop { transition: opacity .28s ease; }
+    .pb-safe { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+    @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+    .pop { animation: pop .25s ease; }
+    @keyframes scanline { 0%, 100% { top: 10%; } 50% { top: 88%; } }
+    .scanline { animation: scanline 2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+  <noscript><p style="padding:16px;font:16px system-ui">Esta app necesita JavaScript. Ábrela con Chrome, Safari o Edge.</p></noscript>
+
+  <!-- ===================== ENCABEZADO / TIENDA ===================== -->
+  <header class="sticky top-0 z-30 bg-brand-600 text-white shadow-md">
+    <div class="max-w-5xl mx-auto px-4 pt-3 pb-3">
+      <div class="flex items-center gap-3">
+        <button id="logoBtn" type="button" class="text-2xl" aria-label="Tienda">🏪</button>
+        <div class="flex-1 min-w-0">
+          <label for="storeSelect" class="block text-[11px] uppercase tracking-wide text-brand-100">Tu tienda cercana</label>
+          <select id="storeSelect"
+            class="w-full bg-transparent font-bold text-base sm:text-lg truncate focus:outline-none cursor-pointer appearance-none pr-6"
+            style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22 fill=%22white%22><path d=%22M5.5 7.5l4.5 4.5 4.5-4.5z%22/></svg>');background-repeat:no-repeat;background-position:right center;background-size:1.1rem;">
+          </select>
+        </div>
+        <button id="adminBtn" type="button" class="shrink-0 inline-flex items-center gap-1 rounded-full bg-white/15 hover:bg-white/25 px-3 py-2 text-xs font-bold" aria-label="Modo tendero">⚙️ Tendero</button>
+      </div>
+      <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+        <span id="storeStatus" class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-semibold"></span>
+        <span id="storeMeta" class="text-brand-100"></span>
+      </div>
+
+      <!-- Buscador -->
+      <div class="mt-3 relative">
+        <span class="absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">🔍</span>
+        <input id="searchInput" type="search" placeholder="Buscar arroz, leche, jabón..." autocomplete="off"
+          class="w-full rounded-xl bg-white text-slate-800 placeholder-slate-400 pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/40" />
+      </div>
+    </div>
+
+    <!-- Categorías -->
+    <nav class="bg-white text-slate-700 border-b border-slate-200">
+      <div id="categoryTabs" class="max-w-5xl mx-auto px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar"></div>
+    </nav>
+  </header>
+
+  <!-- ===================== CATÁLOGO ===================== -->
+  <main class="max-w-5xl mx-auto px-4 pt-4 pb-32">
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <p id="resultCount" class="text-sm text-slate-500"></p>
+      <div class="inline-flex rounded-lg bg-white p-1 shadow-sm text-xs font-semibold" role="group" aria-label="Filtrar por disponibilidad">
+        <button data-stock="all" class="stock-btn px-3 py-1.5 rounded-md">Todos</button>
+        <button data-stock="available" class="stock-btn px-3 py-1.5 rounded-md">Disponibles</button>
+        <button data-stock="soldout" class="stock-btn px-3 py-1.5 rounded-md">Agotados</button>
+      </div>
+    </div>
+
+    <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+
+    <div id="emptyState" class="hidden text-center py-16 text-slate-500">
+      <div class="text-5xl mb-3">🧐</div>
+      <p class="font-semibold">No encontramos productos</p>
+      <p class="text-sm">Prueba con otra palabra o categoría.</p>
+    </div>
+  </main>
+
+  <!-- ===================== BARRA FLOTANTE DEL CARRITO ===================== -->
+  <div id="cartBar" class="fixed bottom-0 inset-x-0 z-30 px-4 pb-safe pt-2 pointer-events-none translate-y-full transition-transform duration-300">
+    <button id="openCartBtn"
+      class="pointer-events-auto max-w-5xl mx-auto w-full flex items-center gap-3 rounded-2xl bg-slate-900 text-white px-4 py-3 shadow-2xl active:scale-[.99] transition">
+      <span class="relative text-2xl">🧺
+        <span id="cartBadge" class="absolute -top-2 -right-3 min-w-[1.4rem] h-[1.4rem] rounded-full bg-brand-500 text-[11px] font-bold flex items-center justify-center px-1">0</span>
+      </span>
+      <span class="flex-1 text-left ml-2">
+        <span class="block text-xs text-slate-300">Ver mi lista de mercado</span>
+        <span id="cartBarTotal" class="block font-bold text-lg leading-tight">$0</span>
+      </span>
+      <span class="font-semibold text-brand-500 text-sm">Continuar ›</span>
+    </button>
+  </div>
+
+  <!-- ===================== PANEL DEL CARRITO (BOTTOM SHEET) ===================== -->
+  <div id="backdrop" class="backdrop fixed inset-0 z-40 bg-black/50 opacity-0 pointer-events-none"></div>
+  <section id="cartSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"
+    class="sheet closed fixed bottom-0 inset-x-0 z-40 max-w-2xl mx-auto bg-white rounded-t-3xl shadow-2xl max-h-[92vh] flex flex-col">
+    <div class="pt-2 flex justify-center"><span class="h-1.5 w-12 rounded-full bg-slate-300"></span></div>
+    <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100">
+      <h2 id="sheetTitle" class="text-lg font-bold">🧺 Mi lista de mercado</h2>
+      <button id="closeCartBtn" class="h-9 w-9 rounded-full bg-slate-100 text-slate-600 text-xl leading-none" aria-label="Cerrar">×</button>
+    </div>
+
+    <div class="overflow-y-auto px-5 py-4 space-y-5">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-semibold text-slate-700">Productos seleccionados</h3>
+          <button id="clearCartBtn" class="text-xs text-red-500 font-semibold">Vaciar lista</button>
+        </div>
+        <ul id="cartItems" class="divide-y divide-slate-100"></ul>
+      </div>
+
+      <div class="rounded-2xl bg-slate-50 p-4 text-sm space-y-1.5">
+        <div class="flex justify-between"><span class="text-slate-500">Subtotal</span><span id="sumSubtotal" class="font-semibold">$0</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Domicilio estimado</span><span id="sumDelivery" class="font-semibold">$0</span></div>
+        <p id="freeDeliveryHint" class="text-xs text-brand-700"></p>
+        <div class="flex justify-between pt-2 border-t border-slate-200 text-base">
+          <span class="font-bold">Total a pagar</span><span id="sumTotal" class="font-extrabold text-brand-700">$0</span>
+        </div>
+      </div>
+
+      <form id="orderForm" novalidate class="space-y-3">
+        <h3 class="font-semibold text-slate-700">Tus datos para la entrega</h3>
+        <div>
+          <label for="custName" class="block text-xs font-semibold text-slate-600 mb-1">Nombre completo *</label>
+          <input id="custName" type="text" autocomplete="name" placeholder="Ej: María Gómez"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+          <p class="err hidden text-xs text-red-500 mt-1">Escribe tu nombre.</p>
+        </div>
+        <div>
+          <label for="custPhone" class="block text-xs font-semibold text-slate-600 mb-1">Tu celular (para que la tienda te contacte) *</label>
+          <input id="custPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Ej: 300 123 4567"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+          <p class="err hidden text-xs text-red-500 mt-1">Ingresa un número válido (ej: 300 123 4567).</p>
+        </div>
+        <div>
+          <label for="custAddress" class="block text-xs font-semibold text-slate-600 mb-1">Dirección exacta *</label>
+          <input id="custAddress" type="text" autocomplete="street-address" placeholder="Ej: Cra 45 #70 Sur-12, Apto 301"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+          <p class="err hidden text-xs text-red-500 mt-1">Necesitamos la dirección para el domicilio.</p>
+        </div>
+        <div>
+          <label for="custNotes" class="block text-xs font-semibold text-slate-600 mb-1">Indicaciones (opcional)</label>
+          <input id="custNotes" type="text" placeholder="Ej: Timbre dañado, llamar al llegar"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+        </div>
+        <fieldset>
+          <legend class="block text-xs font-semibold text-slate-600 mb-1">Método de pago *</legend>
+          <div id="paymentOptions" class="grid grid-cols-3 gap-2"></div>
+        </fieldset>
+        <div id="cashChangeWrap">
+          <label for="cashChange" class="block text-xs font-semibold text-slate-600 mb-1">¿Con cuánto vas a pagar? (opcional)</label>
+          <input id="cashChange" type="text" inputmode="numeric" placeholder="Ej: 50000"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30 focus:border-brand-500" />
+        </div>
+      </form>
+    </div>
+
+    <div class="border-t border-slate-100 px-5 pt-3 pb-safe bg-white">
+      <p id="closedNotice" class="hidden mb-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2"></p>
+      <p id="sendTo" class="mb-2 text-xs text-slate-500 text-center"></p>
+      <button id="sendBtn" type="button"
+        class="w-full rounded-2xl bg-[#25D366] hover:bg-[#1ebe5b] active:scale-[.99] transition text-white font-extrabold text-base py-4 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+        📲 Enviar Pedido por WhatsApp
+      </button>
+      <a id="waFallback" href="#" target="_blank" rel="noopener"
+        class="hidden mt-2 block text-center text-sm font-semibold text-brand-700 underline">¿No se abrió WhatsApp? Toca aquí</a>
+      <p id="sentNotice" class="hidden mt-2 text-xs text-center text-brand-700 bg-brand-50 rounded-lg px-3 py-2"></p>
+    </div>
+  </section>
+
+  <!-- ===================== MODO TENDERO ===================== -->
+  <section id="adminPanel" class="fixed inset-0 z-50 bg-slate-100 hidden flex-col lg:flex-row" role="dialog" aria-modal="true" aria-label="Modo tendero">
+    <aside class="bg-slate-900 text-white shadow lg:w-60 lg:shrink-0 lg:flex lg:flex-col">
+      <div class="px-4 pt-3 pb-2 flex items-center gap-3 lg:pt-5 lg:pb-4">
+        <span class="text-2xl" aria-hidden="true">🧑‍💼</span>
+        <div class="flex-1 min-w-0">
+          <p class="text-[11px] uppercase tracking-wide text-slate-400">Modo tendero</p>
+          <p id="adminStoreName" class="font-bold truncate"></p>
+        </div>
+        <button type="button" class="install-btn hidden rounded-full bg-white/15 px-3 py-2 text-xs font-bold lg:!hidden">📲 Instalar</button>
+        <button id="adminClose" type="button" class="rounded-full bg-brand-600 px-4 py-2 text-sm font-bold lg:hidden">Listo ✓</button>
+      </div>
+      <nav class="flex overflow-x-auto no-scrollbar px-1 lg:flex-col lg:px-3 lg:gap-1 lg:flex-1" aria-label="Secciones">
+        <button data-atab="sell" class="atab">🛒<span>Vender</span></button>
+        <button data-atab="orders" class="atab">🧾<span>Pedidos</span></button>
+        <button data-atab="products" class="atab">📦<span>Inventario</span></button>
+        <button data-atab="customers" class="atab">👥<span>Clientes</span></button>
+        <button data-atab="suppliers" class="atab">🚚<span>Proveedores</span></button>
+        <button data-atab="reports" class="atab">📈<span>Informes</span></button>
+        <button data-atab="store" class="atab">🏪<span>Mi tienda</span></button>
+        <button data-atab="share" class="atab">📤<span>Compartir</span></button>
+      </nav>
+      <button type="button" class="install-btn hidden lg:block mx-3 mt-3 rounded-xl bg-white/10 py-2.5 text-sm font-bold">📲 Instalar como aplicación</button>
+      <button id="adminClose2" type="button" class="hidden lg:block m-3 rounded-xl bg-brand-600 py-2.5 text-sm font-bold">👁️ Ver tienda (clientes)</button>
+    </aside>
+
+    <div id="adminScroll" class="flex-1 overflow-y-auto">
+      <div id="adminInner" class="max-w-3xl mx-auto px-4 py-4 pb-10">
+
+        <!-- Pestaña: Vender (caja) -->
+        <div id="atab-sell" class="hidden">
+          <div class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_380px] items-start">
+            <div class="space-y-3 min-w-0">
+              <form id="sellForm" class="flex gap-2" autocomplete="off">
+                <div class="relative flex-1 min-w-0">
+                  <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 font-black tracking-tighter" aria-hidden="true">▌▌▌</span>
+                  <input id="sellInput" type="text" placeholder="Escanea o escribe código / nombre"
+                    class="w-full rounded-2xl border-2 border-brand-500 bg-white pl-12 pr-3 py-3 text-base font-semibold focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+                </div>
+                <button type="button" id="sellCamBtn" class="shrink-0 rounded-2xl bg-slate-900 text-white px-4 text-xl" aria-label="Escanear con la cámara">📷</button>
+              </form>
+              <p class="text-xs text-slate-500">Con lector de código de barras (pistola USB) solo dispara: el producto entra solo a la venta. Si no existe, la app te pide sus datos.</p>
+              <p id="sellResultsTitle" class="text-xs font-semibold text-slate-500 uppercase"></p>
+              <div id="sellResults" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2"></div>
+            </div>
+            <div class="rounded-2xl bg-white shadow-sm lg:sticky lg:top-0 flex flex-col">
+              <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+                <p class="font-bold">🧾 Venta actual</p>
+                <button id="ticketClear" type="button" class="text-xs text-red-500 font-semibold">Vaciar</button>
+              </div>
+              <ul id="ticketItems" class="divide-y divide-slate-100 max-h-[45vh] overflow-y-auto px-4"></ul>
+              <div class="border-t border-slate-100 px-4 py-3 space-y-3">
+                <div class="flex items-end justify-between">
+                  <span id="ticketCount" class="text-sm text-slate-500">0 productos</span>
+                  <span id="ticketTotal" class="text-3xl font-extrabold tabular-nums">$ 0</span>
+                </div>
+                <button id="chargeBtn" type="button" class="w-full rounded-2xl bg-brand-600 text-white font-extrabold text-lg py-4 shadow disabled:opacity-40">💵 Cobrar</button>
+              </div>
+            </div>
+          </div>
+          <!-- Barra fija en celular para cobrar sin bajar -->
+          <div id="sellBar" class="hidden lg:!hidden sticky bottom-2 mt-4">
+            <button id="sellBarBtn" type="button" class="w-full flex items-center justify-between gap-3 rounded-2xl bg-slate-900 text-white px-4 py-3 shadow-2xl">
+              <span id="sellBarInfo" class="text-sm text-slate-300"></span>
+              <span class="font-extrabold text-lg">💵 Cobrar <span id="sellBarTotal" class="tabular-nums"></span></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pestaña: Clientes y fiados -->
+        <div id="atab-customers" class="hidden space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-2xl bg-white p-4 shadow-sm">
+              <p class="text-xs text-slate-500">Te deben en fiados</p>
+              <p id="fiadoTotal" class="text-2xl font-extrabold text-red-600 tabular-nums">$ 0</p>
+            </div>
+            <button id="custAddBtn" type="button" class="rounded-2xl bg-brand-600 text-white font-bold shadow">➕ Nuevo cliente</button>
+          </div>
+          <input id="custSearch" type="search" placeholder="Buscar cliente..." autocomplete="off"
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          <ul id="custList" class="space-y-2"></ul>
+        </div>
+
+        <!-- Pestaña: Proveedores -->
+        <div id="atab-suppliers" class="hidden space-y-4">
+          <button id="supAddBtn" type="button" class="w-full rounded-2xl bg-brand-600 text-white font-bold py-3.5 shadow">➕ Agregar proveedor</button>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div class="rounded-2xl bg-white p-4 shadow-sm">
+              <p id="supTodayTitle" class="font-bold"></p>
+              <ul id="supToday" class="mt-2 space-y-2"></ul>
+            </div>
+            <div class="rounded-2xl bg-white p-4 shadow-sm">
+              <p id="supTomorrowTitle" class="font-bold"></p>
+              <ul id="supTomorrow" class="mt-2 space-y-2"></ul>
+            </div>
+          </div>
+          <p class="text-xs font-semibold text-slate-500 uppercase">Todos los proveedores</p>
+          <ul id="supAll" class="space-y-2"></ul>
+        </div>
+
+        <!-- Pestaña: Informes -->
+        <div id="atab-reports" class="hidden space-y-4">
+          <div id="repPeriods" class="inline-flex rounded-xl bg-white p-1 shadow-sm text-sm font-semibold">
+            <button type="button" data-period="today" class="rep-btn px-4 py-2 rounded-lg">Hoy</button>
+            <button type="button" data-period="7" class="rep-btn px-4 py-2 rounded-lg">7 días</button>
+            <button type="button" data-period="30" class="rep-btn px-4 py-2 rounded-lg">30 días</button>
+          </div>
+          <div id="repCards" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+          <div class="grid lg:grid-cols-2 gap-4">
+            <div class="rounded-2xl bg-white p-4 shadow-sm"><p class="font-bold mb-2">🏆 Más vendidos</p><ol id="repTop" class="space-y-1.5 text-sm"></ol></div>
+            <div class="rounded-2xl bg-white p-4 shadow-sm"><p class="font-bold mb-2">💳 Por forma de pago</p><ul id="repMethods" class="space-y-1.5 text-sm"></ul></div>
+          </div>
+          <div class="rounded-2xl bg-white p-4 shadow-sm"><p class="font-bold mb-2">⚠️ Por acabarse</p><ul id="repLow" class="space-y-1.5 text-sm"></ul></div>
+          <div class="rounded-2xl bg-white p-4 shadow-sm"><p class="font-bold mb-2">🧾 Ventas del periodo</p><ul id="repSales" class="divide-y divide-slate-100 text-sm"></ul></div>
+        </div>
+
+        <!-- Pestaña: Pedidos -->
+        <div id="atab-orders" class="hidden space-y-4">
+          <div class="rounded-2xl bg-white p-4 shadow-sm space-y-3">
+            <p class="font-bold text-base">🧾 Confirmar o avisar a un cliente</p>
+            <ol class="text-xs text-slate-600 list-decimal pl-4 space-y-0.5">
+              <li>En WhatsApp, mantén presionado el mensaje del pedido y toca <b>Copiar</b>.</li>
+              <li>Vuelve aquí y toca el botón verde.</li>
+              <li>Elige qué decirle al cliente: confirmado, en camino o entregado.</li>
+            </ol>
+            <button id="pasteOrderBtn" type="button" class="w-full rounded-2xl bg-brand-600 text-white font-bold py-3.5 shadow">📋 Pegar pedido copiado</button>
+            <textarea id="orderPaste" rows="2" placeholder="...o mantén presionado aquí y toca Pegar"
+              class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30"></textarea>
+            <button id="readOrderBtn" type="button" class="hidden w-full rounded-xl bg-slate-900 text-white font-semibold py-3">Leer pedido</button>
+          </div>
+
+          <div id="orderDetail" class="hidden rounded-2xl bg-white p-4 shadow-sm space-y-3 scroll-mt-4">
+            <div id="orderInfo"></div>
+            <p class="text-xs font-semibold text-slate-500 uppercase">¿Qué le quieres decir al cliente?</p>
+            <div id="replyBtns" class="grid grid-cols-2 gap-2">
+              <button type="button" data-reply="confirm" class="reply-btn">✅ Confirmar pedido</button>
+              <button type="button" data-reply="onway" class="reply-btn">🛵 Ya va en camino</button>
+              <button type="button" data-reply="delivered" class="reply-btn">📦 Entregado, gracias</button>
+              <button type="button" data-reply="problem" class="reply-btn">⚠️ Falta un producto</button>
+            </div>
+            <div id="replyBox" class="hidden space-y-2">
+              <div id="etaWrap" class="hidden flex items-center gap-2 text-sm">
+                <label for="etaSel">⏱️ Llega en</label>
+                <select id="etaSel" class="rounded-lg border border-slate-300 bg-white px-2 py-1.5 font-semibold">
+                  <option>10</option><option>15</option><option selected>20</option><option>30</option><option>45</option><option>60</option>
+                </select>
+                <span>minutos</span>
+              </div>
+              <textarea id="replyText" rows="7" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30"></textarea>
+              <p class="text-[11px] text-slate-500">Puedes cambiar el texto antes de enviarlo.</p>
+              <button id="replySend" type="button" class="w-full rounded-2xl bg-[#25D366] text-white font-extrabold py-3.5 shadow-lg">📲 Enviar al cliente por WhatsApp</button>
+            </div>
+            <button id="orderDelete" type="button" class="text-xs text-red-500 font-semibold">Quitar de la lista</button>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase">Pedidos recientes</p>
+            <ul id="orderHistory" class="mt-2 space-y-2"></ul>
+          </div>
+        </div>
+
+        <!-- Pestaña: Productos -->
+        <div id="atab-products" class="hidden">
+          <div class="grid grid-cols-2 gap-3">
+            <button id="scanAddBtn" type="button" class="rounded-2xl bg-brand-600 text-white font-bold py-4 shadow flex flex-col items-center gap-1 active:scale-[.98] transition">
+              <span class="text-3xl" aria-hidden="true">📷</span>Escanear código
+              <span class="text-[11px] font-normal text-brand-100">Agrega o busca un producto</span>
+            </button>
+            <button id="manualAddBtn" type="button" class="rounded-2xl bg-white text-slate-800 font-bold py-4 shadow flex flex-col items-center gap-1 active:scale-[.98] transition">
+              <span class="text-3xl" aria-hidden="true">➕</span>Agregar a mano
+              <span class="text-[11px] font-normal text-slate-500">Con foto, nombre y precio</span>
+            </button>
+            <button id="restockScanBtn" type="button" class="col-span-2 rounded-2xl bg-slate-900 text-white font-bold py-3.5 shadow active:scale-[.98] transition">
+              📥 Entrada de mercancía <span class="font-normal text-slate-300 text-xs">(escanea lo que llegó y suma unidades)</span>
+            </button>
+          </div>
+          <div id="invFilters" class="mt-4 flex gap-2 overflow-x-auto no-scrollbar text-xs font-semibold">
+            <button type="button" data-inv="all" class="inv-btn">Todos</button>
+            <button type="button" data-inv="low" class="inv-btn">⚠️ Por acabarse</button>
+            <button type="button" data-inv="nocode" class="inv-btn">Sin código</button>
+            <button type="button" data-inv="nophoto" class="inv-btn">Sin foto</button>
+            <button type="button" data-inv="noprice" class="inv-btn">Sin costo</button>
+          </div>
+          <div class="mt-3 relative">
+            <span class="absolute inset-y-0 left-3 flex items-center text-slate-400" aria-hidden="true">🔍</span>
+            <input id="adminSearch" type="search" placeholder="Buscar en mi catálogo..." autocomplete="off"
+              class="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          </div>
+          <p id="adminCount" class="text-xs text-slate-500 mt-2"></p>
+          <p class="text-xs text-slate-500">Toca un producto para cambiarle la foto o el precio. El interruptor lo marca como disponible o agotado.</p>
+          <ul id="adminList" class="mt-3 space-y-2"></ul>
+        </div>
+
+        <!-- Pestaña: Mi tienda -->
+        <form id="atab-store" class="hidden space-y-3" novalidate>
+          <div>
+            <label for="aStoreSelect" class="block text-xs font-semibold text-slate-600 mb-1">Tienda que estás editando</label>
+            <div class="flex gap-2">
+              <select id="aStoreSelect" class="flex-1 min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm"></select>
+              <button id="addStoreBtn" type="button" class="shrink-0 rounded-xl bg-white border border-slate-300 px-3 text-sm font-semibold">➕ Nueva</button>
+            </div>
+          </div>
+          <div id="demoWarning" class="hidden rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm px-3 py-2.5">
+            ⚠️ <b>El WhatsApp de esta tienda es un número de ejemplo.</b> Los pedidos no le llegan a nadie hasta que pongas tu número real aquí abajo y toques Guardar.
+          </div>
+          <div>
+            <label for="sWa" class="block text-xs font-semibold text-slate-600 mb-1">📲 WhatsApp donde llegan los pedidos *</label>
+            <input id="sWa" type="tel" inputmode="numeric" placeholder="Ej: 300 123 4567"
+              class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base font-semibold focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+            <p class="text-xs text-slate-500 mt-1">Celular de Colombia de 10 dígitos. Si es de otro país, escríbelo con el indicativo (ej: 593 99 123 4567).</p>
+            <p class="err hidden text-xs text-red-500 mt-1">Número no válido. Revisa que tenga 10 dígitos.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="sName" class="block text-xs font-semibold text-slate-600 mb-1">Nombre de la tienda *</label>
+              <input id="sName" type="text" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm" />
+            </div>
+            <div>
+              <label for="sZone" class="block text-xs font-semibold text-slate-600 mb-1">Barrio / municipio</label>
+              <input id="sZone" type="text" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm" />
+            </div>
+            <div>
+              <label for="sOpen" class="block text-xs font-semibold text-slate-600 mb-1">Abre a las</label>
+              <select id="sOpen" class="hour w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm"></select>
+            </div>
+            <div>
+              <label for="sClose" class="block text-xs font-semibold text-slate-600 mb-1">Cierra a las</label>
+              <select id="sClose" class="hour w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm"></select>
+            </div>
+            <div>
+              <label for="sFee" class="block text-xs font-semibold text-slate-600 mb-1">Valor del domicilio</label>
+              <input id="sFee" type="text" inputmode="numeric" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm" />
+            </div>
+            <div>
+              <label for="sFree" class="block text-xs font-semibold text-slate-600 mb-1">Domicilio gratis desde</label>
+              <input id="sFree" type="text" inputmode="numeric" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm" />
+            </div>
+          </div>
+          <button id="saveStoreBtn" type="submit" class="w-full rounded-2xl bg-brand-600 text-white font-bold py-3.5 shadow">💾 Guardar datos de la tienda</button>
+          <button id="testWaBtn" type="button" class="w-full rounded-2xl bg-white border border-slate-300 font-semibold py-3">🧪 Probar: abrir WhatsApp con un mensaje de prueba</button>
+          <button id="deleteStoreBtn" type="button" class="w-full text-sm text-red-500 font-semibold py-2">🗑️ Eliminar esta tienda</button>
+        </form>
+
+        <!-- Pestaña: Compartir -->
+        <div id="atab-share" class="hidden space-y-4">
+          <div class="rounded-2xl bg-white p-4 shadow-sm text-sm space-y-2">
+            <p class="font-bold text-base">📲 Instalar como aplicación</p>
+            <div id="installHelp" class="text-slate-600 space-y-2"></div>
+            <button type="button" class="install-btn hidden w-full rounded-2xl bg-brand-600 text-white font-extrabold py-3.5 shadow">📲 Instalar ahora</button>
+          </div>
+          <div class="rounded-2xl bg-white p-4 shadow-sm text-sm space-y-2">
+            <p class="font-bold text-base">📤 Envía tu catálogo a los clientes</p>
+            <p class="text-slate-600">Los productos, fotos, precios y agotados que cambies se guardan <b>en este celular</b>. Para que tus clientes vean lo mismo, envíales el archivo actualizado (por WhatsApp, por ejemplo). Ellos lo abren con Chrome o Safari y te hacen el pedido.</p>
+            <p class="text-slate-600">En el archivo de los clientes el botón ⚙️ Tendero no aparece. Para entrar tú, toca <b>5 veces seguidas</b> el ícono 🏪 de arriba.</p>
+            <p id="exportSize" class="text-xs text-slate-500"></p>
+          </div>
+          <button id="shareBtn" type="button" class="w-full rounded-2xl bg-[#25D366] text-white font-extrabold py-4 shadow-lg">📲 Enviar archivo por WhatsApp u otra app</button>
+          <button id="downloadBtn" type="button" class="w-full rounded-2xl bg-white border border-slate-300 font-bold py-3.5">⬇️ Descargar archivo actualizado</button>
+          <div class="pt-4 border-t border-slate-200 space-y-2">
+            <p class="text-xs font-semibold text-slate-500 uppercase">Copia de seguridad (ventas, fiados, productos, fotos)</p>
+            <p class="text-xs text-slate-500">Todo se guarda en este navegador. Descarga una copia cada semana por si se borra o cambias de celular/PC.</p>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="backupBtn" type="button" class="rounded-xl bg-white border border-slate-300 text-sm font-semibold py-3">💾 Descargar copia</button>
+              <label class="cursor-pointer rounded-xl bg-white border border-slate-300 text-sm font-semibold py-3 text-center">♻️ Restaurar copia
+                <input id="restoreInput" type="file" accept=".json,application/json" class="sr-only" />
+              </label>
+            </div>
+            <p class="pt-3 text-xs font-semibold text-slate-500 uppercase">Zona de cuidado</p>
+            <button id="clearDemoBtn" type="button" class="w-full rounded-xl bg-white border border-red-200 text-red-600 text-sm font-semibold py-3">🧹 Borrar todos los productos (empezar mi catálogo)</button>
+            <button id="resetBtn" type="button" class="w-full rounded-xl bg-white border border-slate-300 text-slate-600 text-sm font-semibold py-3">↺ Volver a los datos de ejemplo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EDITOR DE PRODUCTO ===================== -->
+  <div id="editor" class="fixed inset-0 z-[55] hidden items-end sm:items-center justify-center bg-black/50">
+    <form id="editorForm" novalidate class="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl max-h-[95vh] flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100">
+        <h2 id="editorTitle" class="text-lg font-bold">Nuevo producto</h2>
+        <button id="editorClose" type="button" class="h-9 w-9 rounded-full bg-slate-100 text-slate-600 text-xl leading-none" aria-label="Cerrar">×</button>
+      </div>
+      <div class="overflow-y-auto px-5 py-4 space-y-4">
+        <div class="flex gap-4">
+          <div id="photoPreview" class="h-32 w-32 shrink-0 rounded-2xl bg-slate-100 overflow-hidden flex items-center justify-center text-5xl border-2 border-dashed border-slate-300"></div>
+          <div class="flex-1 flex flex-col gap-2">
+            <label class="cursor-pointer rounded-xl bg-brand-600 text-white text-sm font-bold text-center py-3 shadow">
+              📸 Tomar foto
+              <input id="photoCamera" type="file" accept="image/*" capture="environment" class="sr-only" />
+            </label>
+            <label class="cursor-pointer rounded-xl bg-slate-100 text-slate-700 text-sm font-semibold text-center py-3">
+              🖼️ Elegir de la galería
+              <input id="photoGallery" type="file" accept="image/*" class="sr-only" />
+            </label>
+            <button id="photoRemove" type="button" class="hidden text-xs text-red-500 font-semibold">Quitar foto</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="edCode" class="block text-xs font-semibold text-slate-600 mb-1">Código de barras (opcional)</label>
+          <div class="flex gap-2">
+            <input id="edCode" type="text" inputmode="numeric" placeholder="Ej: 7702001023456"
+              class="flex-1 min-w-0 rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+            <button id="edScan" type="button" class="shrink-0 rounded-xl bg-slate-900 text-white px-3 text-sm font-bold">📷 Escanear</button>
+          </div>
+          <p id="lookupStatus" class="text-xs text-slate-500 mt-1"></p>
+        </div>
+        <div>
+          <label for="edName" class="block text-xs font-semibold text-slate-600 mb-1">Nombre del producto *</label>
+          <input id="edName" type="text" placeholder="Ej: Arroz Diana"
+            class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          <p class="err hidden text-xs text-red-500 mt-1">Escribe el nombre.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="edUnit" class="block text-xs font-semibold text-slate-600 mb-1">Presentación</label>
+            <input id="edUnit" type="text" placeholder="Ej: 500 g, 1 L, Unidad"
+              class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          </div>
+          <div>
+            <label for="edPrice" class="block text-xs font-semibold text-slate-600 mb-1">Precio *</label>
+            <input id="edPrice" type="text" inputmode="numeric" placeholder="Ej: 4900"
+              class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+            <p class="err hidden text-xs text-red-500 mt-1">Pon el precio.</p>
+          </div>
+        </div>
+        <p id="priceHistory" class="hidden -mt-2 text-[11px] text-slate-500"></p>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="edCost" class="block text-xs font-semibold text-slate-600 mb-1">Costo (lo que te cuesta)</label>
+            <input id="edCost" type="text" inputmode="numeric" placeholder="Ej: 4000"
+              class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          </div>
+          <div>
+            <label for="edMargin" class="block text-xs font-semibold text-slate-600 mb-1">% de ganancia</label>
+            <input id="edMargin" type="text" inputmode="numeric" placeholder="Ej: 20"
+              class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          </div>
+        </div>
+        <div id="refPrices" class="hidden rounded-xl bg-blue-50 border border-blue-100 px-3 py-2.5 text-xs text-blue-900 space-y-1"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="edQty" class="block text-xs font-semibold text-slate-600 mb-1">Unidades en inventario</label>
+            <input id="edQty" type="text" inputmode="numeric" placeholder="Vacío = no contar"
+              class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          </div>
+          <div>
+            <label for="edMinQty" class="block text-xs font-semibold text-slate-600 mb-1">Avisarme cuando queden</label>
+            <input id="edMinQty" type="text" inputmode="numeric" placeholder="Ej: 3"
+              class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          </div>
+        </div>
+        <div>
+          <label for="edCategory" class="block text-xs font-semibold text-slate-600 mb-1">Categoría</label>
+          <select id="edCategory" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm"></select>
+        </div>
+        <label class="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-3 cursor-pointer">
+          <span class="text-sm font-semibold">¿Hay en la tienda? <span class="block text-xs font-normal text-slate-500">Apágalo para mostrarlo como AGOTADO</span></span>
+          <input id="edAvailable" type="checkbox" class="sr-only peer" checked />
+          <span class="relative h-7 w-12 shrink-0 rounded-full bg-slate-300 peer-checked:bg-brand-600 transition after:absolute after:top-1 after:left-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:after:translate-x-5"></span>
+        </label>
+      </div>
+      <div class="flex gap-2 border-t border-slate-100 px-5 pt-3 pb-safe">
+        <button id="editorDelete" type="button" class="rounded-2xl bg-red-50 text-red-600 font-bold px-4" aria-label="Eliminar producto">🗑️</button>
+        <button type="submit" class="flex-1 rounded-2xl bg-brand-600 text-white font-extrabold py-3.5 shadow">💾 Guardar producto</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ===================== COBRAR ===================== -->
+  <div id="chargeModal" class="fixed inset-0 z-[56] hidden items-end sm:items-center justify-center bg-black/50">
+    <div class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl max-h-[95vh] flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100">
+        <h2 class="text-lg font-bold">💵 Cobrar</h2>
+        <button id="chargeClose" type="button" class="h-9 w-9 rounded-full bg-slate-100 text-slate-600 text-xl leading-none" aria-label="Cerrar">×</button>
+      </div>
+      <div id="chargeForm" class="overflow-y-auto px-5 py-4 space-y-4">
+        <p class="text-center"><span class="block text-sm text-slate-500">Total a cobrar</span><span id="chargeTotal" class="block text-4xl font-extrabold tabular-nums"></span></p>
+        <div id="payMethods" class="grid grid-cols-4 gap-2">
+          <button type="button" data-method="efectivo" class="pay-btn">💵<span>Efectivo</span></button>
+          <button type="button" data-method="nequi" class="pay-btn">💜<span>Nequi</span></button>
+          <button type="button" data-method="daviplata" class="pay-btn">❤️<span>Daviplata</span></button>
+          <button type="button" data-method="fiado" class="pay-btn">📒<span>Fiado</span></button>
+        </div>
+        <div id="cashBox" class="space-y-2">
+          <label for="cashIn" class="block text-xs font-semibold text-slate-600">¿Con cuánto paga?</label>
+          <input id="cashIn" type="text" inputmode="numeric" placeholder="Ej: 20000"
+            class="w-full rounded-xl border border-slate-300 px-3 py-3 text-xl font-bold tabular-nums focus:outline-none focus:ring-4 focus:ring-brand-500/30" />
+          <div id="cashQuick" class="flex flex-wrap gap-2"></div>
+          <p id="cashChangeOut" class="text-lg font-extrabold text-brand-700"></p>
+        </div>
+        <div id="fiadoBox" class="hidden space-y-2">
+          <label for="fiadoCustomer" class="block text-xs font-semibold text-slate-600">¿A quién se le fía?</label>
+          <select id="fiadoCustomer" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm"></select>
+          <div id="fiadoNew" class="hidden grid grid-cols-2 gap-2">
+            <input id="fiadoNewName" type="text" placeholder="Nombre" class="rounded-xl border border-slate-300 px-3 py-2.5 text-sm" />
+            <input id="fiadoNewPhone" type="tel" inputmode="numeric" placeholder="Celular" class="rounded-xl border border-slate-300 px-3 py-2.5 text-sm" />
+          </div>
+          <p id="fiadoInfo" class="text-xs text-slate-500"></p>
+        </div>
+      </div>
+      <div id="chargeDone" class="hidden px-5 py-6 text-center space-y-2">
+        <div class="text-5xl">✅</div>
+        <p class="text-lg font-extrabold">Venta registrada</p>
+        <p id="chargeDoneInfo" class="text-sm text-slate-600"></p>
+      </div>
+      <div class="border-t border-slate-100 px-5 pt-3 pb-safe space-y-2">
+        <button id="chargeConfirm" type="button" class="w-full rounded-2xl bg-brand-600 text-white font-extrabold text-lg py-4 shadow">✅ Registrar venta</button>
+        <button id="receiptBtn" type="button" class="hidden w-full rounded-2xl bg-[#25D366] text-white font-bold py-3.5 shadow">📲 Enviar recibo por WhatsApp</button>
+        <button id="newSaleBtn" type="button" class="hidden w-full rounded-2xl bg-slate-900 text-white font-bold py-3.5">🛒 Nueva venta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ENTRADA DE MERCANCÍA ===================== -->
+  <div id="restock" class="fixed inset-0 z-[56] hidden items-end sm:items-center justify-center bg-black/50">
+    <form id="restockForm" novalidate class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-5 pb-safe space-y-4 shadow-2xl">
+      <div class="flex items-center gap-3">
+        <div id="restockImg" class="h-16 w-16 shrink-0 rounded-xl bg-slate-100 overflow-hidden flex items-center justify-center"></div>
+        <div class="min-w-0 flex-1">
+          <p class="text-[11px] uppercase font-semibold text-slate-500">📥 Entrada de mercancía</p>
+          <p id="restockName" class="font-bold leading-tight"></p>
+          <p id="restockNow" class="text-xs text-slate-500"></p>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label for="rsQty" class="block text-[11px] font-semibold text-slate-600 mb-1">¿Cuántas llegaron?</label>
+          <input id="rsQty" type="text" inputmode="numeric" class="w-full rounded-xl border-2 border-brand-500 px-3 py-2.5 text-lg font-bold" />
+        </div>
+        <div>
+          <label for="rsCost" class="block text-[11px] font-semibold text-slate-600 mb-1">Costo c/u</label>
+          <input id="rsCost" type="text" inputmode="numeric" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm" />
+        </div>
+        <div>
+          <label for="rsPrice" class="block text-[11px] font-semibold text-slate-600 mb-1">Precio venta</label>
+          <input id="rsPrice" type="text" inputmode="numeric" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm font-bold" />
+        </div>
+      </div>
+      <p id="rsMargin" class="text-xs text-slate-500"></p>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="submit" data-again="0" class="rounded-2xl bg-brand-600 text-white font-bold py-3.5">📥 Guardar</button>
+        <button type="submit" data-again="1" class="rounded-2xl bg-slate-900 text-white font-bold py-3.5">Guardar y escanear otro</button>
+      </div>
+      <button id="restockCancel" type="button" class="w-full text-sm text-slate-500 font-semibold">Cancelar</button>
+    </form>
+  </div>
+
+  <!-- ===================== FICHA (clientes / proveedores) ===================== -->
+  <div id="card" class="fixed inset-0 z-[56] hidden items-end sm:items-center justify-center bg-black/50">
+    <div class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl max-h-[95vh] flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100">
+        <h2 id="cardTitle" class="text-lg font-bold"></h2>
+        <button id="cardClose" type="button" class="h-9 w-9 rounded-full bg-slate-100 text-slate-600 text-xl leading-none" aria-label="Cerrar">×</button>
+      </div>
+      <div id="cardBody" class="overflow-y-auto px-5 py-4 pb-safe space-y-3"></div>
+    </div>
+  </div>
+
+  <!-- ===================== ESCÁNER ===================== -->
+  <div id="scanner" class="fixed inset-0 z-[60] hidden flex-col bg-black text-white" role="dialog" aria-modal="true" aria-label="Escanear código de barras">
+    <div class="flex items-center justify-between px-4 py-3 bg-slate-900">
+      <p class="font-bold">📷 Escanear código de barras</p>
+      <button id="scanClose" type="button" class="h-9 w-9 rounded-full bg-white/10 text-xl leading-none" aria-label="Cerrar">×</button>
+    </div>
+    <div class="relative flex-1 overflow-hidden">
+      <video id="scanVideo" playsinline muted autoplay class="absolute inset-0 w-full h-full object-cover"></video>
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div class="relative w-72 max-w-[80%] h-44 rounded-2xl border-4 border-white/90 shadow-[0_0_0_9999px_rgba(0,0,0,.45)]">
+          <div class="scanline absolute inset-x-3 h-0.5 bg-red-500 shadow-[0_0_8px_2px_rgba(239,68,68,.7)]"></div>
+        </div>
+      </div>
+      <p id="scanStatus" class="absolute bottom-4 inset-x-4 text-center text-sm bg-black/70 rounded-xl px-3 py-2"></p>
+    </div>
+    <div class="px-4 pt-4 pb-safe space-y-3 bg-slate-900">
+      <label class="block cursor-pointer rounded-xl bg-white/10 text-center text-sm font-semibold py-3">
+        📸 Tomar foto del código (si la cámara en vivo no funciona)
+        <input id="scanPhoto" type="file" accept="image/*" capture="environment" class="sr-only" />
+      </label>
+      <form id="scanManual" class="flex gap-2">
+        <input id="scanManualInput" type="text" inputmode="numeric" placeholder="O escribe el número del código"
+          class="flex-1 min-w-0 rounded-xl bg-white text-slate-800 px-3 py-2.5 text-sm" />
+        <button type="submit" class="rounded-xl bg-brand-600 px-4 font-bold">OK</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70] hidden w-max max-w-[90vw] rounded-xl bg-slate-900 text-white text-sm px-4 py-2.5 shadow-xl text-center"></div>
+
+  <!-- Catálogo incluido en el archivo. Lo llena el botón "Compartir" del modo tendero. -->
+  <script id="catalogo" type="application/json">null</script>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // Copia intacta de la página, para generar el archivo actualizado que se comparte con los clientes.
+    const PRISTINE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    /* ============================================================
+     * 1. DATOS DE EJEMPLO
+     * ============================================================ */
+    const CATEGORIES = [
+      { id: 'all',       label: 'Todo',      icon: '🛒' },
+      { id: 'abarrotes', label: 'Abarrotes', icon: '🥫' },
+      { id: 'lacteos',   label: 'Lácteos',   icon: '🥛' },
+      { id: 'frescos',   label: 'Frescos',   icon: '🥬' },
+      { id: 'aseo',      label: 'Aseo',      icon: '🧼' },
+      { id: 'bebidas',   label: 'Bebidas',   icon: '🥤' }
+    ];
+    const CAT_ICON = Object.fromEntries(CATEGORIES.map(c => [c.id, c.icon]));
+
+    const PAYMENTS = [
+      { id: 'efectivo',  label: 'Efectivo',  sub: 'contra entrega', icon: '💵' },
+      { id: 'nequi',     label: 'Nequi',     sub: 'transferencia',  icon: '💜' },
+      { id: 'daviplata', label: 'Daviplata', sub: 'transferencia',  icon: '❤️' }
+    ];
+
+    // demo: true => número de WhatsApp de ejemplo (se avisa antes de enviar).
+    const DEFAULT_DATA = {
+      version: 2, updatedAt: 0, adminHidden: false,
+      stores: [
+        { id: 'don-luis',   name: 'Granero Don Luis',       zone: 'Sabaneta', whatsapp: '573001234567', demo: true, openHour: 6, closeHour: 21, deliveryFee: 3000, freeDeliveryFrom: 80000,  soldOut: ['p05', 'p13', 'p22'] },
+        { id: 'la-esquina', name: 'Surtitienda La Esquina', zone: 'Envigado', whatsapp: '573109876543', demo: true, openHour: 7, closeHour: 22, deliveryFee: 2500, freeDeliveryFrom: 60000,  soldOut: ['p02', 'p09', 'p17', 'p20'] },
+        { id: 'dona-rosa',  name: 'Minimercado Doña Rosa',  zone: 'Itagüí',   whatsapp: '573205551234', demo: true, openHour: 5, closeHour: 23, deliveryFee: 4000, freeDeliveryFrom: 100000, soldOut: ['p07', 'p14'] }
+      ],
+      products: [
+        { id: 'p01', name: 'Arroz Diana',             unit: '1 kg',       price: 4900,  category: 'abarrotes', icon: '🍚', stock: true },
+        { id: 'p02', name: 'Aceite Premier',          unit: '1.000 ml',   price: 11500, category: 'abarrotes', icon: '🫒', stock: true },
+        { id: 'p03', name: 'Panela Cuadrada',         unit: '500 g',      price: 3200,  category: 'abarrotes', icon: '🟫', stock: true },
+        { id: 'p04', name: 'Fríjol Cargamanto',       unit: '500 g',      price: 6800,  category: 'abarrotes', icon: '🫘', stock: true },
+        { id: 'p05', name: 'Café Sello Rojo',         unit: '250 g',      price: 9900,  category: 'abarrotes', icon: '☕', stock: true },
+        { id: 'p06', name: 'Azúcar Manuelita',        unit: '1 kg',       price: 4600,  category: 'abarrotes', icon: '🧂', stock: true },
+        { id: 'p07', name: 'Pasta Doria Spaghetti',   unit: '500 g',      price: 3900,  category: 'abarrotes', icon: '🍝', stock: true },
+        { id: 'p08', name: 'Atún en aceite',          unit: 'Lata 170 g', price: 6500,  category: 'abarrotes', icon: '🐟', stock: false },
+        { id: 'p09', name: 'Leche Entera Colanta',    unit: '1.100 ml',   price: 4300,  category: 'lacteos',   icon: '🥛', stock: true },
+        { id: 'p10', name: 'Huevos AA',               unit: 'Panal x30',  price: 17500, category: 'lacteos',   icon: '🥚', stock: true },
+        { id: 'p11', name: 'Queso Campesino',         unit: '500 g',      price: 10800, category: 'lacteos',   icon: '🧀', stock: true },
+        { id: 'p12', name: 'Kumis Alpina',            unit: '1.000 g',    price: 7200,  category: 'lacteos',   icon: '🍶', stock: true },
+        { id: 'p13', name: 'Mantequilla',             unit: '250 g',      price: 6900,  category: 'lacteos',   icon: '🧈', stock: true },
+        { id: 'p14', name: 'Arepas de Maíz',          unit: 'Paquete x5', price: 3500,  category: 'frescos',   icon: '🫓', stock: true },
+        { id: 'p15', name: 'Plátano Maduro',          unit: 'Unidad',     price: 1200,  category: 'frescos',   icon: '🍌', stock: true },
+        { id: 'p16', name: 'Tomate Chonto',           unit: 'Libra',      price: 2800,  category: 'frescos',   icon: '🍅', stock: true },
+        { id: 'p17', name: 'Papa Pastusa',            unit: 'Libra',      price: 1900,  category: 'frescos',   icon: '🥔', stock: true },
+        { id: 'p18', name: 'Cebolla Cabezona',        unit: 'Libra',      price: 2400,  category: 'frescos',   icon: '🧅', stock: true },
+        { id: 'p19', name: 'Aguacate Hass',           unit: 'Unidad',     price: 3500,  category: 'frescos',   icon: '🥑', stock: false },
+        { id: 'p20', name: 'Detergente Fab',          unit: '1 kg',       price: 12900, category: 'aseo',      icon: '🧺', stock: true },
+        { id: 'p21', name: 'Jabón Rey en barra',      unit: '300 g',      price: 3600,  category: 'aseo',      icon: '🧼', stock: true },
+        { id: 'p22', name: 'Papel Higiénico Familia', unit: 'Paquete x4', price: 8900,  category: 'aseo',      icon: '🧻', stock: true },
+        { id: 'p23', name: 'Lavaloza Axion',          unit: '450 g',      price: 5800,  category: 'aseo',      icon: '🍽️', stock: true },
+        { id: 'p24', name: 'Coca-Cola',               unit: '1,5 L',      price: 5500,  category: 'bebidas',   icon: '🥤', stock: true },
+        { id: 'p25', name: 'Agua Cristal',            unit: '600 ml',     price: 1800,  category: 'bebidas',   icon: '💧', stock: true },
+        { id: 'p26', name: 'Jugo Hit Mango',          unit: '1 L',        price: 4200,  category: 'bebidas',   icon: '🧃', stock: true },
+        { id: 'p27', name: 'Cerveza Águila',          unit: 'Six pack',   price: 16500, category: 'bebidas',   icon: '🍺', stock: false },
+        { id: 'p28', name: 'Pony Malta',              unit: '330 ml',     price: 2300,  category: 'bebidas',   icon: '🍼', stock: true }
+      ]
+    };
+
+    /* ============================================================
+     * 2. ESTADO + PERSISTENCIA
+     * ============================================================ */
+    const LS_PREFS = 'tiendaBarrio.v1';       // tienda elegida, carrito y datos del cliente
+    const LS_DATA  = 'tiendaBarrio.data.v2';  // catálogo editado por el tendero
+    const readJSON = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+    const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } };
+    const clone = o => JSON.parse(JSON.stringify(o));
+    const validData = d => d && Array.isArray(d.products) && Array.isArray(d.stores) && d.stores.length > 0;
+
+    let embedded = null;
+    try { embedded = JSON.parse(document.getElementById('catalogo').textContent); } catch { /* sin catálogo incluido */ }
+    const baseData = validData(embedded) ? embedded : DEFAULT_DATA;
+    const localData = readJSON(LS_DATA);
+    // Se usa la copia local si es igual o más reciente que la incluida en el archivo.
+    let data = (validData(localData) && (localData.updatedAt || 0) >= (baseData.updatedAt || 0)) ? localData : clone(baseData);
+
+    const saved = readJSON(LS_PREFS) || {};
+    const state = {
+      storeId: data.stores.some(s => s.id === saved.storeId) ? saved.storeId : data.stores[0].id,
+      category: 'all',
+      stockFilter: 'all',
+      query: '',
+      cart: (saved.cart && typeof saved.cart === 'object') ? saved.cart : {},
+      customer: Object.assign({ name: '', phone: '', address: '', notes: '', payment: 'efectivo', cash: '' }, saved.customer || {}),
+      margin: saved.margin > 0 ? saved.margin : 20   // % de ganancia preferido del tendero
+    };
+
+    const persist = () => writeJSON(LS_PREFS, { storeId: state.storeId, cart: state.cart, customer: state.customer, margin: state.margin });
+    const saveData = () => {
+      data.updatedAt = Date.now();
+      if (!writeJSON(LS_DATA, data)) toast('⚠️ La memoria del navegador está llena. Quita algunas fotos.', 4000);
+    };
+
+    /* ============================================================
+     * 3. UTILIDADES
+     * ============================================================ */
+    const $ = sel => document.querySelector(sel);
+    const money = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+    const fmt = n => money.format(n || 0).replace(/\s/g, ' ');
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const normalize = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const digits = s => String(s ?? '').replace(/\D/g, '');
+    const MAX_QTY = 99;
+
+    const currentStore = () => data.stores.find(s => s.id === state.storeId) || data.stores[0];
+    const findProduct = id => data.products.find(p => p.id === id);
+    // Agotado si el tendero lo apagó, si no hay en esta tienda o si su inventario llegó a 0.
+    const isAvailable = p => p.stock !== false && !(typeof p.qty === 'number' && p.qty <= 0) && !currentStore().soldOut.includes(p.id);
+    const isOpen = s => {
+      const h = new Date().getHours();
+      if (s.openHour === s.closeHour) return true;
+      return s.openHour < s.closeHour ? (h >= s.openHour && h < s.closeHour) : (h >= s.openHour || h < s.closeHour);
+    };
+    const hourLabel = h => h === 24 ? '12am' : `${((h + 11) % 12) + 1}${h < 12 ? 'am' : 'pm'}`;
+    const newId = () => 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+
+    // Número de WhatsApp: 10 dígitos que empiezan por 3 => Colombia (+57).
+    const waNumber = raw => { let d = digits(raw); if (d.length === 10 && d[0] === '3') d = '57' + d; return d; };
+    const isValidWa = d => /^\d{11,15}$/.test(d);
+    const prettyWa = d => d.startsWith('57') && d.length === 12 ? `+57 ${d.slice(2, 5)} ${d.slice(5, 8)} ${d.slice(8)}` : `+${d}`;
+
+    const productMedia = (p, iconCls = 'text-5xl') => p.photo
+      ? `<img src="${esc(p.photo)}" alt="" loading="lazy" class="w-full h-full object-cover">`
+      : `<span class="${iconCls}" aria-hidden="true">${esc(p.icon || CAT_ICON[p.category] || '🛒')}</span>`;
+
+    let toastTimer;
+    function toast(msg, ms = 2400) {
+      const t = $('#toast');
+      t.textContent = msg; t.classList.remove('hidden');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add('hidden'), ms);
+    }
+
+    const lockScroll = () => { document.body.style.overflow = 'hidden'; };
+    const unlockScroll = () => {
+      const anyOpen = !$('#cartSheet').classList.contains('closed') || !$('#adminPanel').classList.contains('hidden');
+      if (!anyOpen) document.body.style.overflow = '';
+    };
+    const showFlex = (el, on) => { el.classList.toggle('hidden', !on); el.classList.toggle('flex', on); };
+
+    /* ============================================================
+     * 4. CARRITO
+     * ============================================================ */
+    const cartLines = () => Object.entries(state.cart)
+      .map(([id, qty]) => ({ product: findProduct(id), qty }))
+      .filter(l => l.product && l.qty > 0 && isAvailable(l.product));
+
+    const totals = () => {
+      const lines = cartLines();
+      const subtotal = lines.reduce((acc, l) => acc + l.product.price * l.qty, 0);
+      const units = lines.reduce((acc, l) => acc + l.qty, 0);
+      const s = currentStore();
+      const delivery = subtotal === 0 || (s.freeDeliveryFrom > 0 && subtotal >= s.freeDeliveryFrom) ? 0 : (s.deliveryFee || 0);
+      return { lines, subtotal, units, delivery, total: subtotal + delivery };
+    };
+
+    const pruneCart = () => {
+      let removed = 0;
+      for (const id of Object.keys(state.cart)) {
+        const p = findProduct(id);
+        if (!p || !isAvailable(p) || !(state.cart[id] > 0)) { delete state.cart[id]; removed++; }
+      }
+      if (removed) persist();
+      return removed;
+    };
+
+    const setQty = (id, qty) => {
+      qty = Math.max(0, Math.min(MAX_QTY, qty | 0));
+      if (qty === 0) delete state.cart[id]; else state.cart[id] = qty;
+      persist(); renderProducts(); renderCart();
+    };
+
+    /* ============================================================
+     * 5. RENDER: TIENDA Y FILTROS
+     * ============================================================ */
+    function renderStoreSelect() {
+      const opts = data.stores.map(s =>
+        `<option class="text-slate-800" value="${esc(s.id)}" ${s.id === state.storeId ? 'selected' : ''}>${esc(s.name)}${s.zone ? ' - ' + esc(s.zone) : ''}</option>`).join('');
+      $('#storeSelect').innerHTML = opts;
+      $('#aStoreSelect').innerHTML = opts;
+    }
+
+    function renderStoreStatus() {
+      const s = currentStore();
+      const open = isOpen(s);
+      const badge = $('#storeStatus');
+      badge.className = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-semibold ' +
+        (open ? 'bg-white text-brand-700' : 'bg-amber-100 text-amber-800');
+      badge.innerHTML = open
+        ? '<span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span></span> Abierto · Recibiendo pedidos'
+        : '<span class="h-2 w-2 rounded-full bg-amber-500"></span> Cerrado · Pedido programado';
+      const free = s.freeDeliveryFrom > 0 ? ` (gratis desde ${fmt(s.freeDeliveryFrom)})` : '';
+      $('#storeMeta').textContent = `🕒 ${hourLabel(s.openHour)} – ${hourLabel(s.closeHour)} · 🛵 Domicilio ${s.deliveryFee ? fmt(s.deliveryFee) + free : 'gratis'}`;
+
+      const notice = $('#closedNotice');
+      notice.classList.toggle('hidden', open);
+      if (!open) notice.textContent = `⏰ ${s.name} está cerrada ahora. Puedes enviar tu pedido y lo despacharán al abrir (${hourLabel(s.openHour)}).`;
+      const n = waNumber(s.whatsapp);
+      $('#sendTo').textContent = isValidWa(n) ? `Se enviará al WhatsApp de ${s.name}: ${prettyWa(n)}${s.demo ? ' (número de ejemplo)' : ''}` : '';
+      $('#adminBtn').classList.toggle('hidden', !!data.adminHidden);
+    }
+
+    function renderCategories() {
+      $('#categoryTabs').innerHTML = CATEGORIES.map(c => {
+        const active = c.id === state.category;
+        return `<button data-cat="${c.id}" aria-pressed="${active}"
+          class="shrink-0 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold border transition
+          ${active ? 'bg-brand-600 border-brand-600 text-white shadow' : 'bg-white border-slate-200 text-slate-600 hover:border-brand-500'}">
+          <span aria-hidden="true">${c.icon}</span>${esc(c.label)}</button>`;
+      }).join('');
+    }
+
+    function renderStockFilter() {
+      document.querySelectorAll('.stock-btn').forEach(b => {
+        const active = b.dataset.stock === state.stockFilter;
+        b.setAttribute('aria-pressed', active);
+        b.className = 'stock-btn px-3 py-1.5 rounded-md ' + (active ? 'bg-brand-600 text-white' : 'text-slate-500 hover:text-slate-800');
+      });
+    }
+
+    /* ============================================================
+     * 6. RENDER: CATÁLOGO
+     * ============================================================ */
+    function filteredProducts() {
+      const q = normalize(state.query.trim());
+      return data.products.filter(p => {
+        if (state.category !== 'all' && p.category !== state.category) return false;
+        const avail = isAvailable(p);
+        if (state.stockFilter === 'available' && !avail) return false;
+        if (state.stockFilter === 'soldout' && avail) return false;
+        if (q && !normalize(`${p.name} ${p.unit} ${p.category} ${p.code || ''}`).includes(q)) return false;
+        return true;
+      }).sort((a, b) => Number(isAvailable(b)) - Number(isAvailable(a)));
+    }
+
+    function productCard(p) {
+      const avail = isAvailable(p);
+      const qty = state.cart[p.id] || 0;
+      const checked = qty > 0;
+
+      if (!avail) {
+        return `
+        <article class="relative rounded-2xl bg-white p-3 shadow-sm border border-slate-200 opacity-50 grayscale select-none" aria-disabled="true">
+          <span class="absolute top-2 left-2 z-10 rounded-md bg-red-600 text-white text-[10px] font-extrabold tracking-wider px-2 py-0.5">AGOTADO</span>
+          <div class="aspect-square rounded-xl bg-slate-100 overflow-hidden flex items-center justify-center">${productMedia(p)}</div>
+          <h3 class="mt-2 text-sm font-semibold leading-tight line-clamp-2">${esc(p.name)}</h3>
+          <p class="text-xs text-slate-500">${esc(p.unit)}</p>
+          <p class="mt-1 font-bold text-slate-400 line-through">${fmt(p.price)}</p>
+          <div class="mt-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-semibold text-center py-2">No disponible</div>
+        </article>`;
+      }
+
+      return `
+      <article class="relative rounded-2xl bg-white p-3 shadow-sm border-2 transition ${checked ? 'border-brand-500 ring-4 ring-brand-500/10' : 'border-transparent'}">
+        <label class="absolute top-2 right-2 z-10 cursor-pointer" title="Agregar a la lista">
+          <input type="checkbox" class="sr-only peer" data-check="${p.id}" ${checked ? 'checked' : ''} aria-label="Agregar ${esc(p.name)}" />
+          <span class="h-8 w-8 rounded-full border-2 flex items-center justify-center text-lg font-black transition shadow
+            peer-focus-visible:ring-4 peer-focus-visible:ring-brand-500/40
+            ${checked ? 'bg-brand-600 border-brand-600 text-white' : 'bg-white border-slate-300 text-transparent hover:border-brand-500'}">✓</span>
+        </label>
+        <button type="button" data-toggle="${p.id}" class="block w-full text-left" aria-label="Seleccionar ${esc(p.name)}">
+          <div class="aspect-square rounded-xl ${checked ? 'bg-brand-50' : 'bg-slate-50'} overflow-hidden flex items-center justify-center">${productMedia(p)}</div>
+          <h3 class="mt-2 text-sm font-semibold leading-tight line-clamp-2">${esc(p.name)}</h3>
+          <p class="text-xs text-slate-500">${esc(p.unit)}</p>
+          <p class="mt-1 font-extrabold text-brand-700">${fmt(p.price)}</p>
+        </button>
+        <div class="mt-2 flex items-center justify-between rounded-xl bg-slate-100 p-1">
+          <button type="button" data-dec="${p.id}" class="h-8 w-8 rounded-lg bg-white shadow-sm font-bold text-lg disabled:opacity-40" ${qty === 0 ? 'disabled' : ''} aria-label="Restar">−</button>
+          <span class="font-bold text-sm tabular-nums" aria-live="polite">${qty}</span>
+          <button type="button" data-inc="${p.id}" class="h-8 w-8 rounded-lg bg-brand-600 text-white shadow-sm font-bold text-lg disabled:opacity-40" ${qty >= MAX_QTY ? 'disabled' : ''} aria-label="Sumar">+</button>
+        </div>
+      </article>`;
+    }
+
+    function renderProducts() {
+      const list = filteredProducts();
+      $('#productGrid').innerHTML = list.map(productCard).join('');
+      $('#emptyState').classList.toggle('hidden', list.length > 0);
+      $('#resultCount').textContent = `${list.length} productos · ${list.filter(isAvailable).length} disponibles`;
+    }
+
+    /* ============================================================
+     * 7. RENDER: CARRITO
+     * ============================================================ */
+    function renderCart() {
+      const t = totals();
+      const s = currentStore();
+      $('#cartBadge').textContent = t.units;
+      $('#cartBarTotal').textContent = fmt(t.total);
+      $('#cartBar').classList.toggle('translate-y-full', t.units === 0);
+
+      $('#cartItems').innerHTML = t.lines.length
+        ? t.lines.map(({ product: p, qty }) => `
+          <li class="flex items-center gap-3 py-2.5">
+            <span class="h-10 w-10 shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center">${productMedia(p, 'text-2xl')}</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold truncate">${esc(p.name)}</p>
+              <p class="text-xs text-slate-500">${esc(p.unit)} · ${fmt(p.price)} c/u</p>
+            </div>
+            <div class="flex items-center gap-1">
+              <button type="button" data-dec="${p.id}" class="h-7 w-7 rounded-lg bg-slate-100 font-bold" aria-label="Restar">−</button>
+              <span class="w-6 text-center text-sm font-bold tabular-nums">${qty}</span>
+              <button type="button" data-inc="${p.id}" class="h-7 w-7 rounded-lg bg-slate-100 font-bold" aria-label="Sumar">+</button>
+            </div>
+            <span class="w-20 text-right text-sm font-bold tabular-nums">${fmt(p.price * qty)}</span>
+          </li>`).join('')
+        : '<li class="py-6 text-center text-sm text-slate-500">Tu lista está vacía. Marca los ✓ de los productos que necesitas.</li>';
+
+      $('#sumSubtotal').textContent = fmt(t.subtotal);
+      $('#sumDelivery').textContent = t.subtotal === 0 ? fmt(0) : (t.delivery === 0 ? '¡Gratis! 🎉' : fmt(t.delivery));
+      $('#sumTotal').textContent = fmt(t.total);
+      const missing = s.freeDeliveryFrom - t.subtotal;
+      $('#freeDeliveryHint').textContent = (t.subtotal > 0 && s.deliveryFee > 0 && s.freeDeliveryFrom > 0 && missing > 0)
+        ? `Agrega ${fmt(missing)} más y el domicilio es gratis.` : '';
+      $('#sendBtn').disabled = t.lines.length === 0;
+    }
+
+    /* ============================================================
+     * 8. FORMULARIO DEL CLIENTE
+     * ============================================================ */
+    function renderPayments() {
+      $('#paymentOptions').innerHTML = PAYMENTS.map(m => {
+        const active = state.customer.payment === m.id;
+        return `<label class="cursor-pointer">
+          <input type="radio" name="payment" value="${m.id}" class="sr-only peer" ${active ? 'checked' : ''} />
+          <span class="flex flex-col items-center rounded-xl border-2 px-2 py-2 text-center transition peer-focus-visible:ring-4 peer-focus-visible:ring-brand-500/30
+            ${active ? 'border-brand-500 bg-brand-50' : 'border-slate-200 bg-white'}">
+            <span class="text-xl" aria-hidden="true">${m.icon}</span>
+            <span class="text-xs font-bold">${m.label}</span>
+            <span class="text-[10px] text-slate-500">${m.sub}</span>
+          </span></label>`;
+      }).join('');
+      $('#cashChangeWrap').classList.toggle('hidden', state.customer.payment !== 'efectivo');
+    }
+
+    function fillForm() {
+      $('#custName').value = state.customer.name;
+      $('#custPhone').value = state.customer.phone;
+      $('#custAddress').value = state.customer.address;
+      $('#custNotes').value = state.customer.notes;
+      $('#cashChange').value = state.customer.cash;
+    }
+
+    function validate() {
+      const c = state.customer;
+      const d = digits(c.phone);
+      const checks = [
+        ['#custName', c.name.trim().length >= 2],
+        ['#custPhone', /^(57)?3\d{9}$/.test(d) || /^\d{7,10}$/.test(d)],
+        ['#custAddress', c.address.trim().length >= 5]
+      ];
+      let firstBad = null;
+      for (const [sel, ok] of checks) {
+        const input = $(sel);
+        input.classList.toggle('border-red-400', !ok);
+        input.parentElement.querySelector('.err').classList.toggle('hidden', ok);
+        if (!ok && !firstBad) firstBad = input;
+      }
+      if (firstBad) { firstBad.focus(); firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      return !firstBad;
+    }
+
+    /* ============================================================
+     * 9. MENSAJE Y ENVÍO POR WHATSAPP
+     * ============================================================ */
+    function buildMessage(code) {
+      const s = currentStore();
+      const t = totals();
+      const c = state.customer;
+      const pay = PAYMENTS.find(p => p.id === c.payment) || PAYMENTS[0];
+      const now = new Date();
+      const fecha = now.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' });
+      const hora = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+      const cash = digits(c.cash);
+
+      const lines = [
+        `🛒 *NUEVO PEDIDO — ${s.name.toUpperCase()}*`,
+        `📅 ${fecha} · ${hora}`,
+        code ? `🧾 Pedido #${code}` : null,
+        isOpen(s) ? null : `⏰ _Pedido programado: despachar al abrir_`,
+        '',
+        `📝 *LISTA DE MERCADO* (${t.units} ${t.units === 1 ? 'unidad' : 'unidades'})`,
+        ...t.lines.map(({ product: p, qty }) => `✅ ${qty} x ${p.name}${p.unit ? ` (${p.unit})` : ''} — ${fmt(p.price * qty)}`),
+        '',
+        `💰 Subtotal: ${fmt(t.subtotal)}`,
+        `🛵 Domicilio: ${t.delivery === 0 ? 'Gratis' : fmt(t.delivery)}`,
+        `*💵 TOTAL A PAGAR: ${fmt(t.total)}*`,
+        '',
+        `👤 *DATOS DE ENTREGA*`,
+        `• Nombre: ${c.name.trim()}`,
+        `• Celular: ${c.phone.trim()}`,
+        `• Dirección: ${c.address.trim()}`,
+        c.notes.trim() ? `• Indicaciones: ${c.notes.trim()}` : null,
+        `• Pago: ${pay.icon} ${pay.label}${pay.id === 'efectivo' ? ' (contra entrega)' : ''}`,
+        (pay.id === 'efectivo' && cash) ? `• Paga con: ${fmt(+cash)} (cambio: ${fmt(Math.max(0, +cash - t.total))})` : null,
+        '',
+        `🙏 ¡Gracias! Quedo atento(a) a la confirmación.`
+      ];
+      return lines.filter(l => l !== null).join('\n');
+    }
+
+    // Abre WhatsApp con un enlace real (lo más compatible en celulares) y deja un enlace de respaldo visible.
+    function openWhatsApp(number, text, fallbackEl) {
+      const url = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+      if (fallbackEl) { fallbackEl.href = url; fallbackEl.classList.remove('hidden'); }
+      const a = document.createElement('a');
+      a.href = url; a.target = '_blank'; a.rel = 'noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+      return url;
+    }
+
+    function sendOrder() {
+      if (cartLines().length === 0) { toast('Tu lista está vacía'); return; }
+      if (!validate()) { toast('Revisa tus datos de entrega'); return; }
+      const s = currentStore();
+      const number = waNumber(s.whatsapp);
+      if (!isValidWa(number)) {
+        toast('Esta tienda no tiene un WhatsApp válido. El tendero debe configurarlo.', 4000);
+        return;
+      }
+      if (s.demo) {
+        const go = confirm(`⚠️ El WhatsApp de "${s.name}" es un NÚMERO DE EJEMPLO, así que el pedido no le llega a nadie.\n\nSi eres el tendero: toca "⚙️ Tendero" → "Mi tienda" y pon tu número real.\n\n¿Quieres configurarlo ahora?`);
+        if (go) { closeSheet(); openAdmin('store'); setTimeout(() => $('#sWa').focus(), 100); }
+        return;
+      }
+      const code = Date.now().toString(36).slice(-5).toUpperCase();
+      openWhatsApp(number, buildMessage(code), $('#waFallback'));
+      const n = $('#sentNotice');
+      n.textContent = `✅ Pedido #${code} listo en WhatsApp. Toca "Enviar" allá. ${s.name} te confirmará por ese mismo chat.`;
+      n.classList.remove('hidden');
+    }
+
+    /* ============================================================
+     * 10. PANEL DEL CARRITO
+     * ============================================================ */
+    const openSheet = () => {
+      $('#waFallback').classList.add('hidden');
+      $('#sentNotice').classList.add('hidden');
+      $('#cartSheet').classList.remove('closed');
+      $('#backdrop').classList.remove('opacity-0', 'pointer-events-none');
+      lockScroll();
+    };
+    const closeSheet = () => {
+      $('#cartSheet').classList.add('closed');
+      $('#backdrop').classList.add('opacity-0', 'pointer-events-none');
+      unlockScroll();
+    };
+
+    /* ============================================================
+     * 11. IMÁGENES (fotos de productos, comprimidas para que quepan)
+     * ============================================================ */
+    const loadImage = (src, cors) => new Promise((res, rej) => {
+      const img = new Image();
+      if (cors) img.crossOrigin = 'anonymous';
+      img.onload = () => res(img); img.onerror = rej; img.src = src;
+    });
+
+    // Recorta al centro en cuadrado y comprime a JPEG (~20-40 KB por foto).
+    function squareDataURL(img, size = 400, quality = 0.72) {
+      const w = img.naturalWidth, h = img.naturalHeight, side = Math.min(w, h);
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, size, size);
+      ctx.drawImage(img, (w - side) / 2, (h - side) / 2, side, side, 0, 0, size, size);
+      return c.toDataURL('image/jpeg', quality);
+    }
+
+    async function fileToPhoto(file) {
+      const url = URL.createObjectURL(file);
+      try { return squareDataURL(await loadImage(url)); } finally { URL.revokeObjectURL(url); }
+    }
+
+    async function fileToCanvas(file, max = 1600) {
+      const url = URL.createObjectURL(file);
+      try {
+        const img = await loadImage(url);
+        const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        return c;
+      } finally { URL.revokeObjectURL(url); }
+    }
+
+    /* ============================================================
+     * 12. ESCÁNER DE CÓDIGO DE BARRAS
+     *     1) Lector nativo del celular (Chrome Android): funciona sin internet.
+     *     2) Si no existe (iPhone), se descarga el lector ZXing la primera vez.
+     * ============================================================ */
+    const ZXING_URL = 'https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js';
+    const NATIVE_FORMATS = ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'itf', 'qr_code'];
+    const scan = { session: 0, stream: null, timer: null, busy: false, onCode: null, decoder: null };
+
+    const loadScript = src => new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = src; s.onload = res; s.onerror = () => { s.remove(); rej(new Error('load')); };
+      document.head.appendChild(s);
+    });
+
+    async function getDecoder() {
+      if (scan.decoder) return scan.decoder;
+      if ('BarcodeDetector' in window) {
+        try {
+          const supported = await window.BarcodeDetector.getSupportedFormats();
+          const formats = NATIVE_FORMATS.filter(f => supported.includes(f));
+          if (formats.length) {
+            const det = new window.BarcodeDetector({ formats });
+            return (scan.decoder = async canvas => { const r = await det.detect(canvas); return r.length ? r[0].rawValue : null; });
+          }
+        } catch { /* se usa ZXing */ }
+      }
+      if (!window.ZXing) await loadScript(ZXING_URL);
+      const Z = window.ZXing;
+      const hints = new Map();
+      hints.set(Z.DecodeHintType.POSSIBLE_FORMATS, [
+        Z.BarcodeFormat.EAN_13, Z.BarcodeFormat.EAN_8, Z.BarcodeFormat.UPC_A, Z.BarcodeFormat.UPC_E,
+        Z.BarcodeFormat.CODE_128, Z.BarcodeFormat.CODE_39, Z.BarcodeFormat.ITF, Z.BarcodeFormat.QR_CODE
+      ]);
+      hints.set(Z.DecodeHintType.TRY_HARDER, true);
+      const reader = new Z.MultiFormatReader();
+      reader.setHints(hints);
+      return (scan.decoder = async canvas => {
+        try {
+          const bmp = new Z.BinaryBitmap(new Z.HybridBinarizer(new Z.HTMLCanvasElementLuminanceSource(canvas)));
+          return reader.decodeWithState(bmp).getText();
+        } catch { return null; }
+      });
+    }
+
+    const scanStatus = msg => { $('#scanStatus').textContent = msg; };
+
+    function beep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.frequency.value = 1200; g.gain.value = 0.08;
+        o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.12);
+        o.onended = () => ctx.close();
+      } catch { /* sin sonido */ }
+    }
+
+    async function openScanner(onCode) {
+      const session = ++scan.session;
+      scan.onCode = onCode;
+      $('#scanManualInput').value = '';
+      showFlex($('#scanner'), true);
+      scanStatus('Abriendo la cámara...');
+
+      let decoder = null;
+      try { decoder = await getDecoder(); } catch { decoder = null; }
+      if (session !== scan.session) return;
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        scanStatus('📵 La cámara en vivo no está disponible al abrir el archivo así. Usa "Tomar foto del código" o escribe el número.');
+        return;
+      }
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+      } catch (e) {
+        if (session !== scan.session) return;
+        scanStatus(e && e.name === 'NotAllowedError'
+          ? '🔒 No diste permiso a la cámara. Actívalo en los permisos del navegador o usa "Tomar foto del código".'
+          : '📵 No se pudo abrir la cámara. Usa "Tomar foto del código" o escribe el número.');
+        return;
+      }
+      if (session !== scan.session) { stream.getTracks().forEach(t => t.stop()); return; }
+      scan.stream = stream;
+      const video = $('#scanVideo');
+      video.srcObject = stream;
+      try { await video.play(); } catch { /* autoplay */ }
+
+      if (!decoder) {
+        scanStatus('No se pudo cargar el lector de códigos (¿sin internet?). Escribe el número del código abajo.');
+        return;
+      }
+      scanStatus('Apunta al código de barras dentro del recuadro');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      scan.timer = setInterval(async () => {
+        if (scan.busy || !video.videoWidth || session !== scan.session) return;
+        scan.busy = true;
+        try {
+          const w = Math.min(960, video.videoWidth);
+          canvas.width = w; canvas.height = Math.round(video.videoHeight * w / video.videoWidth);
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const code = await decoder(canvas);
+          if (code && session === scan.session) gotCode(code);
+        } catch { /* sigue intentando */ } finally { scan.busy = false; }
+      }, 250);
+    }
+
+    function closeScanner() {
+      scan.session++;
+      clearInterval(scan.timer); scan.timer = null;
+      if (scan.stream) { scan.stream.getTracks().forEach(t => t.stop()); scan.stream = null; }
+      $('#scanVideo').srcObject = null;
+      showFlex($('#scanner'), false);
+    }
+
+    function gotCode(raw) {
+      const code = String(raw).trim();
+      if (!code) return;
+      if (navigator.vibrate) navigator.vibrate(120);
+      beep();
+      const cb = scan.onCode;
+      scan.onCode = null;
+      closeScanner();
+      if (cb) cb(code);
+    }
+
+    $('#scanClose').addEventListener('click', closeScanner);
+    $('#scanManual').addEventListener('submit', e => {
+      e.preventDefault();
+      const v = $('#scanManualInput').value.trim();
+      if (v.length < 3) { toast('Escribe el número completo del código'); return; }
+      gotCode(v);
+    });
+    $('#scanPhoto').addEventListener('change', async e => {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!file) return;
+      scanStatus('Leyendo la foto...');
+      try {
+        const decoder = await getDecoder();
+        const code = await decoder(await fileToCanvas(file));
+        if (code) gotCode(code);
+        else scanStatus('No encontré un código en la foto. Acércate más, con buena luz y sin reflejos.');
+      } catch {
+        scanStatus('No se pudo leer la foto (¿sin internet en iPhone?). Escribe el número del código abajo.');
+      }
+    });
+
+    /* ============================================================
+     * 13. BÚSQUEDA DEL PRODUCTO EN INTERNET (Open Food Facts, gratis)
+     * ============================================================ */
+    async function lookupProduct(code) {
+      if (!editing || !/^\d{8,14}$/.test(code)) return;
+      const token = editing.token;
+      const st = $('#lookupStatus');
+      st.textContent = '🔎 Buscando el producto en internet...';
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 8000);
+        const r = await fetch(`https://world.openfoodfacts.org/api/v2/product/${code}.json?fields=product_name,product_name_es,brands,quantity,image_front_url,image_front_small_url`, { signal: ctrl.signal });
+        clearTimeout(timer);
+        const j = await r.json();
+        if (!editing || editing.token !== token) return;
+        if (j.status !== 1 || !j.product) { st.textContent = 'No lo encontramos en internet. Escribe el nombre, el precio y tómale una foto.'; return; }
+        const pr = j.product;
+        const base = (pr.product_name_es || pr.product_name || '').trim();
+        const brand = (pr.brands || '').split(',')[0].trim();
+        const name = brand && !normalize(base).includes(normalize(brand)) ? `${base} ${brand}`.trim() : base;
+        if (name && !$('#edName').value.trim()) $('#edName').value = name;
+        if (pr.quantity && !$('#edUnit').value.trim()) $('#edUnit').value = pr.quantity;
+        const imgUrl = pr.image_front_url || pr.image_front_small_url;
+        if (imgUrl && !editing.photo) {
+          try {
+            const photo = squareDataURL(await loadImage(imgUrl, true));
+            if (editing && editing.token === token && !editing.photo) { editing.photo = photo; renderEditorPhoto(); }
+          } catch { /* foto no disponible */ }
+        }
+        st.textContent = name ? '✅ Lo encontramos. Revisa el nombre y ponle tu precio.' : 'Encontrado sin nombre. Escríbelo tú.';
+      } catch {
+        if (editing && editing.token === token) st.textContent = 'Sin conexión para buscarlo. Escribe los datos a mano.';
+      }
+    }
+
+    /* ============================================================
+     * 14. MODO TENDERO
+     * ============================================================ */
+    const ADMIN_TABS = ['sell', 'orders', 'products', 'customers', 'suppliers', 'reports', 'store', 'share'];
+    let adminTab = 'sell';
+    let invFilter = 'all';
+    let adminQuery = '';
+
+    function openAdmin(tab) {
+      if (tab) adminTab = tab;
+      closeSheet();
+      showFlex($('#adminPanel'), true);
+      lockScroll();
+      renderAdmin();
+    }
+    function closeAdmin() {
+      showFlex($('#adminPanel'), false);
+      unlockScroll();
+      pruneCart();
+      renderAll();
+    }
+
+    function renderAdmin() {
+      const s = currentStore();
+      $('#adminStoreName').textContent = `${s.name}${s.zone ? ' - ' + s.zone : ''}`;
+      document.querySelectorAll('.atab').forEach(b => {
+        const active = b.dataset.atab === adminTab;
+        b.className = 'atab shrink-0 min-w-[4.6rem] px-2 py-2 text-lg leading-tight font-semibold text-center border-b-4 transition ' +
+          'lg:min-w-0 lg:flex lg:items-center lg:gap-3 lg:text-left lg:text-base lg:border-b-0 lg:rounded-xl lg:px-3 lg:py-2.5 ' +
+          (active ? 'border-brand-500 text-white lg:bg-brand-600' : 'border-transparent text-slate-400 hover:text-white lg:hover:bg-white/10');
+        b.querySelector('span').className = 'block text-[11px] lg:inline lg:text-sm';
+      });
+      ADMIN_TABS.forEach(t => $(`#atab-${t}`).classList.toggle('hidden', t !== adminTab));
+      const wide = adminTab === 'sell' || adminTab === 'reports' || adminTab === 'suppliers';
+      $('#adminInner').classList.toggle('max-w-3xl', !wide);
+      $('#adminInner').classList.toggle('max-w-6xl', wide);
+      if (adminTab === 'sell') { renderSell(); if (window.matchMedia('(min-width: 1024px)').matches) setTimeout(() => $('#sellInput').focus(), 30); }
+      if (adminTab === 'customers') renderCustomers();
+      if (adminTab === 'suppliers') renderSuppliers();
+      if (adminTab === 'reports') renderReports();
+      if (adminTab === 'orders') renderOrders();
+      if (adminTab === 'products') renderAdminList();
+      if (adminTab === 'store') fillStoreForm();
+      if (adminTab === 'share') renderInstall();
+      if (adminTab === 'share') $('#exportSize').textContent = `Tamaño del archivo: ${Math.ceil(buildExportHTML().length / 1024)} KB · ${data.products.length} productos · ${data.products.filter(p => p.photo).length} con foto`;
+    }
+
+    function renderAdminList() {
+      const q = normalize(adminQuery.trim());
+      document.querySelectorAll('.inv-btn').forEach(b => {
+        b.className = 'inv-btn shrink-0 rounded-full px-3 py-1.5 border ' + (b.dataset.inv === invFilter ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-300 text-slate-600');
+      });
+      const list = data.products.filter(p => (!q || normalize(`${p.name} ${p.unit} ${p.code || ''}`).includes(q)) && (
+        invFilter === 'all' || (invFilter === 'low' && isLow(p)) || (invFilter === 'nocode' && !p.code) ||
+        (invFilter === 'nophoto' && !p.photo) || (invFilter === 'noprice' && !(p.cost > 0))));
+      const avail = data.products.filter(isAvailable).length;
+      $('#adminCount').textContent = `${data.products.length} productos · ${avail} disponibles · ${data.products.length - avail} agotados`;
+      $('#adminList').innerHTML = list.length ? list.map(p => {
+        const on = isAvailable(p);
+        return `
+        <li class="flex items-center gap-3 rounded-2xl bg-white p-2.5 shadow-sm">
+          <button type="button" data-edit="${p.id}" class="relative h-16 w-16 shrink-0 rounded-xl bg-slate-100 overflow-hidden flex items-center justify-center" aria-label="Editar ${esc(p.name)}">
+            ${productMedia(p, 'text-3xl')}
+            ${p.photo ? '' : '<span class="absolute bottom-0 inset-x-0 bg-slate-900/70 text-white text-[9px] font-bold text-center py-0.5">+ FOTO</span>'}
+          </button>
+          <button type="button" data-edit="${p.id}" class="flex-1 min-w-0 text-left">
+            <p class="text-sm font-semibold truncate">${esc(p.name)}</p>
+            <p class="text-xs text-slate-500 truncate">${esc(p.unit)}${p.unit ? ' · ' : ''}<b class="text-slate-700">${fmt(p.price)}</b>${p.cost > 0 ? ` <span class="text-slate-400">· costo ${fmt(p.cost)}</span>` : ''}</p>
+            ${typeof p.qty === 'number' ? `<span class="inline-block mt-0.5 rounded-md px-1.5 py-0.5 text-[11px] font-bold ${isLow(p) ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700'}">${p.qty} uds</span>` : ''}
+            ${p.code ? `<p class="text-[11px] text-slate-400 truncate">▌▌▌ ${esc(p.code)}</p>` : ''}
+          </button>
+          <label class="shrink-0 flex flex-col items-center gap-1 cursor-pointer px-1">
+            <input type="checkbox" data-avail="${p.id}" class="sr-only peer" ${on ? 'checked' : ''} aria-label="Disponible: ${esc(p.name)}" />
+            <span class="relative h-6 w-11 rounded-full bg-slate-300 peer-checked:bg-brand-600 transition after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:after:translate-x-5"></span>
+            <span class="text-[10px] font-bold ${on ? 'text-brand-700' : 'text-red-600'}">${on ? 'HAY' : 'AGOTADO'}</span>
+          </label>
+        </li>`;
+      }).join('') : '<li class="py-10 text-center text-sm text-slate-500">No hay productos. Toca <b>📷 Escanear código</b> o <b>➕ Agregar a mano</b>.</li>';
+    }
+
+    function setAvailability(id, on) {
+      const s = currentStore();
+      const p = findProduct(id);
+      if (!p) return;
+      if (on) { p.stock = true; s.soldOut = s.soldOut.filter(x => x !== id); }
+      else if (!s.soldOut.includes(id)) s.soldOut.push(id);
+    }
+
+    // --- Editor de producto ---
+    let editing = null; // { id, photo, token }
+
+    function openEditor(product, preset = {}) {
+      editing = { id: product ? product.id : null, photo: (product && product.photo) || '', token: Math.random(), afterSave: preset.afterSave || null };
+      $('#editorTitle').textContent = product ? 'Editar producto' : 'Nuevo producto';
+      $('#edCode').value = (product && product.code) || preset.code || '';
+      $('#edName').value = product ? product.name : '';
+      $('#edUnit').value = product ? product.unit : '';
+      $('#edPrice').value = product ? String(product.price) : '';
+      $('#edCategory').value = product ? product.category : (state.category !== 'all' ? state.category : 'abarrotes');
+      $('#edAvailable').checked = product ? (product.stock !== false && !currentStore().soldOut.includes(product.id)) : true;
+      $('#edCost').value = product && product.cost ? String(product.cost) : '';
+      $('#edMargin').value = product && product.cost > 0 && product.price > 0 ? String(Math.round((product.price / product.cost - 1) * 100)) : (product ? '' : String(state.margin));
+      $('#edQty').value = product && typeof product.qty === 'number' ? String(product.qty) : '';
+      $('#edMinQty').value = product && product.minQty != null ? String(product.minQty) : '';
+      const hist = product && product.priceHistory && product.priceHistory.length ? product.priceHistory : null;
+      $('#priceHistory').classList.toggle('hidden', !hist);
+      if (hist) $('#priceHistory').textContent = '🕒 Precios anteriores: ' + hist.slice(-4).reverse().map(h => `${fmt(h.price)} (${new Date(h.at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })})`).join(' · ');
+      $('#refPrices').classList.add('hidden');
+      const codeNow = (product && product.code) || preset.code || '';
+      if (codeNow) lookupPrices(codeNow);
+      $('#editorDelete').classList.toggle('hidden', !product);
+      $('#lookupStatus').textContent = '';
+      document.querySelectorAll('#editorForm .err').forEach(e => e.classList.add('hidden'));
+      document.querySelectorAll('#editorForm input').forEach(i => i.classList.remove('border-red-400'));
+      renderEditorPhoto();
+      showFlex($('#editor'), true);
+    }
+    function closeEditor() { editing = null; showFlex($('#editor'), false); focusSell(); }
+
+    function renderEditorPhoto() {
+      if (!editing) return;
+      const prev = $('#photoPreview');
+      prev.innerHTML = editing.photo
+        ? `<img src="${esc(editing.photo)}" alt="Foto del producto" class="w-full h-full object-cover">`
+        : `<span class="flex flex-col items-center text-slate-400"><span class="text-5xl">${CAT_ICON[$('#edCategory').value] || '🛒'}</span><span class="text-[11px] font-semibold mt-1">Sin foto</span></span>`;
+      prev.classList.toggle('border-dashed', !editing.photo);
+      prev.classList.toggle('border-2', !editing.photo);
+      $('#photoRemove').classList.toggle('hidden', !editing.photo);
+    }
+
+    async function onPhotoPicked(e) {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!file || !editing) return;
+      const token = editing.token;
+      try {
+        const photo = await fileToPhoto(file);
+        if (editing && editing.token === token) { editing.photo = photo; renderEditorPhoto(); }
+      } catch { toast('No se pudo leer esa imagen. Prueba con otra.'); }
+    }
+
+    function saveProduct(e) {
+      e.preventDefault();
+      if (!editing) return;
+      const name = $('#edName').value.trim();
+      const price = parseInt(digits($('#edPrice').value), 10) || 0;
+      const code = $('#edCode').value.trim();
+      const okName = name.length >= 2, okPrice = price > 0;
+      [['#edName', okName], ['#edPrice', okPrice]].forEach(([sel, ok]) => {
+        const el = $(sel); el.classList.toggle('border-red-400', !ok);
+        el.parentElement.querySelector('.err').classList.toggle('hidden', ok);
+      });
+      if (!okName || !okPrice) { toast('Faltan datos del producto'); return; }
+      const dup = code && data.products.find(p => p.code === code && p.id !== editing.id);
+      if (dup) { toast(`Ese código ya es de "${dup.name}"`, 3500); return; }
+
+      const category = $('#edCategory').value;
+      const cost = toInt($('#edCost').value);
+      const qtyRaw = $('#edQty').value.trim();
+      const minRaw = $('#edMinQty').value.trim();
+      const fields = { name, unit: $('#edUnit').value.trim(), price, category, code, photo: editing.photo || '', cost: cost || 0,
+        qty: qtyRaw === '' ? undefined : (parseInt(qtyRaw.replace(/[^\d-]/g, ''), 10) || 0), minQty: minRaw === '' ? undefined : toInt(minRaw) };
+      const m = toInt($('#edMargin').value); if (m > 0) { state.margin = m; persist(); }
+      let p = editing.id && findProduct(editing.id);
+      if (p && p.price !== price) { p.priceHistory = (p.priceHistory || []).concat({ price: p.price, at: p.priceUpdatedAt || Date.now() }).slice(-8); fields.priceUpdatedAt = Date.now(); }
+      if (p) {
+        if (p.category !== category && p.icon === CAT_ICON[p.category]) fields.icon = CAT_ICON[category];
+        Object.assign(p, fields);
+      } else {
+        p = Object.assign({ id: newId(), stock: true, icon: CAT_ICON[category] }, fields);
+        data.products.unshift(p);
+      }
+      if (fields.qty === undefined) delete p.qty;
+      if (fields.minQty === undefined) delete p.minQty;
+      if (!p.priceUpdatedAt) p.priceUpdatedAt = Date.now();
+      setAvailability(p.id, $('#edAvailable').checked);
+      saveData();
+      const after = editing.afterSave;
+      closeEditor();
+      renderAdmin();
+      toast('✅ Producto guardado');
+      if (after) after(p.id);
+    }
+
+    function deleteProduct() {
+      if (!editing || !editing.id) return;
+      const p = findProduct(editing.id);
+      if (!p || !confirm(`¿Eliminar "${p.name}" del catálogo?`)) return;
+      data.products = data.products.filter(x => x.id !== p.id);
+      data.stores.forEach(s => { s.soldOut = s.soldOut.filter(x => x !== p.id); });
+      delete state.cart[p.id]; persist();
+      saveData(); closeEditor(); renderAdminList();
+      toast('Producto eliminado');
+    }
+
+    // Escanear desde "Productos": si el código existe se edita, si no se crea.
+    function onScanForCatalog(code) {
+      const existing = findByCode(code);
+      if (existing) { toast(`Ya está en tu catálogo: ${existing.name}`); openEditor(existing); return; }
+      openEditor(null, { code });
+      lookupProduct(code);
+    }
+
+    // --- Datos de la tienda ---
+    function fillStoreForm() {
+      const s = currentStore();
+      $('#aStoreSelect').value = s.id;
+      $('#demoWarning').classList.toggle('hidden', !s.demo);
+      const n = digits(s.whatsapp);
+      $('#sWa').value = n.length === 12 && n.startsWith('57') ? n.slice(2) : n;
+      $('#sName').value = s.name;
+      $('#sZone').value = s.zone || '';
+      $('#sOpen').value = String(s.openHour);
+      $('#sClose').value = String(s.closeHour);
+      $('#sFee').value = String(s.deliveryFee || 0);
+      $('#sFree').value = String(s.freeDeliveryFrom || 0);
+      $('#sWa').classList.remove('border-red-400');
+      $('#sWa').parentElement.querySelector('.err').classList.add('hidden');
+    }
+
+    function saveStore(e) {
+      e.preventDefault();
+      const s = currentStore();
+      const number = waNumber($('#sWa').value);
+      const okWa = isValidWa(number);
+      $('#sWa').classList.toggle('border-red-400', !okWa);
+      $('#sWa').parentElement.querySelector('.err').classList.toggle('hidden', okWa);
+      if (!okWa) { $('#sWa').focus(); toast('Revisa el número de WhatsApp'); return; }
+      const name = $('#sName').value.trim();
+      if (!name) { $('#sName').focus(); toast('Escribe el nombre de la tienda'); return; }
+      Object.assign(s, {
+        whatsapp: number, demo: false, name, zone: $('#sZone').value.trim(),
+        openHour: +$('#sOpen').value, closeHour: +$('#sClose').value,
+        deliveryFee: parseInt(digits($('#sFee').value), 10) || 0,
+        freeDeliveryFrom: parseInt(digits($('#sFree').value), 10) || 0
+      });
+      saveData();
+      renderStoreSelect(); renderStoreStatus(); renderAdmin();
+      toast(`✅ Guardado. Los pedidos llegarán a ${prettyWa(number)}`, 3500);
+    }
+
+    // --- Compartir el catálogo ---
+    function buildExportHTML() {
+      const out = Object.assign(clone(data), { adminHidden: true });
+      const json = JSON.stringify(out).replace(/</g, '\\u003c');
+      return PRISTINE.replace(/(<script id="catalogo" type="application\/json">)[\s\S]*?(<\/script>)/, (m, a, b) => a + json + b);
+    }
+    function exportFile() {
+      const slug = normalize(currentStore().name).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'tienda';
+      return new File([buildExportHTML()], `${slug}.html`, { type: 'text/html' });
+    }
+    function downloadFile(file) {
+      const url = URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = url; a.download = file.name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      toast(`⬇️ Descargado: ${file.name}`);
+    }
+
+    /* ============================================================
+     * 14b. PEDIDOS: confirmar y avisar al cliente por WhatsApp
+     *      El tendero copia el pedido que le llegó y lo pega aquí.
+     * ============================================================ */
+    const LS_ORDERS = 'tiendaBarrio.orders.v1';
+    let orders = readJSON(LS_ORDERS);
+    if (!Array.isArray(orders)) orders = [];
+    let currentOrderId = null, replyKind = null;
+    const saveOrders = () => { if (!writeJSON(LS_ORDERS, orders.slice(0, 200))) toast('⚠️ La memoria del navegador está llena.'); };
+    const ORDER_STATUS = {
+      nuevo:      { label: 'Nuevo',      cls: 'bg-blue-100 text-blue-700' },
+      confirmado: { label: 'Confirmado', cls: 'bg-amber-100 text-amber-800' },
+      camino:     { label: 'En camino',  cls: 'bg-purple-100 text-purple-700' },
+      entregado:  { label: 'Entregado',  cls: 'bg-brand-100 text-brand-700' }
+    };
+    const REPLY_STATUS = { confirm: 'confirmado', onway: 'camino', delivered: 'entregado' };
+    const toInt = v => parseInt(digits(v), 10) || 0;
+    // Quita negritas de WhatsApp y caracteres dañados (�) que a veces deja el copiar/pegar.
+    const cleanTxt = v => String(v || '').replace(/[*_~]/g, '').replace(/\uFFFD/g, '').trim();
+    const cap = v => v ? v.charAt(0).toUpperCase() + v.slice(1).toLowerCase() : '';
+
+    function parseOrder(text) {
+      const t = String(text || '').replace(/\r/g, '');
+      const get = re => { const m = t.match(re); return m ? cleanTxt(m[1]) : ''; };
+      const phone = digits(get(/Celular:\s*([+\d\s().-]{7,})/i));
+      if (phone.length < 7) return null;
+      const items = [];
+      for (const line of t.split('\n')) {
+        const m = line.match(/(\d+)\s*x\s+(.+?)\s+[—–-]\s+\$\s*([\d.,]+)\s*$/i);
+        if (m) items.push({ qty: +m[1], name: cleanTxt(m[2]), total: toInt(m[3]) });
+      }
+      return {
+        code: get(/Pedido\s*#\s*([A-Za-z0-9]+)/i).toUpperCase(),
+        name: get(/Nombre:\s*(.+)/i),
+        phone,
+        address: get(/Direcci[oó]n:\s*(.+)/i),
+        notes: get(/Indicaciones:\s*(.+)/i),
+        cash: toInt(get(/Paga con:\s*([$\d., \u00a0]+)/i)),
+        payment: get(/Pago:\s*(.+)/i).replace(/^[^A-Za-zÁÉÍÓÚáéíóúÑñ]+/, ''),
+        total: toInt(get(/TOTAL A PAGAR:\s*([$\d., \u00a0]+)/i)),
+        items
+      };
+    }
+
+    function replyTemplate(kind, o) {
+      const s = currentStore();
+      const nombre = cap((o.name || '').split(/\s+/)[0]);
+      const hola = nombre ? `Hola ${nombre}` : 'Hola';
+      const num = o.code ? ` #${o.code}` : '';
+      const dir = o.address || 'tu dirección';
+      const pago = o.payment ? ` · ${o.payment}` : '';
+      const total = o.total ? `💵 Total a pagar: *${fmt(o.total)}*${pago}` : '';
+      const lista = o.items.map(i => `• ${i.qty} x ${i.name}`).join('\n');
+      switch (kind) {
+        case 'confirm':
+          return [`✅ ${hola}, tu pedido${num} en *${s.name}* está *CONFIRMADO*.`, lista && `\n${lista}\n`, total,
+            `Te avisamos cuando salga para ${dir}. ¡Gracias por tu compra!`].filter(Boolean).join('\n');
+        case 'onway':
+          return [`🛵 ${nombre || 'Hola'}, tu pedido${num} *ya va en camino* a ${dir}.`, `⏱️ Llega en aprox. ${$('#etaSel').value} minutos.`, total,
+            o.cash > o.total ? `💰 Llevamos el cambio para ${fmt(o.cash)} (te devolvemos ${fmt(o.cash - o.total)}).` : '']
+            .filter(Boolean).join('\n');
+        case 'delivered':
+          return `🙏 ¡Gracias por tu compra${nombre ? ', ' + nombre : ''}! Esperamos que todo haya llegado bien. Te esperamos pronto en *${s.name}*.`;
+        case 'problem':
+          return `⚠️ ${hola}, sobre tu pedido${num}: no nos queda __________.\n¿Te lo cambiamos por otro producto o lo quitamos del pedido?`;
+      }
+      return '';
+    }
+
+    const orderTime = ts => {
+      const d = new Date(ts), today = new Date().toDateString() === d.toDateString();
+      return (today ? 'Hoy ' : d.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' }) + ' ') +
+        d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+    };
+    const statusChip = st => { const x = ORDER_STATUS[st] || ORDER_STATUS.nuevo; return `<span class="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${x.cls}">${x.label}</span>`; };
+
+    function renderOrders() {
+      const o = orders.find(x => x.id === currentOrderId);
+      $('#orderDetail').classList.toggle('hidden', !o);
+      if (o) {
+        $('#orderInfo').innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <p class="font-bold text-base truncate">👤 ${esc(o.name || 'Cliente')}</p>
+              <p class="text-xs text-slate-500">📞 ${esc(prettyWa(waNumber(o.phone)))}${o.code ? ' · Pedido #' + esc(o.code) : ''}</p>
+            </div>${statusChip(o.status)}
+          </div>
+          ${o.address ? `<p class="mt-2 text-sm">📍 ${esc(o.address)}</p>` : ''}
+          ${o.notes ? `<p class="text-xs text-slate-500">📝 ${esc(o.notes)}</p>` : ''}
+          ${o.items.length ? `<ul class="mt-2 text-sm divide-y divide-slate-100 rounded-xl bg-slate-50 px-3">${o.items.map(i =>
+            `<li class="flex justify-between gap-2 py-1.5"><span>${i.qty} x ${esc(i.name)}</span><span class="font-semibold tabular-nums">${fmt(i.total)}</span></li>`).join('')}</ul>` : ''}
+          <p class="mt-2 text-sm"><b>Total: ${fmt(o.total)}</b>${o.payment ? ' · ' + esc(o.payment) : ''}</p>`;
+        document.querySelectorAll('.reply-btn').forEach(b => {
+          const active = b.dataset.reply === replyKind;
+          b.className = 'reply-btn rounded-xl border-2 px-2 py-3 text-sm font-bold transition ' +
+            (active ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-slate-200 bg-white text-slate-700');
+        });
+        $('#replyBox').classList.toggle('hidden', !replyKind);
+        $('#etaWrap').classList.toggle('hidden', replyKind !== 'onway');
+        $('#etaWrap').classList.toggle('flex', replyKind === 'onway');
+      }
+      $('#orderHistory').innerHTML = orders.length ? orders.map(x => `
+        <li><button type="button" data-order="${x.id}" class="w-full text-left flex items-center gap-3 rounded-2xl bg-white p-3 shadow-sm ${x.id === currentOrderId ? 'ring-2 ring-brand-500' : ''}">
+          <span class="text-2xl" aria-hidden="true">🧾</span>
+          <span class="flex-1 min-w-0">
+            <span class="block text-sm font-semibold truncate">${esc(x.name || 'Cliente')}${x.code ? ' · #' + esc(x.code) : ''}</span>
+            <span class="block text-xs text-slate-500 truncate">${orderTime(x.receivedAt)} · ${x.items.length} producto(s) · ${fmt(x.total)}</span>
+          </span>${statusChip(x.status)}
+        </button></li>`).join('')
+        : '<li class="py-6 text-center text-sm text-slate-500">Aquí aparecerán los pedidos que pegues.</li>';
+      $('#readOrderBtn').classList.toggle('hidden', !$('#orderPaste').value.trim());
+    }
+
+    function selectOrder(id) {
+      currentOrderId = id; replyKind = null;
+      renderOrders();
+      $('#orderDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function addOrderFromText(text) {
+      const o = parseOrder(text);
+      if (!o) { toast('No pude leer el pedido. Copia el mensaje completo desde WhatsApp.', 3500); return false; }
+      const ex = o.code
+        ? orders.find(x => x.code === o.code)
+        : orders.find(x => x.phone === o.phone && x.total === o.total && Date.now() - x.receivedAt < 864e5);
+      $('#orderPaste').value = '';
+      if (ex) { toast('Este pedido ya estaba en tu lista'); selectOrder(ex.id); return true; }
+      Object.assign(o, { id: 'o' + Date.now().toString(36), status: 'nuevo', receivedAt: Date.now() });
+      orders.unshift(o); saveOrders();
+      selectOrder(o.id);
+      toast('✅ Pedido leído. Elige qué responderle al cliente.');
+      return true;
+    }
+
+    $('#pasteOrderBtn').addEventListener('click', async () => {
+      try {
+        const txt = await navigator.clipboard.readText();
+        if (txt && /Celular:/i.test(txt)) { addOrderFromText(txt); return; }
+        toast('No encontré un pedido copiado. Cópialo en WhatsApp o pégalo en el cuadro.', 3500);
+      } catch {
+        toast('Mantén presionado el cuadro blanco y toca "Pegar"', 3500);
+      }
+      $('#orderPaste').focus();
+    });
+    $('#orderPaste').addEventListener('input', e => {
+      const v = e.target.value;
+      if (/Celular:/i.test(v) && /Nombre:/i.test(v)) addOrderFromText(v); else renderOrders();
+    });
+    $('#readOrderBtn').addEventListener('click', () => addOrderFromText($('#orderPaste').value));
+    $('#orderHistory').addEventListener('click', e => { const b = e.target.closest('[data-order]'); if (b) selectOrder(b.dataset.order); });
+    $('#replyBtns').addEventListener('click', e => {
+      const b = e.target.closest('[data-reply]'); if (!b) return;
+      const o = orders.find(x => x.id === currentOrderId); if (!o) return;
+      replyKind = b.dataset.reply;
+      $('#replyText').value = replyTemplate(replyKind, o);
+      renderOrders();
+      $('#replyText').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    $('#etaSel').addEventListener('change', () => {
+      const o = orders.find(x => x.id === currentOrderId);
+      if (o && replyKind === 'onway') $('#replyText').value = replyTemplate('onway', o);
+    });
+    $('#replySend').addEventListener('click', () => {
+      const o = orders.find(x => x.id === currentOrderId); if (!o) return;
+      const number = waNumber(o.phone);
+      if (!isValidWa(number)) { toast('El celular del cliente no es válido'); return; }
+      const text = $('#replyText').value.trim();
+      if (!text) { toast('Escribe el mensaje'); return; }
+      openWhatsApp(number, text);
+      if (REPLY_STATUS[replyKind]) { o.status = REPLY_STATUS[replyKind]; saveOrders(); }
+      renderOrders();
+      toast(`📲 Abriendo el WhatsApp de ${o.name || 'el cliente'}`);
+    });
+    $('#orderDelete').addEventListener('click', () => {
+      if (!confirm('¿Quitar este pedido de la lista?')) return;
+      orders = orders.filter(x => x.id !== currentOrderId); saveOrders();
+      currentOrderId = null; replyKind = null; renderOrders();
+    });
+
+    /* ============================================================
+     * 14c. NEGOCIO: caja, inventario, clientes (fiados), proveedores e informes.
+     *      Se guarda solo en este navegador: NO va en el archivo de los clientes.
+     * ============================================================ */
+    const LS_BIZ = 'tiendaBarrio.negocio.v1';
+    let biz = readJSON(LS_BIZ);
+    if (!biz || typeof biz !== 'object') biz = {};
+    biz.sales = Array.isArray(biz.sales) ? biz.sales : [];
+    biz.customers = Array.isArray(biz.customers) ? biz.customers : [];
+    biz.suppliers = Array.isArray(biz.suppliers) ? biz.suppliers : [];
+    biz.ticket = Array.isArray(biz.ticket) ? biz.ticket : [];
+    const saveBiz = () => {
+      if (biz.sales.length > 5000) biz.sales.length = 5000;
+      if (!writeJSON(LS_BIZ, biz)) toast('⚠️ La memoria del navegador está llena. Descarga una copia de seguridad.', 4000);
+    };
+    const METHOD = { efectivo: '💵 Efectivo', nequi: '💜 Nequi', daviplata: '❤️ Daviplata', fiado: '📒 Fiado' };
+    const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const uid = pfx => pfx + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    const isModalOpen = () => ['#editor', '#scanner', '#chargeModal', '#restock', '#card'].some(sel => !$(sel).classList.contains('hidden'));
+    const isDesktop = () => window.matchMedia('(min-width: 1024px)').matches;
+    function isLow(p) { return typeof p.qty === 'number' && p.qty <= (p.minQty != null ? p.minQty : 3); }
+    function balance(c) { return (c.movements || []).reduce((a, m) => a + (m.type === 'fiado' ? m.amount : -m.amount), 0); }
+    // Busca por código; tolera el 0 inicial que algunos lectores agregan o quitan (UPC vs EAN).
+    function findByCode(raw) {
+      const c = String(raw || '').replace(/\s/g, '');
+      if (!c) return null;
+      return data.products.find(p => p.code && (p.code === c || p.code === '0' + c || '0' + p.code === c)) || null;
+    }
+    const thumb = (p, cls = 'h-10 w-10') => `<span class="${cls} shrink-0 rounded-lg bg-slate-100 overflow-hidden flex items-center justify-center">${productMedia(p, 'text-2xl')}</span>`;
+    function focusSell() {
+      if (adminTab === 'sell' && !$('#adminPanel').classList.contains('hidden') && !isModalOpen() && isDesktop()) $('#sellInput').focus();
+    }
+
+    // --- Precio: el tuyo, su historial y precios reportados en internet (Open Prices) ---
+    async function lookupPrices(code) {
+      const box = $('#refPrices');
+      const token = editing && editing.token;
+      const p = editing && editing.id ? findProduct(editing.id) : null;
+      const own = p ? `<p>🏷️ <b>Tu precio actual: ${fmt(p.price)}</b>${p.priceUpdatedAt ? ` · lo pusiste el ${new Date(p.priceUpdatedAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}` : ''}</p>` : '';
+      box.classList.remove('hidden');
+      if (!/^\d{8,14}$/.test(code)) { box.innerHTML = own; box.classList.toggle('hidden', !own); return; }
+      box.innerHTML = own + '<p>🔎 Buscando precios reportados en Colombia…</p>';
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 8000);
+        const r = await fetch(`https://prices.openfoodfacts.org/api/v1/prices?product_code=${code}&currency=COP&order_by=-date&size=10`, { signal: ctrl.signal });
+        clearTimeout(timer);
+        const j = await r.json();
+        if (!editing || editing.token !== token) return;
+        const items = (j.items || []).filter(x => x.currency === 'COP' && x.price > 0);
+        if (!items.length) {
+          box.innerHTML = own + '<p>No hay precios reportados en internet para este código. Pon tu <b>costo</b> y el <b>% de ganancia</b> y la app te calcula el precio de venta.</p>';
+          return;
+        }
+        const avg = Math.round(items.reduce((a, x) => a + x.price, 0) / items.length / 50) * 50;
+        box.innerHTML = own + '<p class="font-semibold">🌐 Precios que otras personas reportaron (Open Prices):</p>' +
+          items.slice(0, 4).map(x => `<p>• ${fmt(x.price)} · ${esc(x.date || '')}${x.location && x.location.osm_display_name ? ' · ' + esc(String(x.location.osm_display_name).split(',').slice(0, 2).join(',')) : ''}</p>`).join('') +
+          `<button type="button" id="useAvgPrice" data-price="${avg}" class="mt-1 rounded-lg bg-blue-600 text-white font-bold px-3 py-1.5">Usar promedio ${fmt(avg)}</button>`;
+      } catch {
+        if (editing && editing.token === token) box.innerHTML = own + '<p>Sin conexión para buscar precios de referencia.</p>';
+      }
+    }
+    const roundPrice = v => Math.ceil(v / 50) * 50;
+    function priceFromMargin() {
+      const c = toInt($('#edCost').value), m = toInt($('#edMargin').value);
+      if (c > 0 && $('#edMargin').value.trim() !== '') $('#edPrice').value = String(roundPrice(c * (1 + m / 100)));
+    }
+    function marginFromPrice() {
+      const c = toInt($('#edCost').value), pr = toInt($('#edPrice').value);
+      if (c > 0 && pr > 0) $('#edMargin').value = String(Math.round((pr / c - 1) * 100));
+    }
+    $('#edCost').addEventListener('input', priceFromMargin);
+    $('#edMargin').addEventListener('input', priceFromMargin);
+    $('#edPrice').addEventListener('input', marginFromPrice);
+    $('#refPrices').addEventListener('click', e => {
+      const b = e.target.closest('#useAvgPrice');
+      if (b) { $('#edPrice').value = b.dataset.price; marginFromPrice(); }
+    });
+    $('#edCode').addEventListener('change', e => lookupPrices(e.target.value.trim()));
+
+    // --- Caja: vender escaneando ---
+    const ticketTotal = () => biz.ticket.reduce((a, t) => a + t.price * t.qty, 0);
+
+    function addToTicket(id, n = 1) {
+      const p = findProduct(id);
+      if (!p) return;
+      let line = biz.ticket.find(t => t.id === id);
+      if (line) line.qty += n; else { line = { id, qty: n, price: p.price }; biz.ticket.push(line); }
+      saveBiz();
+      renderSell(id);
+      if (typeof p.qty === 'number' && p.qty - line.qty < 0) toast(`⚠️ Según el inventario ya no quedan "${p.name}". Se vende igual.`, 3000);
+    }
+
+    function handleSellCode(raw) {
+      const v = String(raw || '').trim();
+      if (!v) return;
+      const p = findByCode(v);
+      if (p) { addToTicket(p.id); beep(); return; }
+      if (/^\d{6,14}$/.test(v)) {
+        beep();
+        toast('Código nuevo: completa los datos y queda en la venta', 3000);
+        openEditor(null, { code: v, afterSave: id => { if (adminTab === 'sell') addToTicket(id); } });
+        lookupProduct(v);
+        return;
+      }
+      const q = normalize(v);
+      const matches = data.products.filter(x => normalize(x.name).includes(q));
+      if (matches.length === 1) addToTicket(matches[0].id);
+      else { toast(matches.length ? 'Hay varios: toca el que es' : 'No encontré ese producto'); $('#sellInput').value = v; renderSell(); }
+    }
+
+    function renderSell(flashId) {
+      const q = normalize($('#sellInput').value.trim());
+      let list, title;
+      if (q) {
+        list = data.products.filter(p => normalize(`${p.name} ${p.code || ''}`).includes(q)).slice(0, 24);
+        title = list.length ? 'Toca para agregar' : 'Sin resultados';
+      } else {
+        const count = {};
+        biz.sales.slice(0, 300).forEach(s => s.items.forEach(i => { count[i.id] = (count[i.id] || 0) + i.qty; }));
+        list = data.products.slice().sort((a, b) => (count[b.id] || 0) - (count[a.id] || 0)).slice(0, 12);
+        title = Object.keys(count).length ? 'Más vendidos' : 'Productos';
+      }
+      $('#sellResultsTitle').textContent = title;
+      $('#sellResults').innerHTML = list.map(p => `
+        <button type="button" data-sell="${p.id}" class="flex items-center gap-2 rounded-xl bg-white p-2 shadow-sm text-left active:scale-[.98] transition">
+          ${thumb(p)}
+          <span class="min-w-0"><span class="block text-xs font-semibold leading-tight line-clamp-2">${esc(p.name)}</span>
+          <span class="block text-xs font-bold text-brand-700">${fmt(p.price)}${typeof p.qty === 'number' ? ` <span class="font-normal ${isLow(p) ? 'text-red-600' : 'text-slate-400'}">· ${p.qty} uds</span>` : ''}</span></span>
+        </button>`).join('');
+
+      const total = ticketTotal(), units = biz.ticket.reduce((a, t) => a + t.qty, 0);
+      $('#ticketItems').innerHTML = biz.ticket.length ? biz.ticket.map(t => {
+        const p = findProduct(t.id) || { name: '(producto borrado)', icon: '❔' };
+        return `<li class="flex items-center gap-2 py-2.5 ${t.id === flashId ? 'bg-brand-50' : ''}">
+          ${thumb(p, 'h-9 w-9')}
+          <div class="flex-1 min-w-0"><p class="text-sm font-semibold truncate">${esc(p.name)}</p><p class="text-xs text-slate-500">${fmt(t.price)} c/u</p></div>
+          <div class="flex items-center gap-1">
+            <button type="button" data-tdec="${t.id}" class="h-7 w-7 rounded-lg bg-slate-100 font-bold" aria-label="Restar">−</button>
+            <span class="w-6 text-center text-sm font-bold tabular-nums">${t.qty}</span>
+            <button type="button" data-tinc="${t.id}" class="h-7 w-7 rounded-lg bg-slate-100 font-bold" aria-label="Sumar">+</button>
+          </div>
+          <span class="w-20 text-right text-sm font-bold tabular-nums">${fmt(t.price * t.qty)}</span>
+        </li>`;
+      }).join('') : '<li class="py-8 text-center text-sm text-slate-500">Escanea un producto para empezar la venta.</li>';
+      $('#ticketCount').textContent = `${units} ${units === 1 ? 'producto' : 'productos'}`;
+      $('#ticketTotal').textContent = fmt(total);
+      $('#chargeBtn').disabled = !biz.ticket.length;
+      $('#sellBar').classList.toggle('hidden', !biz.ticket.length);
+      $('#sellBarInfo').textContent = `🧾 ${units} ${units === 1 ? 'producto' : 'productos'}`;
+      $('#sellBarTotal').textContent = fmt(total);
+    }
+
+    $('#sellForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const v = $('#sellInput').value;
+      $('#sellInput').value = '';
+      handleSellCode(v);
+      focusSell();
+    });
+    $('#sellInput').addEventListener('input', () => renderSell());
+    $('#sellResults').addEventListener('click', e => {
+      const b = e.target.closest('[data-sell]');
+      if (!b) return;
+      $('#sellInput').value = '';
+      addToTicket(b.dataset.sell);
+      focusSell();
+    });
+    $('#ticketItems').addEventListener('click', e => {
+      const inc = e.target.closest('[data-tinc]'), dec = e.target.closest('[data-tdec]');
+      const id = inc ? inc.dataset.tinc : dec ? dec.dataset.tdec : null;
+      const line = id && biz.ticket.find(t => t.id === id);
+      if (!line) return;
+      line.qty += inc ? 1 : -1;
+      if (line.qty <= 0) biz.ticket = biz.ticket.filter(t => t !== line);
+      saveBiz(); renderSell();
+    });
+    $('#ticketClear').addEventListener('click', () => {
+      if (biz.ticket.length && confirm('¿Vaciar la venta actual?')) { biz.ticket = []; saveBiz(); renderSell(); focusSell(); }
+    });
+    $('#sellCamBtn').addEventListener('click', () => openScanner(handleSellCode));
+
+    // Lector USB (funciona como teclado): si escribe rápido y termina en Enter, es un código.
+    let wedge = '', wedgeAt = 0;
+    document.addEventListener('keydown', e => {
+      if ($('#adminPanel').classList.contains('hidden') || adminTab !== 'sell' || isModalOpen()) return;
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      const now = Date.now();
+      if (now - wedgeAt > 80) wedge = '';
+      wedgeAt = now;
+      if (e.key === 'Enter') { if (wedge.length >= 4) { e.preventDefault(); handleSellCode(wedge); } wedge = ''; return; }
+      if (e.key.length === 1) wedge += e.key;
+    });
+
+    // --- Cobrar ---
+    const charge = { method: 'efectivo', lastSale: null };
+
+    function openCharge() {
+      if (!biz.ticket.length) return;
+      charge.method = 'efectivo'; charge.lastSale = null;
+      $('#cashIn').value = ''; $('#fiadoNewName').value = ''; $('#fiadoNewPhone').value = ''; $('#fiadoCustomer').value = '';
+      $('#chargeForm').classList.remove('hidden'); $('#chargeDone').classList.add('hidden');
+      $('#chargeConfirm').classList.remove('hidden'); $('#receiptBtn').classList.add('hidden'); $('#newSaleBtn').classList.add('hidden');
+      renderCharge();
+      showFlex($('#chargeModal'), true);
+      setTimeout(() => $('#cashIn').focus(), 50);
+    }
+    function closeCharge() { showFlex($('#chargeModal'), false); renderSell(); focusSell(); }
+
+    function renderCharge() {
+      const total = ticketTotal();
+      $('#chargeTotal').textContent = fmt(total);
+      document.querySelectorAll('.pay-btn').forEach(b => {
+        const on = b.dataset.method === charge.method;
+        b.className = 'pay-btn flex flex-col items-center rounded-xl border-2 py-2 text-xl transition ' + (on ? 'border-brand-500 bg-brand-50' : 'border-slate-200 bg-white');
+        b.querySelector('span').className = 'text-[11px] font-bold text-slate-700';
+      });
+      $('#cashBox').classList.toggle('hidden', charge.method !== 'efectivo');
+      $('#fiadoBox').classList.toggle('hidden', charge.method !== 'fiado');
+      const bills = [total, ...[2000, 5000, 10000, 20000, 50000, 100000].filter(b => b > total)].slice(0, 5);
+      $('#cashQuick').innerHTML = bills.map((b, i) => `<button type="button" data-bill="${b}" class="rounded-lg bg-slate-100 px-3 py-2 text-sm font-bold">${i === 0 ? 'Exacto' : fmt(b)}</button>`).join('');
+      const cash = toInt($('#cashIn').value);
+      $('#cashChangeOut').textContent = cash ? (cash >= total ? `Cambio: ${fmt(cash - total)}` : `Faltan ${fmt(total - cash)}`) : '';
+      $('#cashChangeOut').className = 'text-lg font-extrabold ' + (cash && cash < total ? 'text-red-600' : 'text-brand-700');
+      if (charge.method === 'fiado') {
+        const sel = $('#fiadoCustomer'), prev = sel.value;
+        sel.innerHTML = '<option value="">— Elige el cliente —</option>' +
+          biz.customers.slice().sort((a, b) => a.name.localeCompare(b.name)).map(c => `<option value="${c.id}">${esc(c.name)}${balance(c) > 0 ? ' (debe ' + fmt(balance(c)) + ')' : ''}</option>`).join('') +
+          '<option value="__new">➕ Cliente nuevo…</option>';
+        sel.value = prev || '';
+        const isNew = sel.value === '__new';
+        $('#fiadoNew').classList.toggle('hidden', !isNew);
+        $('#fiadoNew').classList.toggle('grid', isNew);
+        const c = biz.customers.find(x => x.id === sel.value);
+        $('#fiadoInfo').textContent = c ? `Quedará debiendo ${fmt(balance(c) + total)}.` : '';
+      }
+    }
+
+    function confirmSale() {
+      const total = ticketTotal();
+      if (!total && !biz.ticket.length) return;
+      const cash = toInt($('#cashIn').value);
+      if (charge.method === 'efectivo' && cash && cash < total) { toast('El dinero recibido no alcanza'); return; }
+      let customer = null;
+      if (charge.method === 'fiado') {
+        const v = $('#fiadoCustomer').value;
+        if (v === '__new') {
+          const name = $('#fiadoNewName').value.trim();
+          if (name.length < 2) { toast('Escribe el nombre del cliente'); $('#fiadoNewName').focus(); return; }
+          customer = { id: uid('c'), name, phone: $('#fiadoNewPhone').value.trim(), movements: [], createdAt: Date.now() };
+          biz.customers.push(customer);
+        } else customer = biz.customers.find(c => c.id === v) || null;
+        if (!customer) { toast('Elige a quién se le fía'); return; }
+      }
+      const sale = {
+        id: uid('v'), at: Date.now(), method: charge.method, total,
+        cash: charge.method === 'efectivo' ? cash : 0, customerId: customer ? customer.id : null,
+        items: biz.ticket.map(t => { const p = findProduct(t.id) || {}; return { id: t.id, name: p.name || '?', qty: t.qty, price: t.price, cost: p.cost || 0 }; })
+      };
+      sale.items.forEach(i => { const p = findProduct(i.id); if (p && typeof p.qty === 'number') p.qty -= i.qty; });
+      if (customer) customer.movements.push({ at: sale.at, type: 'fiado', amount: total, saleId: sale.id });
+      biz.sales.unshift(sale);
+      biz.ticket = [];
+      charge.lastSale = sale;
+      saveBiz(); saveData();
+      $('#chargeForm').classList.add('hidden'); $('#chargeDone').classList.remove('hidden');
+      $('#chargeConfirm').classList.add('hidden'); $('#receiptBtn').classList.remove('hidden'); $('#newSaleBtn').classList.remove('hidden');
+      $('#chargeDoneInfo').textContent = `${fmt(total)} · ${METHOD[sale.method]}` +
+        (sale.cash > total ? ` · Cambio: ${fmt(sale.cash - total)}` : '') +
+        (customer ? ` · ${customer.name} debe ahora ${fmt(balance(customer))}` : '');
+      const low = sale.items.map(i => findProduct(i.id)).filter(p => p && isLow(p));
+      if (low.length) toast(`⚠️ Se está acabando: ${low.map(p => p.name).join(', ')}`, 4000);
+    }
+
+    function receiptText(sale) {
+      const s = currentStore();
+      const c = biz.customers.find(x => x.id === sale.customerId);
+      const d = new Date(sale.at);
+      return [
+        `🧾 *${s.name}*`,
+        `${d.toLocaleDateString('es-CO')} ${d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })} · Venta #${sale.id.slice(-5).toUpperCase()}`,
+        '',
+        ...sale.items.map(i => `${i.qty} x ${i.name} — ${fmt(i.price * i.qty)}`),
+        '',
+        `*TOTAL: ${fmt(sale.total)}*`,
+        `Pago: ${METHOD[sale.method]}` + (sale.cash > sale.total ? ` · Recibido ${fmt(sale.cash)} · Cambio ${fmt(sale.cash - sale.total)}` : ''),
+        c ? `Saldo pendiente: *${fmt(balance(c))}*` : null,
+        '',
+        '¡Gracias por tu compra! 🙏'
+      ].filter(l => l !== null).join('\n');
+    }
+
+    $('#chargeBtn').addEventListener('click', openCharge);
+    $('#sellBarBtn').addEventListener('click', openCharge);
+    $('#chargeClose').addEventListener('click', closeCharge);
+    $('#newSaleBtn').addEventListener('click', closeCharge);
+    $('#chargeConfirm').addEventListener('click', confirmSale);
+    $('#payMethods').addEventListener('click', e => {
+      const b = e.target.closest('[data-method]');
+      if (!b) return;
+      charge.method = b.dataset.method;
+      renderCharge();
+      if (charge.method === 'efectivo') $('#cashIn').focus();
+    });
+    $('#cashIn').addEventListener('input', renderCharge);
+    $('#cashIn').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); confirmSale(); } });
+    $('#cashQuick').addEventListener('click', e => {
+      const b = e.target.closest('[data-bill]');
+      if (b) { $('#cashIn').value = b.dataset.bill; renderCharge(); }
+    });
+    $('#fiadoCustomer').addEventListener('change', () => { renderCharge(); if ($('#fiadoCustomer').value === '__new') $('#fiadoNewName').focus(); });
+    $('#receiptBtn').addEventListener('click', () => {
+      const sale = charge.lastSale;
+      if (!sale) return;
+      const c = biz.customers.find(x => x.id === sale.customerId);
+      let phone = c && c.phone;
+      if (!phone) phone = prompt('Celular del cliente para enviarle el recibo:') || '';
+      const n = waNumber(phone);
+      if (!isValidWa(n)) { if (phone) toast('Número no válido'); return; }
+      if (c && !c.phone) { c.phone = phone; saveBiz(); }
+      openWhatsApp(n, receiptText(sale));
+    });
+
+    // --- Entrada de mercancía (sumar unidades escaneando) ---
+    let restockState = null;
+    function openRestock(p) {
+      restockState = { id: p.id };
+      $('#restockImg').innerHTML = productMedia(p, 'text-3xl');
+      $('#restockName').textContent = p.name + (p.unit ? ` · ${p.unit}` : '');
+      $('#restockNow').textContent = typeof p.qty === 'number' ? `Hay ${p.qty} uds en inventario` : 'Aún no llevas la cuenta de unidades de este producto';
+      $('#rsQty').value = '';
+      $('#rsCost').value = p.cost ? String(p.cost) : '';
+      $('#rsPrice').value = p.price ? String(p.price) : '';
+      rsMargin();
+      showFlex($('#restock'), true);
+      setTimeout(() => $('#rsQty').focus(), 50);
+    }
+    function closeRestock() { restockState = null; showFlex($('#restock'), false); }
+    function rsMargin() {
+      const c = toInt($('#rsCost').value), pr = toInt($('#rsPrice').value);
+      $('#rsMargin').textContent = c > 0 && pr > 0
+        ? `Ganancia: ${fmt(pr - c)} por unidad (${Math.round((pr / c - 1) * 100)}%)` + (pr < c ? ' ⚠️ estás vendiendo por debajo del costo' : '')
+        : '';
+    }
+    ['#rsCost', '#rsPrice'].forEach(sel => $(sel).addEventListener('input', rsMargin));
+    $('#restockCancel').addEventListener('click', closeRestock);
+    $('#restockForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const p = restockState && findProduct(restockState.id);
+      if (!p) return;
+      const n = toInt($('#rsQty').value);
+      if (!n) { toast('¿Cuántas unidades llegaron?'); $('#rsQty').focus(); return; }
+      const cost = toInt($('#rsCost').value), price = toInt($('#rsPrice').value);
+      p.qty = (typeof p.qty === 'number' ? p.qty : 0) + n;
+      if (cost) p.cost = cost;
+      if (price && price !== p.price) {
+        p.priceHistory = (p.priceHistory || []).concat({ price: p.price, at: p.priceUpdatedAt || Date.now() }).slice(-8);
+        p.price = price; p.priceUpdatedAt = Date.now();
+      }
+      setAvailability(p.id, true);
+      saveData();
+      const again = e.submitter && e.submitter.dataset.again === '1';
+      closeRestock();
+      renderAdmin();
+      toast(`📥 +${n} ${p.name}. Ahora hay ${p.qty} uds`);
+      if (again) openScanner(onScanRestock);
+    });
+    function onScanRestock(code) {
+      const p = findByCode(code);
+      if (p) { openRestock(p); return; }
+      toast('Producto nuevo: llena sus datos y las unidades que llegaron', 3500);
+      openEditor(null, { code });
+      lookupProduct(code);
+      setTimeout(() => $('#edQty').focus(), 300);
+    }
+    $('#restockScanBtn').addEventListener('click', () => openScanner(onScanRestock));
+    $('#invFilters').addEventListener('click', e => {
+      const b = e.target.closest('[data-inv]');
+      if (b) { invFilter = b.dataset.inv; renderAdminList(); }
+    });
+
+    // --- Ficha genérica (clientes / proveedores) ---
+    let cardCtx = null;
+    function openCard(title, html, ctx) { cardCtx = ctx; $('#cardTitle').textContent = title; $('#cardBody').innerHTML = html; showFlex($('#card'), true); }
+    function closeCard() { cardCtx = null; showFlex($('#card'), false); }
+    $('#cardClose').addEventListener('click', closeCard);
+    $('#card').addEventListener('click', e => { if (e.target.id === 'card') closeCard(); });
+    $('#cardBody').addEventListener('click', e => {
+      const b = e.target.closest('[data-act]');
+      if (!b || !cardCtx) return;
+      if (cardCtx.kind === 'customer') customerAction(b.dataset.act);
+      else if (cardCtx.kind === 'supplier') supplierAction(b.dataset.act);
+    });
+
+    // --- Clientes y fiados ---
+    let custQuery = '';
+    function renderCustomers() {
+      $('#fiadoTotal').textContent = fmt(biz.customers.reduce((a, c) => a + Math.max(0, balance(c)), 0));
+      const q = normalize(custQuery.trim());
+      const list = biz.customers.filter(c => !q || normalize(`${c.name} ${c.phone || ''}`).includes(q))
+        .sort((a, b) => balance(b) - balance(a) || a.name.localeCompare(b.name));
+      $('#custList').innerHTML = list.length ? list.map(c => {
+        const b = balance(c);
+        return `<li><button type="button" data-cust="${c.id}" class="w-full flex items-center gap-3 rounded-2xl bg-white p-3 shadow-sm text-left">
+          <span class="h-10 w-10 shrink-0 rounded-full bg-brand-100 text-brand-700 font-extrabold flex items-center justify-center">${esc(c.name.charAt(0).toUpperCase())}</span>
+          <span class="flex-1 min-w-0"><span class="block text-sm font-semibold truncate">${esc(c.name)}</span><span class="block text-xs text-slate-500">${c.phone ? '📞 ' + esc(c.phone) : 'Sin celular'}</span></span>
+          <span class="shrink-0 text-sm font-extrabold tabular-nums ${b > 0 ? 'text-red-600' : 'text-brand-700'}">${b > 0 ? 'Debe ' + fmt(b) : 'Al día'}</span>
+        </button></li>`;
+      }).join('') : '<li class="py-8 text-center text-sm text-slate-500">Aún no hay clientes. Se crean al fiar una venta o con “➕ Nuevo cliente”.</li>';
+    }
+
+    function openCustomer(id) {
+      const c = id ? biz.customers.find(x => x.id === id) : null;
+      const b = c ? balance(c) : 0;
+      const mov = c ? c.movements.slice().reverse().slice(0, 30) : [];
+      const inputCls = 'rounded-xl border border-slate-300 px-3 py-2.5 text-sm';
+      openCard(c ? c.name : 'Nuevo cliente', `
+        <div class="grid grid-cols-2 gap-2">
+          <input id="cuName" type="text" placeholder="Nombre" value="${esc(c ? c.name : '')}" class="${inputCls}" />
+          <input id="cuPhone" type="tel" inputmode="numeric" placeholder="Celular" value="${esc(c ? c.phone || '' : '')}" class="${inputCls}" />
+        </div>
+        <button type="button" data-act="save" class="w-full rounded-xl bg-slate-900 text-white font-bold py-3">💾 Guardar datos</button>
+        ${c ? `
+        <div class="rounded-2xl ${b > 0 ? 'bg-red-50' : 'bg-brand-50'} p-4 text-center">
+          <p class="text-xs text-slate-500">Saldo pendiente</p>
+          <p class="text-3xl font-extrabold tabular-nums ${b > 0 ? 'text-red-600' : 'text-brand-700'}">${fmt(b)}</p>
+        </div>
+        <div class="flex gap-2">
+          <input id="cuAmount" type="text" inputmode="numeric" placeholder="Valor" class="flex-1 min-w-0 rounded-xl border border-slate-300 px-3 py-2.5 text-base font-bold" />
+          <button type="button" data-act="abono" class="rounded-xl bg-brand-600 text-white font-bold px-3 text-sm">💵 Abonó</button>
+          <button type="button" data-act="fiar" class="rounded-xl bg-red-50 text-red-700 font-bold px-3 text-sm">📒 Fiar</button>
+        </div>
+        ${b > 0 && c.phone ? '<button type="button" data-act="remind" class="w-full rounded-xl bg-[#25D366] text-white font-bold py-3">📲 Recordarle el saldo por WhatsApp</button>' : ''}
+        <p class="text-xs font-semibold text-slate-500 uppercase">Movimientos</p>
+        <ul class="divide-y divide-slate-100 text-sm">${mov.length ? mov.map(m => `<li class="flex justify-between py-2">
+          <span>${m.type === 'fiado' ? '📒 Fiado' : '💵 Abono'} <span class="text-xs text-slate-400">${new Date(m.at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}</span></span>
+          <span class="font-bold tabular-nums ${m.type === 'fiado' ? 'text-red-600' : 'text-brand-700'}">${m.type === 'fiado' ? '+' : '−'}${fmt(m.amount)}</span></li>`).join('') : '<li class="py-3 text-slate-500">Sin movimientos.</li>'}</ul>
+        <button type="button" data-act="delete" class="w-full text-xs text-red-500 font-semibold py-2">Eliminar cliente</button>` : ''}`,
+      { kind: 'customer', id: c ? c.id : null });
+    }
+
+    function customerAction(act) {
+      let c = cardCtx.id ? biz.customers.find(x => x.id === cardCtx.id) : null;
+      if (act === 'save') {
+        const name = $('#cuName').value.trim();
+        if (name.length < 2) { toast('Escribe el nombre'); return; }
+        if (!c) { c = { id: uid('c'), name, phone: '', movements: [], createdAt: Date.now() }; biz.customers.push(c); }
+        c.name = name; c.phone = $('#cuPhone').value.trim();
+        saveBiz(); openCustomer(c.id); renderCustomers(); toast('✅ Cliente guardado');
+        return;
+      }
+      if (!c) return;
+      if (act === 'abono' || act === 'fiar') {
+        const amount = toInt($('#cuAmount').value);
+        if (!amount) { toast('Escribe el valor'); $('#cuAmount').focus(); return; }
+        c.movements.push({ at: Date.now(), type: act === 'abono' ? 'abono' : 'fiado', amount });
+        saveBiz(); openCustomer(c.id); renderCustomers();
+        toast(act === 'abono' ? `💵 Abono de ${fmt(amount)} registrado` : `📒 Fiado de ${fmt(amount)} registrado`);
+      } else if (act === 'remind') {
+        const n = waNumber(c.phone);
+        if (!isValidWa(n)) { toast('El celular del cliente no es válido'); return; }
+        openWhatsApp(n, `Hola ${cap(c.name.split(/\s+/)[0])} 👋, te saludamos de *${currentStore().name}*.\nTu saldo pendiente es de *${fmt(balance(c))}*.\nCuando puedas, pásate a abonar. ¡Gracias!`);
+      } else if (act === 'delete') {
+        const b = balance(c);
+        if (!confirm(b > 0 ? `${c.name} todavía debe ${fmt(b)}. ¿Eliminarlo de todas formas?` : `¿Eliminar a ${c.name}?`)) return;
+        biz.customers = biz.customers.filter(x => x !== c);
+        saveBiz(); closeCard(); renderCustomers();
+      }
+    }
+    $('#custAddBtn').addEventListener('click', () => openCustomer(null));
+    $('#custSearch').addEventListener('input', e => { custQuery = e.target.value; renderCustomers(); });
+    $('#custList').addEventListener('click', e => { const b = e.target.closest('[data-cust]'); if (b) openCustomer(b.dataset.cust); });
+
+    // --- Proveedores ---
+    const visitText = sp => (sp.days || []).length
+      ? sp.days.slice().sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7)).map(d => DAYS[d].slice(0, 3)).join(', ')
+      : 'Sin días de visita';
+    const supplierItem = sp => `<li class="flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
+        <button type="button" data-sup="${sp.id}" class="flex-1 min-w-0 text-left">
+          <span class="block text-sm font-semibold truncate">🚚 ${esc(sp.name)}</span>
+          <span class="block text-xs text-slate-500 truncate">${esc(sp.sells || '')}${sp.sells ? ' · ' : ''}${visitText(sp)}</span>
+        </button>
+        ${sp.phone ? `<button type="button" data-supwa="${sp.id}" class="shrink-0 rounded-xl bg-[#25D366] text-white text-sm font-bold px-3 py-2" aria-label="Pedir por WhatsApp">📲</button>` : ''}
+      </li>`;
+
+    function renderSuppliers() {
+      const now = new Date(), tom = new Date(Date.now() + 864e5);
+      const today = now.getDay(), tomorrow = tom.getDay();
+      $('#supTodayTitle').textContent = `Hoy, ${DAYS[today]} ${now.getDate()}, te visitan:`;
+      $('#supTomorrowTitle').textContent = `Mañana, ${DAYS[tomorrow]} ${tom.getDate()}, te visitan:`;
+      const empty = '<li class="py-4 text-center text-xs text-slate-500">Nadie. Ponle días de visita a tus proveedores y aquí te aviso.</li>';
+      const by = day => biz.suppliers.filter(sp => (sp.days || []).includes(day));
+      $('#supToday').innerHTML = by(today).map(supplierItem).join('') || empty;
+      $('#supTomorrow').innerHTML = by(tomorrow).map(supplierItem).join('') || empty;
+      $('#supAll').innerHTML = biz.suppliers.slice().sort((a, b) => a.name.localeCompare(b.name)).map(supplierItem).join('')
+        || '<li class="py-6 text-center text-sm text-slate-500">Agrega tus proveedores (la de lácteos, la de gaseosas, el de huevos…).</li>';
+    }
+
+    function openSupplier(id) {
+      const sp = id ? biz.suppliers.find(x => x.id === id) : null;
+      const days = sp ? sp.days || [] : [];
+      const inputCls = 'rounded-xl border border-slate-300 px-3 py-2.5 text-sm';
+      openCard(sp ? sp.name : 'Nuevo proveedor', `
+        <input id="spName" type="text" placeholder="Nombre del proveedor" value="${esc(sp ? sp.name : '')}" class="w-full ${inputCls}" />
+        <div class="grid grid-cols-2 gap-2">
+          <input id="spPhone" type="tel" inputmode="numeric" placeholder="Celular del vendedor" value="${esc(sp ? sp.phone || '' : '')}" class="${inputCls}" />
+          <input id="spSells" type="text" placeholder="¿Qué te vende?" value="${esc(sp ? sp.sells || '' : '')}" class="${inputCls}" />
+        </div>
+        <p class="text-xs font-semibold text-slate-600">¿Qué días te visita?</p>
+        <div class="grid grid-cols-7 gap-1">${[1, 2, 3, 4, 5, 6, 0].map(d => `<label class="cursor-pointer">
+          <input type="checkbox" class="sr-only peer sp-day" value="${d}" ${days.includes(d) ? 'checked' : ''} />
+          <span class="block rounded-lg border-2 border-slate-200 py-2 text-center text-xs font-bold peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700">${DAYS[d].slice(0, 3)}</span>
+        </label>`).join('')}</div>
+        <textarea id="spNotes" rows="2" placeholder="Notas (ej: hacer el pedido antes de las 10am)" class="w-full ${inputCls}">${esc(sp ? sp.notes || '' : '')}</textarea>
+        <button type="button" data-act="save" class="w-full rounded-xl bg-brand-600 text-white font-bold py-3">💾 Guardar proveedor</button>
+        ${sp ? `${sp.phone ? '<button type="button" data-act="order" class="w-full rounded-xl bg-[#25D366] text-white font-bold py-3">📲 Hacerle un pedido por WhatsApp</button>' : ''}
+        <button type="button" data-act="delete" class="w-full text-xs text-red-500 font-semibold py-2">Eliminar proveedor</button>` : ''}`,
+      { kind: 'supplier', id: sp ? sp.id : null });
+    }
+
+    function supplierWhatsApp(sp) {
+      const n = waNumber(sp.phone);
+      if (!isValidWa(n)) { toast('El celular del proveedor no es válido'); return; }
+      const low = data.products.filter(isLow);
+      openWhatsApp(n, `Hola 👋, te escribo de *${currentStore().name}*. Quiero hacer un pedido:\n` +
+        (low.length ? low.slice(0, 15).map(p => `• ${p.name} — ___ uds`).join('\n') : '• '));
+    }
+
+    function supplierAction(act) {
+      let sp = cardCtx.id ? biz.suppliers.find(x => x.id === cardCtx.id) : null;
+      if (act === 'save') {
+        const name = $('#spName').value.trim();
+        if (name.length < 2) { toast('Escribe el nombre'); return; }
+        if (!sp) { sp = { id: uid('s') }; biz.suppliers.push(sp); }
+        Object.assign(sp, {
+          name, phone: $('#spPhone').value.trim(), sells: $('#spSells').value.trim(), notes: $('#spNotes').value.trim(),
+          days: [...document.querySelectorAll('.sp-day:checked')].map(i => +i.value)
+        });
+        saveBiz(); closeCard(); renderSuppliers(); toast('✅ Proveedor guardado');
+        return;
+      }
+      if (!sp) return;
+      if (act === 'order') supplierWhatsApp(sp);
+      if (act === 'delete' && confirm(`¿Eliminar a ${sp.name}?`)) {
+        biz.suppliers = biz.suppliers.filter(x => x !== sp);
+        saveBiz(); closeCard(); renderSuppliers();
+      }
+    }
+    $('#supAddBtn').addEventListener('click', () => openSupplier(null));
+    $('#atab-suppliers').addEventListener('click', e => {
+      const wa = e.target.closest('[data-supwa]');
+      if (wa) { const sp = biz.suppliers.find(x => x.id === wa.dataset.supwa); if (sp) supplierWhatsApp(sp); return; }
+      const b = e.target.closest('[data-sup]');
+      if (b) openSupplier(b.dataset.sup);
+    });
+
+    // --- Informes ---
+    let repPeriod = 'today';
+    function periodStart() {
+      const d = new Date(); d.setHours(0, 0, 0, 0);
+      if (repPeriod !== 'today') d.setDate(d.getDate() - (+repPeriod - 1));
+      return d.getTime();
+    }
+    function renderReports() {
+      document.querySelectorAll('.rep-btn').forEach(b => {
+        b.className = 'rep-btn px-4 py-2 rounded-lg ' + (b.dataset.period === repPeriod ? 'bg-brand-600 text-white' : 'text-slate-500');
+      });
+      const from = periodStart();
+      const sales = biz.sales.filter(s => s.at >= from);
+      const total = sales.reduce((a, s) => a + s.total, 0);
+      let profit = 0, allCosts = true;
+      const top = {}, methods = {};
+      sales.forEach(s => {
+        methods[s.method] = (methods[s.method] || 0) + s.total;
+        s.items.forEach(i => {
+          top[i.id] = top[i.id] || { name: i.name, qty: 0, total: 0 };
+          top[i.id].qty += i.qty; top[i.id].total += i.qty * i.price;
+          if (i.cost > 0) profit += (i.price - i.cost) * i.qty; else allCosts = false;
+        });
+      });
+      const owed = biz.customers.reduce((a, c) => a + Math.max(0, balance(c)), 0);
+      const card = (label, value, sub, cls = '') => `<div class="rounded-2xl bg-white p-4 shadow-sm"><p class="text-xs text-slate-500">${label}</p>
+        <p class="text-2xl font-extrabold tabular-nums ${cls}">${value}</p>${sub ? `<p class="text-[11px] text-slate-400">${sub}</p>` : ''}</div>`;
+      $('#repCards').innerHTML =
+        card('💰 Vendido', fmt(total), `${sales.length} ${sales.length === 1 ? 'venta' : 'ventas'}`) +
+        card('📈 Ganancia estimada', fmt(profit), allCosts ? 'precio − costo' : 'solo de productos con costo', 'text-brand-700') +
+        card('🧾 Venta promedio', fmt(sales.length ? Math.round(total / sales.length) : 0)) +
+        card('📒 Te deben (fiados)', fmt(owed), `${biz.customers.filter(c => balance(c) > 0).length} clientes`, 'text-red-600');
+      const topList = Object.values(top).sort((a, b) => b.qty - a.qty).slice(0, 10);
+      $('#repTop').innerHTML = topList.length
+        ? topList.map((t, i) => `<li class="flex justify-between gap-2"><span class="truncate">${i + 1}. ${esc(t.name)}</span><span class="shrink-0 font-semibold tabular-nums">${t.qty} uds · ${fmt(t.total)}</span></li>`).join('')
+        : '<li class="text-slate-500">Aún no hay ventas en este periodo.</li>';
+      $('#repMethods').innerHTML = Object.keys(METHOD).map(m => `<li class="flex justify-between"><span>${METHOD[m]}</span><span class="font-semibold tabular-nums">${fmt(methods[m] || 0)}</span></li>`).join('');
+      const low = data.products.filter(isLow).sort((a, b) => a.qty - b.qty);
+      $('#repLow').innerHTML = low.length
+        ? low.map(p => `<li class="flex justify-between gap-2"><span class="truncate">${esc(p.name)}</span><span class="shrink-0 font-bold ${p.qty <= 0 ? 'text-red-600' : 'text-amber-600'}">${p.qty} uds</span></li>`).join('')
+        : '<li class="text-slate-500">Nada por acabarse (solo cuento productos con unidades en inventario).</li>';
+      $('#repSales').innerHTML = sales.slice(0, 50).map(s => {
+        const c = biz.customers.find(x => x.id === s.customerId);
+        return `<li class="flex items-center gap-2 py-2">
+          <span class="flex-1 min-w-0"><span class="block font-semibold">${fmt(s.total)} · ${METHOD[s.method]}${c ? ' · ' + esc(c.name) : ''}</span>
+          <span class="block text-xs text-slate-500 truncate">${orderTime(s.at)} · ${s.items.map(i => `${i.qty} ${esc(i.name)}`).join(', ')}</span></span>
+          <button type="button" data-void="${s.id}" class="shrink-0 text-xs text-red-500 font-semibold">Anular</button></li>`;
+      }).join('') || '<li class="py-3 text-slate-500">Sin ventas.</li>';
+    }
+    function voidSale(id) {
+      const sale = biz.sales.find(s => s.id === id);
+      if (!sale || !confirm(`¿Anular la venta de ${fmt(sale.total)}? Las unidades vuelven al inventario.`)) return;
+      sale.items.forEach(i => { const p = findProduct(i.id); if (p && typeof p.qty === 'number') p.qty += i.qty; });
+      biz.customers.forEach(c => { c.movements = c.movements.filter(m => m.saleId !== sale.id); });
+      biz.sales = biz.sales.filter(s => s !== sale);
+      saveBiz(); saveData(); renderReports(); toast('Venta anulada');
+    }
+    $('#repPeriods').addEventListener('click', e => { const b = e.target.closest('[data-period]'); if (b) { repPeriod = b.dataset.period; renderReports(); } });
+    $('#repSales').addEventListener('click', e => { const b = e.target.closest('[data-void]'); if (b) voidSale(b.dataset.void); });
+
+    // --- Copia de seguridad ---
+    $('#backupBtn').addEventListener('click', () => {
+      const json = JSON.stringify({ app: 'tienda-barrio', version: 1, at: Date.now(), data, biz, orders });
+      downloadFile(new File([json], `copia-tienda-${new Date().toISOString().slice(0, 10)}.json`, { type: 'application/json' }));
+    });
+    $('#restoreInput').addEventListener('change', async e => {
+      const f = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!f) return;
+      try {
+        const j = JSON.parse(await f.text());
+        if (j.app !== 'tienda-barrio' || !validData(j.data)) throw new Error('formato');
+        if (!confirm(`¿Restaurar la copia del ${new Date(j.at).toLocaleString('es-CO')}? Se reemplaza lo que hay ahora en este navegador.`)) return;
+        writeJSON(LS_DATA, Object.assign(j.data, { updatedAt: Date.now() }));
+        writeJSON(LS_BIZ, j.biz || {});
+        writeJSON(LS_ORDERS, j.orders || []);
+        location.reload();
+      } catch { toast('Ese archivo no es una copia de seguridad válida', 3500); }
+    });
+
+    $('#adminClose2').addEventListener('click', () => closeAdmin());
+
+    /* ============================================================
+     * 15. EVENTOS
+     * ============================================================ */
+    const bump = () => { const b = $('#cartBadge'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); };
+
+    document.addEventListener('click', e => {
+      const el = e.target.closest('[data-inc],[data-dec],[data-toggle],[data-edit]');
+      if (!el) return;
+      if (el.dataset.inc) { setQty(el.dataset.inc, (state.cart[el.dataset.inc] || 0) + 1); bump(); }
+      else if (el.dataset.dec) setQty(el.dataset.dec, (state.cart[el.dataset.dec] || 0) - 1);
+      else if (el.dataset.toggle) { const id = el.dataset.toggle; setQty(id, state.cart[id] ? 0 : 1); if (state.cart[id]) bump(); }
+      else if (el.dataset.edit) { const p = findProduct(el.dataset.edit); if (p) openEditor(p); }
+    });
+
+    $('#productGrid').addEventListener('change', e => {
+      const id = e.target.dataset.check;
+      if (!id) return;
+      setQty(id, e.target.checked ? Math.max(1, state.cart[id] || 0) : 0);
+      if (e.target.checked) bump();
+    });
+
+    $('#categoryTabs').addEventListener('click', e => {
+      const b = e.target.closest('[data-cat]'); if (!b) return;
+      state.category = b.dataset.cat; renderCategories(); renderProducts();
+    });
+    document.querySelectorAll('.stock-btn').forEach(b => b.addEventListener('click', () => {
+      state.stockFilter = b.dataset.stock; renderStockFilter(); renderProducts();
+    }));
+    $('#searchInput').addEventListener('input', e => { state.query = e.target.value; renderProducts(); });
+
+    function changeStore(id) {
+      state.storeId = id;
+      const removed = pruneCart();
+      persist();
+      renderAll();
+      if (!$('#adminPanel').classList.contains('hidden')) renderAdmin();
+      return removed;
+    }
+    $('#storeSelect').addEventListener('change', e => {
+      const removed = changeStore(e.target.value);
+      toast(removed ? `Tienda cambiada. ${removed} producto(s) agotado(s) se quitaron de tu lista.` : `Ahora compras en ${currentStore().name}`);
+    });
+
+    $('#openCartBtn').addEventListener('click', openSheet);
+    $('#closeCartBtn').addEventListener('click', closeSheet);
+    $('#backdrop').addEventListener('click', closeSheet);
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      if (!$('#scanner').classList.contains('hidden')) closeScanner();
+      else if (!$('#editor').classList.contains('hidden')) closeEditor();
+      else if (!$('#chargeModal').classList.contains('hidden')) closeCharge();
+      else if (!$('#restock').classList.contains('hidden')) closeRestock();
+      else if (!$('#card').classList.contains('hidden')) closeCard();
+      else if (!$('#adminPanel').classList.contains('hidden')) closeAdmin();
+      else closeSheet();
+    });
+
+    $('#clearCartBtn').addEventListener('click', () => {
+      if (!Object.keys(state.cart).length) return;
+      if (!confirm('¿Vaciar toda la lista de mercado?')) return;
+      state.cart = {}; persist(); renderProducts(); renderCart(); closeSheet();
+    });
+
+    const bindField = (sel, key) => $(sel).addEventListener('input', e => {
+      state.customer[key] = e.target.value; persist();
+      const err = e.target.parentElement.querySelector('.err');
+      if (err && !err.classList.contains('hidden')) { err.classList.add('hidden'); e.target.classList.remove('border-red-400'); }
+    });
+    bindField('#custName', 'name');
+    bindField('#custPhone', 'phone');
+    bindField('#custAddress', 'address');
+    bindField('#custNotes', 'notes');
+    bindField('#cashChange', 'cash');
+
+    $('#paymentOptions').addEventListener('change', e => {
+      if (e.target.name !== 'payment') return;
+      state.customer.payment = e.target.value; persist(); renderPayments();
+    });
+    $('#sendBtn').addEventListener('click', sendOrder);
+
+    // --- Acceso al modo tendero ---
+    $('#adminBtn').addEventListener('click', () => openAdmin());
+    let logoTaps = 0, logoTimer;
+    $('#logoBtn').addEventListener('click', () => {
+      logoTaps++; clearTimeout(logoTimer);
+      logoTimer = setTimeout(() => { logoTaps = 0; }, 1500);
+      if (logoTaps >= 5) { logoTaps = 0; openAdmin(); }
+    });
+    if (location.hash === '#tendero') setTimeout(() => openAdmin(), 0);
+
+    $('#adminClose').addEventListener('click', closeAdmin);
+    document.querySelectorAll('.atab').forEach(b => b.addEventListener('click', () => { adminTab = b.dataset.atab; renderAdmin(); }));
+    $('#adminSearch').addEventListener('input', e => { adminQuery = e.target.value; renderAdminList(); });
+    $('#adminList').addEventListener('change', e => {
+      const id = e.target.dataset.avail; if (!id) return;
+      setAvailability(id, e.target.checked);
+      if (!e.target.checked) { delete state.cart[id]; persist(); }
+      saveData(); renderAdminList();
+    });
+    $('#scanAddBtn').addEventListener('click', () => openScanner(onScanForCatalog));
+    $('#manualAddBtn').addEventListener('click', () => openEditor(null));
+
+    // Editor
+    $('#editorClose').addEventListener('click', closeEditor);
+    $('#editor').addEventListener('click', e => { if (e.target.id === 'editor') closeEditor(); });
+    $('#editorForm').addEventListener('submit', saveProduct);
+    $('#editorDelete').addEventListener('click', deleteProduct);
+    $('#photoCamera').addEventListener('change', onPhotoPicked);
+    $('#photoGallery').addEventListener('change', onPhotoPicked);
+    $('#photoRemove').addEventListener('click', () => { if (editing) { editing.photo = ''; renderEditorPhoto(); } });
+    $('#edCategory').addEventListener('change', renderEditorPhoto);
+    $('#edScan').addEventListener('click', () => openScanner(code => {
+      const dup = data.products.find(p => p.code === code && (!editing || p.id !== editing.id));
+      if (dup) toast(`Ojo: ese código ya es de "${dup.name}"`, 3500);
+      $('#edCode').value = code;
+      if (editing && !editing.id) lookupProduct(code);
+    }));
+    $('#edCode').addEventListener('change', e => { if (editing && !editing.id && !$('#edName').value.trim()) lookupProduct(e.target.value.trim()); });
+
+    // Tienda
+    const hourOpts = Array.from({ length: 25 }, (_, h) => `<option value="${h}">${hourLabel(h)}${h === 24 ? ' (medianoche)' : ''}</option>`).join('');
+    document.querySelectorAll('select.hour').forEach(s => { s.innerHTML = hourOpts; });
+    $('#atab-store').addEventListener('submit', saveStore);
+    $('#aStoreSelect').addEventListener('change', e => changeStore(e.target.value));
+    $('#testWaBtn').addEventListener('click', () => {
+      const number = waNumber($('#sWa').value);
+      if (!isValidWa(number)) { toast('Primero escribe un número válido'); return; }
+      openWhatsApp(number, `✅ Prueba de "${$('#sName').value.trim() || 'mi tienda'}": así te llegarán los pedidos de tus clientes.`);
+    });
+    $('#addStoreBtn').addEventListener('click', () => {
+      const s = { id: 's' + Date.now().toString(36), name: 'Mi tienda', zone: '', whatsapp: '', demo: false, openHour: 7, closeHour: 21, deliveryFee: 3000, freeDeliveryFrom: 0, soldOut: [] };
+      data.stores.push(s); saveData();
+      changeStore(s.id);
+      setTimeout(() => $('#sWa').focus(), 50);
+      toast('Nueva tienda creada: llena sus datos y toca Guardar');
+    });
+    $('#deleteStoreBtn').addEventListener('click', () => {
+      if (data.stores.length < 2) { toast('Debe quedar al menos una tienda'); return; }
+      const s = currentStore();
+      if (!confirm(`¿Eliminar la tienda "${s.name}"? Los productos se conservan.`)) return;
+      data.stores = data.stores.filter(x => x.id !== s.id); saveData();
+      changeStore(data.stores[0].id);
+    });
+
+    // Compartir
+    $('#shareBtn').addEventListener('click', async () => {
+      const file = exportFile();
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: currentStore().name, text: `🛒 Haz tu pedido a ${currentStore().name}. Abre este archivo con Chrome o Safari.` }); }
+        catch (err) { if (err && err.name !== 'AbortError') downloadFile(file); }
+      } else {
+        downloadFile(file);
+        toast('Tu navegador no permite compartir directo: se descargó el archivo para que lo envíes.', 4000);
+      }
+    });
+    $('#downloadBtn').addEventListener('click', () => downloadFile(exportFile()));
+    $('#clearDemoBtn').addEventListener('click', () => {
+      if (!confirm('¿Borrar TODOS los productos para empezar tu propio catálogo?')) return;
+      data.products = []; data.stores.forEach(s => { s.soldOut = []; });
+      state.cart = {}; persist(); saveData(); adminTab = 'products'; renderAdmin();
+      toast('Catálogo vacío. Ahora escanea o agrega tus productos.');
+    });
+    $('#resetBtn').addEventListener('click', () => {
+      if (!confirm('¿Volver a los datos de ejemplo? Se pierden tus productos, fotos y datos de tienda en este celular.')) return;
+      data = clone(DEFAULT_DATA); saveData();
+      state.storeId = data.stores[0].id; state.cart = {}; persist();
+      renderAll(); renderAdmin();
+    });
+
+    /* ============================================================
+     * 15b. APLICACIÓN INSTALABLE (PWA)
+     * ============================================================ */
+    const APP_URL = 'https://wilmarzuluaga149-dot.github.io/logisticubo/tienda-barrio.html';
+    let installEvt = null;
+    const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    function renderInstall() {
+      const can = !!installEvt && !isStandalone();
+      document.querySelectorAll('.install-btn').forEach(b => b.classList.toggle('hidden', !can));
+      let html;
+      if (isStandalone()) html = '<p>✅ Estás usando la aplicación instalada.</p>';
+      else if (location.protocol === 'file:') html = `<p>Abriste el archivo descargado. Para instalarla como programa (con ícono en el escritorio o en el celular), ábrela desde este enlace y toca <b>Instalar</b>:</p>
+        <p><a href="${APP_URL}" target="_blank" rel="noopener" class="break-all font-semibold text-brand-700 underline">${APP_URL}</a></p>
+        <p class="text-xs">Tus datos de este archivo no pasan solos a la app: descarga una <b>💾 Copia de seguridad</b> aquí abajo y restáurala en la app.</p>`;
+      else if (isIOS()) html = '<p>En iPhone/iPad (Safari): toca el botón <b>Compartir</b> ⬆️ y luego <b>“Agregar a inicio”</b>.</p>';
+      else if (can) html = '<p>Toca el botón para instalarla. Quedará con su ícono en el escritorio, en el menú Inicio o en la pantalla del celular, y se abre en su propia ventana, también sin internet.</p>';
+      else html = '<p>En Chrome o Edge: abre el menú <b>⋮</b> y elige <b>“Instalar aplicación”</b> (en el celular: <b>“Agregar a la pantalla principal”</b>).</p>';
+      $('#installHelp').innerHTML = html;
+    }
+    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; renderInstall(); });
+    window.addEventListener('appinstalled', () => { installEvt = null; renderInstall(); toast('✅ App instalada. Búscala en el escritorio o en la pantalla de inicio.', 4000); });
+    document.addEventListener('click', async e => {
+      if (!e.target.closest('.install-btn') || !installEvt) return;
+      installEvt.prompt();
+      try { await installEvt.userChoice; } catch { /* cancelado */ }
+      installEvt = null; renderInstall();
+    });
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      navigator.serviceWorker.register('sw.js').catch(() => { /* sin modo sin conexión */ });
+    }
+
+    /* ============================================================
+     * 16. INICIO
+     * ============================================================ */
+    $('#edCategory').innerHTML = CATEGORIES.filter(c => c.id !== 'all').map(c => `<option value="${c.id}">${c.icon} ${c.label}</option>`).join('');
+
+    function renderAll() {
+      renderStoreSelect(); renderStoreStatus(); renderProducts(); renderCart();
+    }
+
+    pruneCart();
+    renderCategories();
+    renderStockFilter();
+    renderPayments();
+    fillForm();
+    renderAll();
+    setInterval(renderStoreStatus, 60000);
+  })();
+  </script>
+</body>
+</html>
