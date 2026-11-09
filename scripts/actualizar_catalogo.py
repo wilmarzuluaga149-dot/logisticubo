@@ -60,34 +60,64 @@ def limpiar(nombre):
         nombre = nombre[:m.start()].strip()
     return re.sub(r'\s+', ' ', nombre), unidad
 
+# Máximo de productos por subcategoría (los más vendidos primero). Mascotas tiene menos cupo.
+MAX_POR_SUB = 150
+MAX_ESPECIAL = {'Mascotas': 40, 'Vinos y licores': 60, 'Pollo, carne y pescado': 60, 'Charcutería y delicatessen': 50}
+
 def destinos(arbol):
+    """Devuelve (ruta, categoría de la app, nombre, cupo) por cada subcategoría de 3er nivel."""
     for top in arbol:
         regla = QUIERO.get(top['name'])
         if not regla:
             continue
-        if isinstance(regla, str):
-            yield f"/{top['id']}/", regla.lstrip('*'), top['name']
-            continue
-        for sub in top.get('children', []):
-            if sub['name'] in regla:
-                yield f"/{top['id']}/{sub['id']}/", regla[sub['name']], sub['name']
+        subs = top.get('children', [])
+        for sub in subs:
+            if isinstance(regla, str):
+                cat, grupo = regla.lstrip('*'), top['name']
+            elif sub['name'] in regla:
+                cat, grupo = regla[sub['name']], sub['name']
+            else:
+                continue
+            cupo = MAX_ESPECIAL.get(grupo, MAX_POR_SUB)
+            hijos = sub.get('children') or [None]
+            for h in hijos:
+                ruta = f"/{top['id']}/{sub['id']}/" + (f"{h['id']}/" if h else '')
+                yield ruta, cat, sub['name'] + (f" > {h['name']}" if h else ''), cupo
+
+def guardar(productos, completo):
+    items = sorted(productos.values(), key=lambda x: (x['k'], x['n']))
+    salida = {
+        'fuente': 'Éxito (exito.com, tienda en línea)',
+        'actualizado': datetime.now(timezone.utc).strftime('%Y-%m-%d'),
+        'nota': 'Precios de supermercado como referencia. Cada tienda define su propio precio.',
+        'completo': completo,
+        'items': items,
+    }
+    tmp = SALIDA + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(salida, f, ensure_ascii=False, separators=(',', ':'))
+    import os
+    os.replace(tmp, SALIDA)
+    return items
 
 def main():
     arbol, _ = get(f'{BASE}/category/tree/2')
     productos = {}
-    for ruta, cat, nombre in destinos(arbol):
-        desde, total = 0, None
-        while desde < 2500 and (total is None or desde < total):
-            q = urllib.parse.urlencode({'fq': f'C:{ruta}', '_from': desde, '_to': desde + PAGINA - 1})
+    for ruta, cat, nombre, cupo in destinos(arbol):
+        desde, total, tomados = 0, None, 0
+        while tomados < cupo and desde < 2500 and (total is None or desde < total):
+            q = urllib.parse.urlencode({'fq': f'C:{ruta}', '_from': desde, '_to': desde + PAGINA - 1, 'O': 'OrderByTopSaleDESC'})
             lote, rango = get(f'{BASE}/products/search?{q}')
             if total is None:
                 total = int(rango.split('/')[-1]) if '/' in rango else 0
-                print(f'{nombre}: {total} productos', file=sys.stderr)
             if not lote:
                 break
             for p in lote:
                 for it in p.get('items', [])[:1]:
-                    oferta = (it.get('sellers') or [{}])[0].get('commertialOffer', {})
+                    vendedor = (it.get('sellers') or [{}])[0]
+                    if str(vendedor.get('sellerId')) != '1':   # solo lo que vende Éxito (no terceros)
+                        continue
+                    oferta = vendedor.get('commertialOffer', {})
                     precio = round(oferta.get('Price') or 0)
                     if not precio or not oferta.get('IsAvailable', True):
                         continue
@@ -96,21 +126,17 @@ def main():
                         codigo = ''
                     n, u = limpiar(p.get('productName', ''))
                     clave = codigo or ('id' + str(p.get('productId')))
+                    if clave not in productos:
+                        tomados += 1
                     productos[clave] = {
                         'c': codigo, 'n': n, 'b': p.get('brand', ''), 'u': u, 'p': precio,
-                        'l': round(oferta.get('ListPrice') or precio), 'k': cat, 's': nombre,
+                        'l': round(oferta.get('ListPrice') or precio), 'k': cat, 's': nombre.split(' > ')[-1],
                     }
             desde += PAGINA
             time.sleep(PAUSA)
-    items = sorted(productos.values(), key=lambda x: (x['k'], x['n']))
-    salida = {
-        'fuente': 'exito.com (tienda en línea)',
-        'actualizado': datetime.now(timezone.utc).strftime('%Y-%m-%d'),
-        'nota': 'Precios de supermercado como referencia. Cada tienda define su propio precio.',
-        'items': items,
-    }
-    with open(SALIDA, 'w', encoding='utf-8') as f:
-        json.dump(salida, f, ensure_ascii=False, separators=(',', ':'))
+        items = guardar(productos, False)
+        print(f'{nombre}: +{tomados} (total {len(items)})', file=sys.stderr, flush=True)
+    items = guardar(productos, True)
     con = sum(1 for x in items if x['c'])
     print(f'Listo: {len(items)} productos ({con} con código de barras) -> {SALIDA}', file=sys.stderr)
 
