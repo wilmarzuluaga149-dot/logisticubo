@@ -1081,13 +1081,30 @@
     }
 
     // Abre WhatsApp con un enlace real (lo más compatible en celulares) y deja un enlace de respaldo visible.
+    // En celular abre directo la APLICACIÓN de WhatsApp (o WhatsApp Business) con el enlace whatsapp://.
+    // En computador usa wa.me (que ofrece WhatsApp Web o la app de escritorio).
+    const isMobile = () => /android|iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     function openWhatsApp(number, text, fallbackEl) {
-      const url = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
-      if (fallbackEl) { fallbackEl.href = url; fallbackEl.classList.remove('hidden'); }
+      const enc = encodeURIComponent(text);
+      const web = `https://wa.me/${number}?text=${enc}`;
+      const app = `whatsapp://send?phone=${number}&text=${enc}`;
+      if (fallbackEl) { fallbackEl.href = web; }
       const a = document.createElement('a');
-      a.href = url; a.target = '_blank'; a.rel = 'noopener';
-      document.body.appendChild(a); a.click(); a.remove();
-      return url;
+      if (isMobile()) {
+        a.href = app;
+        document.body.appendChild(a); a.click(); a.remove();
+        // Si la app de WhatsApp no abrió (la página sigue visible), se ofrece la versión web.
+        setTimeout(() => {
+          if (document.visibilityState !== 'visible') return;
+          if (fallbackEl) fallbackEl.classList.remove('hidden');
+          else toast('Si WhatsApp no se abrió, revisa que esté instalado en este celular.', 4000);
+        }, 1800);
+      } else {
+        if (fallbackEl) fallbackEl.classList.remove('hidden');
+        a.href = web; a.target = '_blank'; a.rel = 'noopener';
+        document.body.appendChild(a); a.click(); a.remove();
+      }
+      return isMobile() ? app : web;
     }
 
     function sendOrder() {
@@ -2723,7 +2740,7 @@
       installEvt = null; renderInstall();
     });
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-      navigator.serviceWorker.register('sw.js').catch(() => { /* sin modo sin conexión */ });
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => { /* sin modo sin conexión */ });
     }
 
     /* ============================================================
