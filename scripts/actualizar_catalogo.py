@@ -10,7 +10,7 @@ import json, re, sys, time, urllib.request, urllib.parse
 from datetime import datetime, timezone
 
 BASE = 'https://www.exito.com/api/catalog_system/pub'
-SALIDA = 'catalogo-referencia.json'
+SALIDA = sys.argv[1] if len(sys.argv) > 1 else 'catalogo-referencia.json'
 PAUSA = 1.0
 PAGINA = 50
 # El programa se identifica con su propio nombre (no se hace pasar por un navegador).
@@ -48,7 +48,8 @@ def ean_valido(c):
     if not re.fullmatch(r'\d{8}|\d{12,14}', c or ''):
         return False
     d = [int(x) for x in c]
-    s = sum(v * (3 if i % 2 else 1) for i, v in enumerate(reversed(d[:-1])))
+    # Dígito de control GS1: desde la derecha (sin el control) los pesos son 3, 1, 3, 1...
+    s = sum(v * (1 if i % 2 else 3) for i, v in enumerate(reversed(d[:-1])))
     return (10 - s % 10) % 10 == d[-1]
 
 def limpiar(nombre):
