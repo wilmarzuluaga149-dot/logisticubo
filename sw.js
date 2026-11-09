@@ -1,6 +1,6 @@
 // Service worker de "Mi Tienda de Barrio": permite instalarla y usarla sin internet.
-const CACHE = 'mi-tienda-v1';
-const CORE = ['./tienda-barrio.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png'];
+const CACHE = 'mi-tienda-v2';
+const CORE = ['./tienda-barrio.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './catalogo-referencia.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)));
