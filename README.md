@@ -22,3 +22,7 @@ La última milla y el transporte de larga distancia requieren un control estrict
 
 6. Conclusión y Mejora Continua
 Implementar controles rigurosos en cada etapa de la cadena logística asegura una ventaja competitiva sostenible. La retroalimentación constante y el análisis de indicadores (KPIs) permiten identificar áreas de oportunidad y eficiencia operativa.
+
+
+## Juego: La Escalera de Oro
+Abre `escalera-de-oro.html` en el navegador: 15 preguntas de cultura general, premios hasta $1.000.000.000, peldaños seguros y cuatro ayudas.

@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Escalera de Oro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: escenario de concurso a la izquierda (pregunta + 4 respuestas), escalera de premios a la derecha; en celular la escalera se abre como panel. Un solo look nocturno, deliberado. */
+:root {
+  --ink: #0b1a1d;        /* fondo: tinta verde petróleo */
+  --panel: #12282c;      /* superficies */
+  --panel-2: #183439;
+  --line: #2a4a50;
+  --text: #eaf2ef;
+  --muted: #93aaa6;
+  --brass: #e2b155;      /* acento: latón */
+  --brass-deep: #9c7426;
+  --ok: #3fbf7f;
+  --bad: #e5604f;
+  --pick: #f0c46a;
+  --f-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background:
+    radial-gradient(1200px 500px at 30% -10%, rgba(226,177,85,.13), transparent 60%),
+    radial-gradient(900px 600px at 110% 110%, rgba(63,191,127,.08), transparent 60%),
+    var(--ink);
+  background-color: var(--ink);
+  color: var(--text);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--brass); outline-offset: 2px; }
+.app { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; min-height: 100%; }
+
+/* Cabecera */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { width: 34px; height: 34px; flex: none; }
+.brand h1 { font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; letter-spacing: -.01em; margin: 0; }
+.brand h1 span { color: var(--brass); }
+.top-actions { display: flex; gap: 8px; }
+.chip-btn { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-size: .9rem; }
+.chip-btn:hover { border-color: var(--brass-deep); }
+.ladder-toggle { display: none; }
+
+/* Pantallas */
+.screen[hidden] { display: none !important; }
+
+/* Intro */
+.intro { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; align-items: center; padding-block: 20px; }
+.intro h2 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.2rem, 6vw, 4rem); line-height: .98; letter-spacing: -.03em; margin: 0 0 14px; text-wrap: balance; }
+.intro h2 em { font-style: normal; color: var(--brass); }
+.intro p { color: var(--muted); max-width: 52ch; margin: 0 0 18px; }
+.rules { display: grid; gap: 10px; margin: 0 0 22px; padding: 0; list-style: none; }
+.rules li { display: flex; gap: 10px; align-items: baseline; color: var(--text); }
+.rules b { font-family: var(--f-mono); color: var(--brass); font-size: .85rem; min-width: 4.6em; }
+.name-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.name-row input { flex: 1 1 200px; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; color: var(--text); font: inherit; }
+.primary { background: var(--brass); color: #1d1405; border: 0; border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 1rem; }
+.primary:hover { filter: brightness(1.07); }
+.primary:disabled { opacity: .45; cursor: default; filter: none; }
+.ghost { background: transparent; border: 1px solid var(--line); border-radius: 12px; padding: 13px 18px; font-weight: 600; }
+.ghost:hover { border-color: var(--brass-deep); }
+.record { margin-top: 14px; font-size: .9rem; color: var(--muted); }
+.record b { color: var(--brass); font-family: var(--f-mono); }
+.intro-art { display: flex; justify-content: center; }
+.intro-art svg { width: 100%; max-width: 360px; height: auto; }
+
+/* Juego */
+.game { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 20px; align-items: start; }
+.stage { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.hud { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.lifelines { display: flex; gap: 8px; flex-wrap: wrap; }
+.life { display: flex; align-items: center; gap: 7px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px 8px 10px; font-size: .9rem; font-weight: 600; }
+.life svg { width: 20px; height: 20px; flex: none; }
+.life:hover:not(:disabled) { border-color: var(--brass); }
+.life:disabled { opacity: .35; cursor: default; text-decoration: line-through; }
+.timer { display: flex; align-items: center; gap: 10px; }
+.timer-ring { width: 54px; height: 54px; position: relative; }
+.timer-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer-ring .track { stroke: var(--line); }
+.timer-ring .bar { stroke: var(--brass); transition: stroke-dashoffset .25s linear, stroke .3s; }
+.timer-ring.warn .bar { stroke: var(--bad); }
+.timer-ring span { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--f-mono); font-weight: 700; font-size: 1rem; }
+.timer-label { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+
+.qcard { background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px 26px; position: relative; overflow: hidden; }
+.qmeta { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 10px; }
+.qmeta b { color: var(--brass); font-family: var(--f-mono); letter-spacing: 0; font-size: .9rem; }
+.question { font-family: var(--f-display); font-weight: 600; font-size: clamp(1.25rem, 2.8vw, 1.8rem); line-height: 1.2; margin: 0; text-wrap: balance; }
+
+.answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ans { display: flex; align-items: center; gap: 12px; text-align: left; background: var(--panel); border: 2px solid var(--line); border-radius: 14px; padding: 14px 16px; min-height: 66px; transition: border-color .15s, background .2s, transform .1s; min-width: 0; }
+.ans:hover:not(:disabled) { border-color: var(--brass-deep); }
+.ans:active:not(:disabled) { transform: scale(.99); }
+.ans .key { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-mono); font-weight: 700; background: var(--ink); color: var(--brass); border: 1px solid var(--brass-deep); }
+.ans .txt { font-weight: 500; font-size: 1.02rem; min-width: 0; overflow-wrap: anywhere; }
+.ans.gone { visibility: hidden; }
+.ans.picked { border-color: var(--pick); background: rgba(240,196,106,.12); }
+.ans.locked { border-color: var(--pick); background: rgba(240,196,106,.22); animation: pulse .7s ease-in-out infinite alternate; }
+.ans.right { border-color: var(--ok); background: rgba(63,191,127,.22); animation: none; }
+.ans.right .key { background: var(--ok); color: #05210f; border-color: var(--ok); }
+.ans.wrong { border-color: var(--bad); background: rgba(229,96,79,.2); animation: none; }
+.ans.wrong .key { background: var(--bad); color: #2a0702; border-color: var(--bad); }
+.ans:disabled { cursor: default; }
+@keyframes pulse { from { box-shadow: 0 0 0 0 rgba(240,196,106,.0); } to { box-shadow: 0 0 0 6px rgba(240,196,106,.18); } }
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.actions .hint { color: var(--muted); font-size: .9rem; margin-right: auto; }
+
+.help { background: var(--panel); border: 1px dashed var(--brass-deep); border-radius: 14px; padding: 14px 16px; }
+.help h3 { margin: 0 0 10px; font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; color: var(--brass); font-weight: 700; }
+.poll { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: end; height: 150px; }
+.poll .col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; height: 100%; }
+.poll .bar { width: 100%; max-width: 54px; background: linear-gradient(180deg, var(--brass), var(--brass-deep)); border-radius: 6px 6px 2px 2px; transition: height .9s cubic-bezier(.2,.8,.2,1); height: 0; }
+.poll .pct { font-family: var(--f-mono); font-size: .85rem; font-variant-numeric: tabular-nums; }
+.poll .lbl { font-family: var(--f-mono); font-weight: 700; color: var(--muted); }
+.friend { display: flex; gap: 12px; align-items: flex-start; }
+.friend .avatar { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--brass-deep); display: grid; place-items: center; font-weight: 700; color: var(--ink); }
+.friend p { margin: 0; }
+.friend small { color: var(--muted); }
+
+/* Escalera */
+.ladder { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 14px; }
+.ladder h3 { margin: 0 0 10px; font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); display: flex; justify-content: space-between; }
+.ladder ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column-reverse; gap: 3px; }
+.rung { display: grid; grid-template-columns: 2.2em 1fr; align-items: center; padding: 6px 10px; border-radius: 8px; font-family: var(--f-mono); font-size: .88rem; font-variant-numeric: tabular-nums; color: var(--muted); }
+.rung .n { opacity: .7; }
+.rung .v { text-align: right; }
+.rung.safe { color: var(--text); }
+.rung.safe .v::after { content: " ◆"; color: var(--brass); font-size: .7em; }
+.rung.done { color: var(--ok); }
+.rung.now { background: var(--brass); color: #1d1405; font-weight: 700; }
+.rung.now .n { opacity: 1; }
+.rung.now.safe .v::after { color: #1d1405; }
+.ladder .legend { margin-top: 10px; font-size: .78rem; color: var(--muted); }
+
+/* Final */
+.end { text-align: center; padding-block: 30px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.end .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .8rem; color: var(--muted); }
+.end h2 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2rem, 5vw, 3.2rem); margin: 0; line-height: 1.05; text-wrap: balance; }
+.end .prize { font-family: var(--f-mono); font-weight: 700; color: var(--brass); font-size: clamp(2rem, 7vw, 3.6rem); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.end p { color: var(--muted); max-width: 52ch; margin: 0; }
+.end .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+/* Confeti */
+#fx { position: fixed; inset: 0; pointer-events: none; z-index: 5; width: 100%; height: 100%; }
+
+/* Responsive */
+@media (max-width: 860px) {
+  .game { grid-template-columns: 1fr; }
+  .ladder-toggle { display: inline-flex; }
+  .ladder { position: fixed; z-index: 20; top: calc(env(safe-area-inset-top, 0px) + 64px); right: max(16px, env(safe-area-inset-right, 0px)); width: min(290px, calc(100vw - 32px)); max-height: calc(100% - 90px); overflow: auto; box-shadow: 0 20px 50px rgba(0,0,0,.55); display: none; }
+  .ladder.open { display: block; }
+  .intro { grid-template-columns: 1fr; }
+  .intro-art { order: -1; }
+  .intro-art svg { max-width: 220px; }
+}
+@media (max-width: 560px) {
+  .answers { grid-template-columns: 1fr; }
+  .qcard { padding: 18px 16px 20px; }
+  .life .lname { display: none; }
+  .life { padding: 9px 12px; }
+  .ans.gone { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="3" y="30" width="34" height="6" rx="1.5" fill="#9c7426"/>
+        <rect x="9" y="21" width="22" height="6" rx="1.5" fill="#c4923a"/>
+        <rect x="15" y="12" width="10" height="6" rx="1.5" fill="#e2b155"/>
+        <circle cx="20" cy="6" r="3.5" fill="#f0c46a"/>
+      </svg>
+      <h1>La Escalera <span>de Oro</span></h1>
+    </div>
+    <div class="top-actions">
+      <button class="chip-btn ladder-toggle" id="ladderToggle" type="button" aria-expanded="false" aria-controls="ladder" hidden>Premios</button>
+      <button class="chip-btn" id="soundBtn" type="button" aria-pressed="true">Sonido: sí</button>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <section class="screen intro" id="introScreen">
+    <div>
+      <h2>15 preguntas.<br>Mil <em>millones</em> de pesos.</h2>
+      <p>Responde preguntas de cultura general que se ponen cada vez más difíciles. Cada acierto te sube un peldaño; un error te devuelve al último seguro.</p>
+      <ul class="rules">
+        <li><b>Seguros</b><span>Pregunta 5 ($1.000.000) y pregunta 10 ($32.000.000): ese dinero ya no lo pierdes.</span></li>
+        <li><b>Ayudas</b><span>50:50, encuesta al público, consulta a un amigo y cambio de pregunta. Una vez cada una.</span></li>
+        <li><b>Tiempo</b><span>30 s en las preguntas 1–5, 45 s en las 6–10, sin límite en las últimas cinco.</span></li>
+        <li><b>Plantarse</b><span>Puedes retirarte en cualquier momento con lo que llevas ganado.</span></li>
+      </ul>
+      <form class="name-row" id="startForm">
+        <input id="playerName" type="text" maxlength="24" placeholder="Tu nombre" autocomplete="nickname" aria-label="Tu nombre">
+        <button class="primary" type="submit">Empezar a jugar</button>
+      </form>
+      <div class="record" id="recordLine" hidden></div>
+    </div>
+    <div class="intro-art" aria-hidden="true">
+      <svg viewBox="0 0 300 300">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+            <stop offset="0" stop-color="#e2b155" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#e2b155" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="150" cy="140" r="140" fill="url(#glow)"/>
+        <g font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">
+          <rect x="40" y="232" width="220" height="30" rx="6" fill="#183439" stroke="#2a4a50"/>
+          <text x="54" y="252" fill="#93aaa6">1</text><text x="246" y="252" fill="#93aaa6" text-anchor="end">$100.000</text>
+          <rect x="60" y="192" width="180" height="30" rx="6" fill="#183439" stroke="#2a4a50"/>
+          <text x="74" y="212" fill="#eaf2ef">5</text><text x="226" y="212" fill="#eaf2ef" text-anchor="end">$1.000.000</text>
+          <rect x="80" y="152" width="140" height="30" rx="6" fill="#183439" stroke="#2a4a50"/>
+          <text x="94" y="172" fill="#eaf2ef">10</text><text x="206" y="172" fill="#eaf2ef" text-anchor="end">$32 M</text>
+          <rect x="100" y="112" width="100" height="30" rx="6" fill="#e2b155"/>
+          <text x="150" y="132" fill="#1d1405" text-anchor="middle">15 · $1.000 M</text>
+        </g>
+        <circle cx="150" cy="78" r="16" fill="#f0c46a"/>
+        <circle cx="150" cy="78" r="10" fill="none" stroke="#9c7426" stroke-width="2"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- JUEGO -->
+  <section class="screen game" id="gameScreen" hidden>
+    <div class="stage">
+      <div class="hud">
+        <div class="lifelines" role="group" aria-label="Ayudas">
+          <button class="life" id="lifeHalf" type="button" title="Quita dos respuestas incorrectas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/></svg>
+            <span>50:50</span>
+          </button>
+          <button class="life" id="lifePoll" type="button" title="Pregunta al público">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 20V12M10 20V6M15 20v-9M20 20V9"/></svg>
+            <span class="lname">Público</span>
+          </button>
+          <button class="life" id="lifeFriend" type="button" title="Consulta a un amigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v10H9l-5 4z"/></svg>
+            <span class="lname">Amigo</span>
+          </button>
+          <button class="life" id="lifeSwap" type="button" title="Cambia la pregunta por otra del mismo nivel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>
+            <span class="lname">Cambiar</span>
+          </button>
+        </div>
+        <div class="timer" id="timerBox">
+          <span class="timer-label" id="timerLabel">Tiempo</span>
+          <div class="timer-ring" id="timerRing">
+            <svg viewBox="0 0 44 44"><circle class="track" cx="22" cy="22" r="19" fill="none" stroke-width="4"/><circle class="bar" id="timerBar" cx="22" cy="22" r="19" fill="none" stroke-width="4" stroke-linecap="round" stroke-dasharray="119.38" stroke-dashoffset="0"/></svg>
+            <span id="timerNum">30</span>
+          </div>
+        </div>
+      </div>
+
+      <article class="qcard" aria-live="polite">
+        <div class="qmeta"><span id="qNumber">Pregunta 1 de 15</span><span>En juego: <b id="qPrize">$100.000</b></span></div>
+        <h2 class="question" id="qText">…</h2>
+      </article>
+
+      <div class="answers" id="answers" role="group" aria-label="Respuestas"></div>
+
+      <div class="help" id="helpBox" hidden></div>
+
+      <div class="actions">
+        <span class="hint" id="hint">Elige una respuesta (teclas A, B, C, D).</span>
+        <button class="ghost" id="walkBtn" type="button">Plantarme</button>
+        <button class="primary" id="confirmBtn" type="button" disabled>Respuesta final</button>
+        <button class="primary" id="nextBtn" type="button" hidden>Siguiente pregunta</button>
+      </div>
+    </div>
+
+    <aside class="ladder" id="ladder" aria-label="Escalera de premios">
+      <h3><span>Premios</span><span id="ladderName"></span></h3>
+      <ol id="ladderList"></ol>
+      <div class="legend">◆ Peldaño seguro</div>
+    </aside>
+  </section>
+
+  <!-- FINAL -->
+  <section class="screen end" id="endScreen" hidden>
+    <div class="eyebrow" id="endEyebrow">Fin del juego</div>
+    <h2 id="endTitle">…</h2>
+    <div class="prize" id="endPrize">$0</div>
+    <p id="endText"></p>
+    <div class="row">
+      <button class="primary" id="againBtn" type="button">Jugar otra vez</button>
+      <button class="ghost" id="homeBtn" type="button">Volver al inicio</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------- Premios ----------
+  const PRIZES = [100000, 200000, 300000, 500000, 1000000, 2000000, 4000000, 8000000, 16000000, 32000000, 64000000, 125000000, 250000000, 500000000, 1000000000];
+  const SAFE = [4, 9]; // índices de peldaños seguros (preguntas 5 y 10)
+  const money = n => "$" + n.toLocaleString("es-CO");
+  const tierOf = lvl => (lvl < 5 ? 0 : lvl < 10 ? 1 : 2);
+  const TIME = [30, 45, 0];
+
+  // ---------- Banco de preguntas: [pregunta, correcta, incorrecta, incorrecta, incorrecta] ----------
+  const BANK = [
+    [ // Fácil
+      ["¿Cuál es la capital de Colombia?", "Bogotá", "Medellín", "Cali", "Cartagena"],
+      ["¿Cuántos días tiene un año bisiesto?", "366", "365", "364", "360"],
+      ["¿Qué color se obtiene al mezclar azul y amarillo?", "Verde", "Morado", "Naranja", "Café"],
+      ["¿Cuántas patas tiene una araña?", "8", "6", "10", "4"],
+      ["¿Qué planeta es conocido como el planeta rojo?", "Marte", "Venus", "Júpiter", "Saturno"],
+      ["¿En qué continente está Egipto?", "África", "Asia", "Europa", "Oceanía"],
+      ["¿Cuántos minutos tiene una hora?", "60", "100", "30", "90"],
+      ["¿Cuál es el océano más grande del planeta?", "Pacífico", "Atlántico", "Índico", "Ártico"],
+      ["¿Qué fruta es la base del guacamole?", "Aguacate", "Mango", "Papaya", "Guayaba"],
+      ["¿Cuántos lados tiene un triángulo?", "3", "4", "5", "6"],
+      ["¿Cuál es la moneda de Colombia?", "El peso", "El sol", "El bolívar", "El real"],
+      ["¿Qué gas necesitamos las personas para respirar?", "Oxígeno", "Dióxido de carbono", "Helio", "Metano"],
+      ["¿Cuántos colores tiene la bandera de Colombia?", "3", "2", "4", "5"],
+      ["¿Cuánto es 7 × 8?", "56", "54", "64", "48"],
+      ["¿Qué instrumento tiene teclas blancas y negras?", "Piano", "Guitarra", "Violín", "Tambor"],
+      ["¿Cuál es el animal más grande del planeta?", "La ballena azul", "El elefante africano", "El tiburón blanco", "La jirafa"],
+      ["¿Cuántos jugadores tiene en la cancha un equipo de fútbol?", "11", "10", "9", "12"],
+      ["¿Qué órgano bombea la sangre por el cuerpo?", "El corazón", "El hígado", "Los pulmones", "Los riñones"],
+      ["¿Qué astro le da luz y calor a la Tierra?", "El Sol", "La Luna", "Marte", "La estrella Polar"],
+      ["¿Cuántas horas tiene un día?", "24", "12", "20", "36"]
+    ],
+    [ // Media
+      ["¿Quién escribió «Cien años de soledad»?", "Gabriel García Márquez", "Mario Vargas Llosa", "Jorge Luis Borges", "Pablo Neruda"],
+      ["¿Qué río atraviesa Colombia de sur a norte y desemboca en el Caribe en Barranquilla?", "Magdalena", "Cauca", "Atrato", "Meta"],
+      ["¿Cuál es el símbolo químico del oro?", "Au", "Ag", "Or", "Go"],
+      ["¿En qué año llegó Cristóbal Colón a América?", "1492", "1500", "1810", "1453"],
+      ["¿Cuántos huesos tiene el cuerpo humano adulto?", "206", "180", "256", "212"],
+      ["¿Qué artista nacido en Medellín es famoso por sus figuras voluminosas?", "Fernando Botero", "Débora Arango", "Alejandro Obregón", "Omar Rayo"],
+      ["¿Cuál es el país más grande del mundo por superficie?", "Rusia", "Canadá", "China", "Estados Unidos"],
+      ["¿Qué día se celebra la independencia de Colombia?", "20 de julio", "7 de agosto", "12 de octubre", "1 de mayo"],
+      ["¿Cuál es el planeta más grande del sistema solar?", "Júpiter", "Saturno", "Neptuno", "Urano"],
+      ["¿Cuál es el órgano más grande del cuerpo humano?", "La piel", "El hígado", "El intestino", "El cerebro"],
+      ["¿En qué país está Machu Picchu?", "Perú", "Bolivia", "Ecuador", "Chile"],
+      ["¿Cuál es la capital de Australia?", "Canberra", "Sídney", "Melbourne", "Perth"],
+      ["¿Qué científico propuso la teoría de la relatividad?", "Albert Einstein", "Isaac Newton", "Galileo Galilei", "Nikola Tesla"],
+      ["¿Qué idioma tiene más hablantes nativos en el mundo?", "Chino mandarín", "Inglés", "Español", "Hindi"],
+      ["¿Qué cantante colombiana interpretó «Hips Don't Lie»?", "Shakira", "Karol G", "Fanny Lú", "Totó la Momposina"],
+      ["¿Cuántos departamentos tiene Colombia?", "32", "30", "28", "34"],
+      ["¿Qué vitamina produce la piel cuando recibe luz del sol?", "Vitamina D", "Vitamina A", "Vitamina C", "Vitamina B12"],
+      ["¿Cuál es la montaña más alta del mundo sobre el nivel del mar?", "Everest", "K2", "Aconcagua", "Kilimanjaro"],
+      ["¿Qué ciudad colombiana es llamada «la ciudad de la eterna primavera»?", "Medellín", "Cali", "Bucaramanga", "Pereira"],
+      ["¿Quién escribió «Don Quijote de la Mancha»?", "Miguel de Cervantes", "Lope de Vega", "Francisco de Quevedo", "Garcilaso de la Vega"]
+    ],
+    [ // Difícil
+      ["¿En qué año recibió Gabriel García Márquez el Premio Nobel de Literatura?", "1982", "1967", "1975", "1990"],
+      ["¿Cuál es la velocidad aproximada de la luz en el vacío?", "300.000 km/s", "150.000 km/s", "30.000 km/s", "1.000.000 km/s"],
+      ["¿Qué batalla de 1819 selló la independencia de la Nueva Granada?", "Batalla de Boyacá", "Batalla de Ayacucho", "Batalla de Carabobo", "Batalla de Pichincha"],
+      ["¿Cuál es el hueso más largo del cuerpo humano?", "Fémur", "Tibia", "Húmero", "Peroné"],
+      ["¿Cuántos corazones tiene un pulpo?", "3", "1", "2", "8"],
+      ["¿En qué año cayó el Muro de Berlín?", "1989", "1991", "1985", "1979"],
+      ["¿Cuál es la capital de Canadá?", "Ottawa", "Toronto", "Montreal", "Vancouver"],
+      ["¿Qué filósofo griego fue maestro de Alejandro Magno?", "Aristóteles", "Platón", "Sócrates", "Pitágoras"],
+      ["¿Cuál es el desierto cálido más grande del mundo?", "Sahara", "Gobi", "Atacama", "Kalahari"],
+      ["¿Qué compositor ya estaba sordo cuando estrenó su Novena Sinfonía?", "Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Johann Sebastian Bach", "Frédéric Chopin"],
+      ["¿Cuántos cromosomas tiene una célula humana normal (no sexual)?", "46", "23", "48", "44"],
+      ["¿Cuál es la ciudad más antigua fundada por españoles en Colombia que aún existe?", "Santa Marta", "Cartagena", "Bogotá", "Popayán"],
+      ["¿Qué gas es el más abundante en la atmósfera terrestre?", "Nitrógeno", "Oxígeno", "Argón", "Dióxido de carbono"],
+      ["¿En qué año pisó el ser humano la Luna por primera vez?", "1969", "1965", "1972", "1959"],
+      ["¿Qué lago es considerado el lago navegable más alto del mundo?", "Titicaca", "Tota", "Victoria", "Baikal"],
+      ["¿Qué tipo de animal es el ajolote?", "Anfibio", "Pez", "Reptil", "Mamífero"],
+      ["¿Qué río de Colombia es famoso como «el río de los cinco colores»?", "Caño Cristales", "Río Cauca", "Río Guatapurí", "Río Amazonas"],
+      ["¿Cuál es la unidad de medida de la resistencia eléctrica?", "Ohmio", "Voltio", "Amperio", "Vatio"],
+      ["¿Qué país tiene más husos horarios contando sus territorios de ultramar?", "Francia", "Rusia", "Estados Unidos", "China"],
+      ["¿Cuál es el elemento químico más abundante en el universo?", "Hidrógeno", "Helio", "Oxígeno", "Carbono"]
+    ]
+  ];
+
+  // ---------- Utilidades ----------
+  const $ = id => document.getElementById(id);
+  const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const LETTERS = ["A", "B", "C", "D"];
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  // ---------- Sonido (Web Audio, sin archivos) ----------
+  let actx = null, soundOn = store.get("edo-sound") !== "0";
+  function ctx() { if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } return actx; }
+  function tone(freq, dur, { type = "sine", vol = .12, at = 0, slide = 0 } = {}) {
+    if (!soundOn) return; const c = ctx(); if (!c) return;
+    const t = c.currentTime + at, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g).connect(c.destination); o.start(t); o.stop(t + dur + .05);
+  }
+  const sfx = {
+    pick: () => tone(660, .12, { type: "triangle" }),
+    lock: () => { tone(196, 1.3, { type: "sawtooth", vol: .05 }); tone(294, 1.3, { type: "sine", vol: .06 }); },
+    right: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, .35, { type: "triangle", at: i * .1 })),
+    wrong: () => { tone(220, .7, { type: "sawtooth", vol: .08, slide: 110 }); },
+    tick: () => tone(1200, .05, { type: "square", vol: .04 }),
+    life: () => tone(440, .3, { type: "sine", slide: 880 }),
+    win: () => [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone(f, .5, { type: "triangle", at: i * .12 }))
+  };
+
+  // ---------- Estado ----------
+  let S = null;
+  let timerId = null, revealId = null;
+
+  function freshState(name) {
+    return {
+      phase: "play", name: name || "Jugador", level: 0,
+      used: [[], [], []], q: null,
+      lifes: { half: true, poll: true, friend: true, swap: true },
+      removed: [], selected: null, stage: "choose", // choose | locked | revealed
+      help: null, timeLeft: TIME[0], result: null
+    };
+  }
+
+  function drawQuestion(level) {
+    const t = tierOf(level), pool = BANK[t];
+    let idxs = pool.map((_, i) => i).filter(i => !S.used[t].includes(i));
+    if (!idxs.length) { S.used[t] = []; idxs = pool.map((_, i) => i); }
+    const pickIdx = idxs[Math.floor(Math.random() * idxs.length)];
+    S.used[t].push(pickIdx);
+    const [text, correct, ...wrong] = pool[pickIdx];
+    const options = shuffle([correct, ...wrong]);
+    return { text, options, correct: options.indexOf(correct) };
+  }
+
+  // ---------- Pantallas ----------
+  function show(which) {
+    $("introScreen").hidden = which !== "intro";
+    $("gameScreen").hidden = which !== "play";
+    $("endScreen").hidden = which !== "end";
+    $("ladderToggle").hidden = which !== "play";
+    if (which !== "play") closeLadder();
+  }
+
+  function renderRecord() {
+    const best = Number(store.get("edo-best") || 0);
+    const line = $("recordLine");
+    if (best > 0) { line.hidden = false; line.innerHTML = "Tu mejor premio en este navegador: <b>" + money(best) + "</b>"; }
+    else line.hidden = true;
+  }
+
+  function renderLadder() {
+    const ol = $("ladderList"); ol.innerHTML = "";
+    PRIZES.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.className = "rung" + (SAFE.includes(i) ? " safe" : "") + (S && i < S.level ? " done" : "") + (S && i === S.level && S.phase === "play" ? " now" : "");
+      li.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="v">' + money(p) + "</span>";
+      if (S && i === S.level) li.setAttribute("aria-current", "step");
+      ol.appendChild(li);
+    });
+    $("ladderName").textContent = S ? S.name : "";
+  }
+
+  function renderQuestion() {
+    const q = S.q;
+    $("qNumber").textContent = "Pregunta " + (S.level + 1) + " de 15" + (SAFE.includes(S.level) ? " · peldaño seguro" : "");
+    $("qPrize").textContent = money(PRIZES[S.level]);
+    $("qText").textContent = q.text;
+    const box = $("answers"); box.innerHTML = "";
+    q.options.forEach((opt, i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "ans"; b.id = "ans" + i;
+      b.innerHTML = '<span class="key">' + LETTERS[i] + '</span><span class="txt"></span>';
+      b.querySelector(".txt").textContent = opt;
+      b.setAttribute("aria-label", LETTERS[i] + ": " + opt);
+      b.addEventListener("click", () => choose(i));
+      box.appendChild(b);
+    });
+    paintAnswers();
+  }
+
+  function paintAnswers() {
+    const q = S.q;
+    q.options.forEach((_, i) => {
+      const b = $("ans" + i); if (!b) return;
+      b.className = "ans";
+      if (S.removed.includes(i)) b.classList.add("gone");
+      if (S.selected === i) b.classList.add(S.stage === "locked" ? "locked" : "picked");
+      if (S.stage === "revealed") {
+        if (i === q.correct) b.classList.add("right");
+        else if (i === S.selected) b.classList.add("wrong");
+      }
+      b.disabled = S.stage !== "choose" || S.removed.includes(i);
+    });
+    const choosing = S.stage === "choose";
+    $("confirmBtn").hidden = S.stage === "revealed";
+    $("confirmBtn").disabled = !(choosing && S.selected !== null);
+    $("nextBtn").hidden = !(S.stage === "revealed" && S.result === null);
+    $("walkBtn").disabled = !choosing;
+    ["half", "poll", "friend", "swap"].forEach(k => {
+      $("life" + k[0].toUpperCase() + k.slice(1)).disabled = !S.lifes[k] || !choosing;
+    });
+    const hint = $("hint");
+    if (S.stage === "locked") hint.textContent = "Respuesta final… veamos.";
+    else if (S.stage === "revealed") hint.textContent = "¡Correcto! Ganas " + money(PRIZES[S.level]) + ".";
+    else if (S.selected !== null) hint.textContent = "¿Seguro? Pulsa «Respuesta final» o Enter.";
+    else hint.textContent = "Elige una respuesta (teclas A, B, C, D).";
+  }
+
+  function renderHelp() {
+    const box = $("helpBox"), h = S.help;
+    if (!h) { box.hidden = true; box.innerHTML = ""; return; }
+    box.hidden = false;
+    if (h.type === "poll") {
+      box.innerHTML = '<h3>Votación del público</h3><div class="poll">' +
+        h.data.map((v, i) => '<div class="col"><span class="pct">' + (S.removed.includes(i) ? "–" : v + "%") + '</span><div class="bar" data-h="' + v + '"></div><span class="lbl">' + LETTERS[i] + "</span></div>").join("") + "</div>";
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        box.querySelectorAll(".bar").forEach(b => { b.style.height = Math.max(2, Number(b.dataset.h) * 0.85) + "%"; });
+      }));
+    } else if (h.type === "friend") {
+      box.innerHTML = '<h3>Consulta a un amigo</h3><div class="friend"><div class="avatar">' + h.who[0] + '</div><div><p></p><small></small></div></div>';
+      box.querySelector("p").textContent = "«" + h.msg + "»";
+      box.querySelector("small").textContent = h.who;
+    }
+  }
+
+  // ---------- Temporizador ----------
+  const CIRC = 119.38;
+  function stopTimer() { clearInterval(timerId); timerId = null; }
+  function startTimer() {
+    stopTimer();
+    const total = TIME[tierOf(S.level)];
+    const box = $("timerBox");
+    if (!total) { $("timerNum").textContent = "∞"; $("timerBar").style.strokeDashoffset = 0; $("timerRing").classList.remove("warn"); $("timerLabel").textContent = "Sin límite"; return; }
+    $("timerLabel").textContent = "Tiempo";
+    paintTimer(total);
+    timerId = setInterval(() => {
+      if (S.stage !== "choose") return;
+      S.timeLeft--;
+      paintTimer(total);
+      if (S.timeLeft <= 5 && S.timeLeft > 0) sfx.tick();
+      if (S.timeLeft <= 0) { stopTimer(); timeUp(); }
+    }, 1000);
+    box.hidden = false;
+  }
+  function paintTimer(total) {
+    $("timerNum").textContent = Math.max(0, S.timeLeft);
+    $("timerBar").style.strokeDashoffset = CIRC * (1 - Math.max(0, S.timeLeft) / total);
+    $("timerRing").classList.toggle("warn", S.timeLeft <= 5);
+  }
+
+  // ---------- Flujo ----------
+  function startGame(name) {
+    S = freshState(name);
+    S.q = drawQuestion(0);
+    show("play");
+    renderAll();
+    startTimer();
+  }
+
+  function renderAll() { renderLadder(); renderQuestion(); renderHelp(); }
+
+  function choose(i) {
+    if (S.stage !== "choose" || S.removed.includes(i)) return;
+    S.selected = i; sfx.pick(); paintAnswers();
+  }
+
+  function confirmAnswer() {
+    if (S.stage !== "choose" || S.selected === null) return;
+    S.stage = "locked"; stopTimer(); sfx.lock(); paintAnswers();
+    const wait = 1100 + S.level * 90; // más suspenso a medida que sube
+    revealId = setTimeout(reveal, wait);
+  }
+
+  function reveal() {
+    const ok = S.selected === S.q.correct;
+    S.stage = "revealed";
+    if (ok) {
+      sfx.right();
+      if (S.level === 14) { S.result = { kind: "win", amount: PRIZES[14] }; paintAnswers(); setTimeout(finish, 1400); return; }
+    } else {
+      sfx.wrong();
+      S.result = { kind: "lose", amount: safeAmount(), correctText: S.q.options[S.q.correct] };
+      paintAnswers(); $("hint").textContent = "Incorrecto. La respuesta era " + LETTERS[S.q.correct] + ": " + S.q.options[S.q.correct] + ".";
+      setTimeout(finish, 2200); return;
+    }
+    paintAnswers();
+    $("nextBtn").focus({ preventScroll: true });
+  }
+
+  function safeAmount() {
+    let amt = 0; SAFE.forEach(s => { if (S.level > s) amt = PRIZES[s]; }); return amt;
+  }
+
+  function nextQuestion() {
+    S.level++; S.q = drawQuestion(S.level);
+    S.removed = []; S.selected = null; S.stage = "choose"; S.help = null; S.result = null;
+    S.timeLeft = TIME[tierOf(S.level)];
+    renderAll(); startTimer();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function timeUp() {
+    S.stage = "revealed"; S.selected = null; sfx.wrong();
+    S.result = { kind: "time", amount: safeAmount(), correctText: S.q.options[S.q.correct] };
+    paintAnswers(); $("hint").textContent = "Se acabó el tiempo. Era " + LETTERS[S.q.correct] + ": " + S.q.options[S.q.correct] + ".";
+    setTimeout(finish, 2200);
+  }
+
+  function walkAway() {
+    if (S.stage !== "choose") return;
+    stopTimer();
+    S.result = { kind: "walk", amount: S.level > 0 ? PRIZES[S.level - 1] : 0, correctText: S.q.options[S.q.correct] };
+    S.stage = "revealed"; S.selected = null; paintAnswers();
+    $("hint").textContent = "Te plantas. La respuesta era " + LETTERS[S.q.correct] + ": " + S.q.options[S.q.correct] + ".";
+    setTimeout(finish, 1800);
+  }
+
+  function finish() {
+    if (!S || !S.result) return;
+    S.phase = "end"; stopTimer();
+    const r = S.result;
+    const best = Number(store.get("edo-best") || 0);
+    if (r.amount > best) store.set("edo-best", String(r.amount));
+    const titles = {
+      win: "¡" + S.name + ", subiste toda la escalera!",
+      walk: S.name + " se planta",
+      lose: "Respuesta incorrecta",
+      time: "Se acabó el tiempo"
+    };
+    const texts = {
+      win: "Respondiste las 15 preguntas sin fallar. Eres oficialmente de oro.",
+      walk: "Te retiraste a tiempo en la pregunta " + (S.level + 1) + ". La respuesta era: " + r.correctText + ".",
+      lose: "Caíste en la pregunta " + (S.level + 1) + ". La respuesta correcta era: " + r.correctText + ". " + (r.amount ? "Te llevas tu peldaño seguro." : "No alcanzaste el primer peldaño seguro."),
+      time: "El reloj llegó a cero en la pregunta " + (S.level + 1) + ". La respuesta era: " + r.correctText + "."
+    };
+    $("endEyebrow").textContent = r.kind === "win" ? "Gran premio" : "Fin del juego";
+    $("endTitle").textContent = titles[r.kind];
+    $("endText").textContent = texts[r.kind];
+    countUp($("endPrize"), r.amount);
+    show("end");
+    if (r.kind === "win") { sfx.win(); confetti(); }
+    else if (r.amount >= PRIZES[4]) confetti(60);
+  }
+
+  function countUp(el, target) {
+    const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || target === 0) { el.textContent = money(target); return; }
+    const t0 = performance.now(), dur = 1200;
+    const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = money(Math.round(target * e)); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+
+  // ---------- Ayudas ----------
+  function useHalf() {
+    if (!S.lifes.half || S.stage !== "choose") return;
+    S.lifes.half = false; sfx.life();
+    const wrong = shuffle([0, 1, 2, 3].filter(i => i !== S.q.correct && !S.removed.includes(i)));
+    S.removed = S.removed.concat(wrong.slice(0, 2));
+    if (S.removed.includes(S.selected)) S.selected = null;
+    if (S.help && S.help.type === "poll") renderHelp();
+    paintAnswers();
+  }
+
+  function usePoll() {
+    if (!S.lifes.poll || S.stage !== "choose") return;
+    S.lifes.poll = false; sfx.life();
+    const t = tierOf(S.level);
+    const live = [0, 1, 2, 3].filter(i => !S.removed.includes(i));
+    // El público acierta más en preguntas fáciles; en las difíciles a veces se equivoca.
+    const misled = t === 2 && Math.random() < .25;
+    const fav = misled ? shuffle(live.filter(i => i !== S.q.correct))[0] : S.q.correct;
+    const base = [[55, 80], [40, 62], [28, 48]][t];
+    const favPct = live.length === 2 ? base[0] + 15 + Math.random() * (base[1] - base[0]) : base[0] + Math.random() * (base[1] - base[0]);
+    const data = [0, 0, 0, 0];
+    data[fav] = Math.round(Math.min(92, favPct));
+    let rest = 100 - data[fav];
+    const others = live.filter(i => i !== fav);
+    const weights = others.map(() => Math.random() + .2), sum = weights.reduce((a, b) => a + b, 0);
+    others.forEach((i, k) => { data[i] = Math.round(rest * weights[k] / sum); });
+    const diff = 100 - data.reduce((a, b) => a + b, 0); data[fav] += diff;
+    S.help = { type: "poll", data };
+    renderHelp(); paintAnswers();
+  }
+
+  const FRIENDS = ["Doña Marta, la profesora", "Andrés, tu primo ingeniero", "Luz Elena, la vecina", "Julián, el de la tienda", "Camila, tu amiga lectora"];
+  function useFriend() {
+    if (!S.lifes.friend || S.stage !== "choose") return;
+    S.lifes.friend = false; sfx.life();
+    const t = tierOf(S.level);
+    const live = [0, 1, 2, 3].filter(i => !S.removed.includes(i));
+    const knows = Math.random() < [.92, .75, .55][t];
+    const guess = knows ? S.q.correct : shuffle(live.filter(i => i !== S.q.correct))[0];
+    const L = LETTERS[guess], txt = S.q.options[guess];
+    const sure = [
+      "Esa me la sé: es la " + L + ", " + txt + ". Estoy completamente seguro.",
+      "Sin duda la " + L + ", " + txt + ". Dale tranquilo."
+    ];
+    const maybe = [
+      "Mmm… yo diría que la " + L + ", " + txt + ", pero no pondría las manos al fuego.",
+      "Me suena la " + L + ", " + txt + ". Como un 60 % seguro.",
+      "Uy, difícil. Creo que es " + txt + " (la " + L + "), aunque dudo."
+    ];
+    const msg = (knows && t < 2 ? sure : maybe)[Math.floor(Math.random() * (knows && t < 2 ? sure.length : maybe.length))];
+    S.help = { type: "friend", who: FRIENDS[Math.floor(Math.random() * FRIENDS.length)], msg };
+    renderHelp(); paintAnswers();
+  }
+
+  function useSwap() {
+    if (!S.lifes.swap || S.stage !== "choose") return;
+    S.lifes.swap = false; sfx.life();
+    S.q = drawQuestion(S.level);
+    S.removed = []; S.selected = null; S.help = null;
+    S.timeLeft = TIME[tierOf(S.level)];
+    renderAll(); startTimer();
+  }
+
+  // ---------- Confeti ----------
+  function confetti(n = 160) {
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const cv = $("fx"), c = cv.getContext("2d");
+    const W = cv.width = innerWidth * devicePixelRatio, H = cv.height = innerHeight * devicePixelRatio;
+    const cols = ["#e2b155", "#f0c46a", "#3fbf7f", "#eaf2ef", "#9c7426"];
+    const parts = Array.from({ length: n }, () => ({ x: Math.random() * W, y: -Math.random() * H * .5, vx: (Math.random() - .5) * 3, vy: 2 + Math.random() * 4, r: (4 + Math.random() * 6) * devicePixelRatio, a: Math.random() * 6, va: (Math.random() - .5) * .3, c: cols[Math.floor(Math.random() * cols.length)] }));
+    const t0 = performance.now();
+    (function frame(now) {
+      c.clearRect(0, 0, W, H);
+      parts.forEach(p => { p.x += p.vx * devicePixelRatio; p.y += p.vy * devicePixelRatio; p.a += p.va; c.save(); c.translate(p.x, p.y); c.rotate(p.a); c.fillStyle = p.c; c.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); c.restore(); });
+      if (now - t0 < 4500) requestAnimationFrame(frame); else c.clearRect(0, 0, W, H);
+    })(t0);
+  }
+
+  // ---------- Escalera en celular ----------
+  function closeLadder() { $("ladder").classList.remove("open"); $("ladderToggle").setAttribute("aria-expanded", "false"); }
+  $("ladderToggle").addEventListener("click", e => {
+    e.stopPropagation();
+    const open = $("ladder").classList.toggle("open");
+    $("ladderToggle").setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", e => { if (!$("ladder").contains(e.target) && e.target !== $("ladderToggle")) closeLadder(); });
+
+  // ---------- Eventos ----------
+  $("startForm").addEventListener("submit", e => {
+    e.preventDefault(); ctx();
+    const name = $("playerName").value.trim();
+    store.set("edo-name", name);
+    startGame(name);
+  });
+  $("confirmBtn").addEventListener("click", confirmAnswer);
+  $("nextBtn").addEventListener("click", nextQuestion);
+  $("walkBtn").addEventListener("click", walkAway);
+  $("lifeHalf").addEventListener("click", useHalf);
+  $("lifePoll").addEventListener("click", usePoll);
+  $("lifeFriend").addEventListener("click", useFriend);
+  $("lifeSwap").addEventListener("click", useSwap);
+  $("againBtn").addEventListener("click", () => startGame(S ? S.name : ""));
+  $("homeBtn").addEventListener("click", () => { S = null; renderRecord(); show("intro"); });
+  $("soundBtn").addEventListener("click", () => {
+    soundOn = !soundOn; store.set("edo-sound", soundOn ? "1" : "0"); paintSound(); if (soundOn) { ctx(); sfx.pick(); }
+  });
+  function paintSound() { $("soundBtn").textContent = "Sonido: " + (soundOn ? "sí" : "no"); $("soundBtn").setAttribute("aria-pressed", String(soundOn)); }
+
+  document.addEventListener("keydown", e => {
+    if (!S || S.phase !== "play" || e.target.tagName === "INPUT") return;
+    const k = e.key.toUpperCase();
+    const i = LETTERS.indexOf(k);
+    if (i >= 0) { choose(i); e.preventDefault(); }
+    else if (e.key === "Enter") {
+      if (S.stage === "choose" && S.selected !== null) { confirmAnswer(); e.preventDefault(); }
+      else if (S.stage === "revealed" && S.result === null) { nextQuestion(); e.preventDefault(); }
+    }
+  });
+
+  // ---------- Arranque (conserva la partida si la página se actualiza) ----------
+  function start(data) {
+    paintSound();
+    $("playerName").value = store.get("edo-name") || "";
+    renderRecord();
+    const saved = data && data.S;
+    if (saved && saved.phase === "play" && saved.q) {
+      S = saved;
+      if (S.stage === "locked") S.stage = "choose";
+      show("play"); renderAll();
+      if (S.stage === "revealed" && S.result) { finish(); return; }
+      startTimer();
+    } else {
+      show("intro"); renderLadder();
+    }
+  }
+  window.claude?.hot?.snapshot?.(() => ({ S }));
+  window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
+</body>
+</html>
